@@ -37,27 +37,35 @@ const MainBtn = styled.button`
 
 const SIZES = {
   sm: css`
-    --button-width: 65px;
-    --button-height: 35px;
+    --button-width: 6.5rem;
+    --button-height: 3.5rem;
     --button-font-size: 16px;
     --button-radius: 8px;
   `,
   md: css`
-    --button-width: 100px;
+    --button-width: 10rem;
     --button-font-size: 16px;
-    --button-height: 54px;
+    --button-height: 4.5rem;
     --button-radius: 8px;
   `,
   lg: css`
-    --button-width: 450px;
-    --button-height: 60px;
+    --button-width: 10rem;
+    --button-height: 5.4rem;
     --button-font-size: 20px;
-
+    --button-radius: 8px;
+  `,
+  xl: css`
+    --button-width: 45rem;
+    --button-height: 6rem;
+    --button-font-size: 20px;
     --button-radius: 8px;
   `,
 };
 
 const VARIANTS = {
+  tab: css`
+    --button-color: #767676;
+  `,
   error: css`
     --button-color: #ffffff;
     --button-bg-color: #e23737;
