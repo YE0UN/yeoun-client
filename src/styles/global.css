@@ -1,0 +1,35 @@
+:root {
+  font-size: 10px;
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-md: 16px;
+  --fs-lg: 18px;
+  --fs-xl: 24px;
+  --fs-2xl: 36px;
+  --bg-color: #ffffff;
+
+  /* --main-color:
+  --sub-color:
+  --text-color: 
+  --sub-text-color: 
+  --border-color: 
+  --profile-border-color: 
+  --alert-color:  */
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+}
