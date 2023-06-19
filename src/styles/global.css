@@ -8,13 +8,25 @@
   --fs-2xl: 36px;
   --bg-color: #ffffff;
 
-  /* --main-color:
-  --sub-color:
-  --text-color: 
-  --sub-text-color: 
-  --border-color: 
-  --profile-border-color: 
-  --alert-color:  */
+  --btn-text-color: #white;
+  --main-text-color: #black;
+  --sub-text-color: #767676;
+  --border-color: #d8d8d8;
+  --profile-border-color: #94afc6;
+  --alert-color: #e23737;
+  --main-btn-color: #577fa0;
+  --main-btn-text-color: #ffffff;
+  --main-btn-hover-color: #94afc6;
+  --sub-btn-color: #94afc6;
+  --sub-btn-hover-color: #e4e9ea;
+  --main-checkbox-color: #0d3a64;
+  --input-border-color: #c4c4c4;
+  --main-btn-disabled-color: #e4e9ea;
+  --input-border-focus-color: #577fa0;
+  --modal-bg-header-color: #94afc6;
+  --modal-bg-color: #e4e9ea;
+  --main-bg-color: #eceeee;
+  --button-margin: 0 0 0 10px;
 }
 
 .ellipsis {
