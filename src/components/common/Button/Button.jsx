@@ -28,14 +28,14 @@ const SIZES = {
 
 const VARIANTS = {
   main: css`
-    --button-color: #ffffff;
-    --button-bg-color: #577fa0;
-    --button-hover-bg-color: #94afc6;
+    --button-color: var(--btn-text-color);
+    --button-bg-color: var(--main-btn-color);
+    --button-hover-bg-color: var(--main-btn-hover-color);
   `,
   region: css`
-    --button-color: #ffffff7;
-    --button-bg-color: #767676;
-    --button-hover-bg-color: #c4c4c4;
+    --button-color: var(--btn-text-color);
+    --button-bg-color: var(--sub-text-color);
+    --button-hover-bg-color: var(--input-border-color);
   `,
 };
 const Button = ({ disabled, size, variants, children }) => {
