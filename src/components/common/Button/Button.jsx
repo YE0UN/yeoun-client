@@ -39,7 +39,7 @@ const VARIANTS = {
   `,
 };
 
-export const Button = ({ disabled, size, variants, children }) => {
+function Button({ disabled, size, variants, children }) {
   const styleSize = SIZES[size];
   const variantStyle = VARIANTS[variants];
 
@@ -49,7 +49,9 @@ export const Button = ({ disabled, size, variants, children }) => {
       {children}
     </MainBtn>
   );
-};
+}
+
+export default Button;
 
 const MainBtn = styled.button`
   ${(p) => p.styleSize}
