@@ -8,7 +8,7 @@ const SIZES = {
   `,
   md: css`
     --button-width: 10rem;
-    --button-font-size: var(--fs-sm);
+    --button-font-size: var(--fs-lg); // --fs-lg
     --button-height: 4.5rem;
     --button-radius: 8px;
   `,
@@ -56,7 +56,7 @@ const MainBtn = styled.button`
   ${(p) => p.variantStyle}
   background-color: var(--button-bg-color,--main-btn-color);
   width: var(--button-width);
-  height: 60px;
+  height: var(--button-height);
   color: var(--main-btn-text-color, #ffffff);
   border-radius: 8px;
   font-size: var(--button-font-size);
