@@ -2,25 +2,28 @@ import React from 'react';
 import styled from 'styled-components';
 import Logo from '../../../assets/images/logo.svg';
 import Button from '../Button/Button';
+import InnerLayout from '../layout/InnerLayout/InnerLayout';
 // import userFillIcon from '../../../assets/images/user-fill.svg';
 
 const Header = () => {
   return (
     <HeaderContainer>
-      <HeaderWrapper>
-        <LogoImg src={Logo} alt='여운 로고' />
-        <Nav>
-          <Ul>
-            <Li>관광지</Li>
-            <Li>새 글 작성</Li>
-            <Li>
-              <Button variants='main' size='md'>
-                로그인
-              </Button>
-            </Li>
-          </Ul>
-        </Nav>
-      </HeaderWrapper>
+      <InnerLayout>
+        <HeaderWrapper>
+          <LogoImg src={Logo} alt='여운 로고' />
+          <Nav>
+            <Ul>
+              <Li>관광지</Li>
+              <Li>새 글 작성</Li>
+              <Li>
+                <Button variants='main' size='md'>
+                  로그인
+                </Button>
+              </Li>
+            </Ul>
+          </Nav>
+        </HeaderWrapper>
+      </InnerLayout>
     </HeaderContainer>
   );
 };
@@ -34,8 +37,6 @@ const HeaderContainer = styled.header`
 `;
 
 const HeaderWrapper = styled.div`
-  width: 120rem;
-  margin: 0 auto;
   padding: 1rem 0;
   display: flex;
   align-items: center;
