@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import logo from '../../../assets/images/logo.svg';
 import octocatIcon from '../../../assets/images/octocat-icon.svg';
 import copyrightIcon from '../../../assets/images/copyright-icon.svg';
+import InnerLayout from './../layout/InnerLayout/InnerLayout';
 
 const Footer = () => {
   return (
     <FooterTag>
-      <InnerFooter>
+      <InnerLayout>
         <LogoImg src={logo} alt='여운 로고' />
         <Line></Line>
         <Address>
@@ -17,7 +18,7 @@ const Footer = () => {
           </CopyrightP>
           <OctocatImg src={octocatIcon} alt='옥토캣' />
         </Address>
-      </InnerFooter>
+      </InnerLayout>
     </FooterTag>
   );
 };
@@ -29,11 +30,6 @@ const FooterTag = styled.footer`
   background: var(--main-bg-color);
   height: 30rem;
   padding: 5rem 0 0 0;
-`;
-
-const InnerFooter = styled.div`
-  width: 120rem;
-  margin: 0 auto;
 `;
 
 const LogoImg = styled.img`
