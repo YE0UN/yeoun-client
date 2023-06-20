@@ -6,28 +6,36 @@ import Button from '../Button/Button';
 
 const Header = () => {
   return (
-    <HeaderWrapper>
-      <LogoImg src={Logo} alt='여운 로고' />
-      <Nav>
-        <Ul>
-          <Li>관광지</Li>
-          <Li>새 글 작성</Li>
-          <Li>
-            <Button variants='main' size='md'>
-              로그인
-            </Button>
-          </Li>
-        </Ul>
-      </Nav>
-    </HeaderWrapper>
+    <HeaderContainer>
+      <HeaderWrapper>
+        <LogoImg src={Logo} alt='여운 로고' />
+        <Nav>
+          <Ul>
+            <Li>관광지</Li>
+            <Li>새 글 작성</Li>
+            <Li>
+              <Button variants='main' size='md'>
+                로그인
+              </Button>
+            </Li>
+          </Ul>
+        </Nav>
+      </HeaderWrapper>
+    </HeaderContainer>
   );
 };
 
 export default Header;
 
-const HeaderWrapper = styled.header`
-  min-width: 120rem;
+const HeaderContainer = styled.header`
+  width: 100%;
   height: 10rem;
+  border-bottom: 1px solid var(--border-color);
+`;
+
+const HeaderWrapper = styled.div`
+  width: 120rem;
+  margin: 0 auto;
   padding: 2rem 0;
   display: flex;
   align-items: center;
@@ -37,6 +45,7 @@ const HeaderWrapper = styled.header`
 const LogoImg = styled.img`
   width: 12rem;
   height: 6rem;
+  cursor: pointer;
 `;
 
 const Nav = styled.nav``;
@@ -51,4 +60,5 @@ const Li = styled.li`
   font-size: var(--fs-lg);
   color: var(--sub-text-color);
   font-weight: 700;
+  cursor: pointer;
 `;
