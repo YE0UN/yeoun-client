@@ -27,5 +27,5 @@ const MainContainer = styled.div`
 const SubContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 40rem);
+  min-height: calc(100vh - 38rem);
 `;

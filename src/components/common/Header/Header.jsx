@@ -29,14 +29,14 @@ export default Header;
 
 const HeaderContainer = styled.header`
   width: 100%;
-  height: 10rem;
+  height: 8rem;
   border-bottom: 1px solid var(--border-color);
 `;
 
 const HeaderWrapper = styled.div`
   width: 120rem;
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 1rem 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
