@@ -12,7 +12,8 @@
   --main-text-color: #000000;
   --sub-text-color: #767676;
   --border-color: #d8d8d8;
-  --profile-border-color: #94afc6;
+  --profile-border-color: #767676;
+  --profile-bg-color: #94afc6;
   --alert-color: #e23737;
   --main-btn-color: #577fa0;
   --main-btn-text-color: #ffffff;
@@ -29,9 +30,12 @@
 }
 
 .ellipsis {
-  overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: hidden;
+  display: -webkit-box;
+  word-wrap: break-word;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .sr-only {
