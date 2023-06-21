@@ -8,14 +8,14 @@ const SIZES = {
   `,
   md: css`
     --button-width: 10rem;
-    --button-font-size: var(--fs-lg); // --fs-lg
+    --button-font-size: var(--fs-md); // --fs-lg
     --button-height: 4.5rem;
     --button-radius: 8px;
   `,
   lg: css`
     --button-width: 10rem;
     --button-height: 5.4rem;
-    --button-font-size: var(--fs-lg);
+    --button-font-size: var(--fs-md);
     --button-radius: 8px;
   `,
   xl: css`
