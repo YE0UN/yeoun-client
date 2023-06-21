@@ -22,7 +22,10 @@ const LoginPage = () => {
   const onChangeInputEmail = (e) => {
     const enteredEmail = e.target.value;
 
-    if (validateEmail(enteredEmail) === null) {
+    if (enteredEmail.trim() === '') {
+      setValidateEmailText(''); // 빈 문자열로 설정하여 메시지를 숨깁니다.
+      setValidateEmailNoticeClassname('validate hidden'); // 추가된 CSS 클래스로 메시지를 숨깁니다.
+    } else if (validateEmail(enteredEmail) === null) {
       setValidateEmailText('이메일 형식으로 입력해 주세요');
       setValidateEmailNoticeClassname('validate');
     } else {
@@ -33,11 +36,15 @@ const LoginPage = () => {
 
   const onChangeInputPassword = (e) => {
     const enteredPassword = e.target.value;
-    if (enteredPassword.length < 6) {
+
+    if (enteredPassword.trim() === '') {
+      setvalidatePasswordText(''); // 빈 문자열로 설정하여 메시지를 숨깁니다.
+      setValidatePasswordNoticeClassname('validate hidden'); // 추가된 CSS 클래스로 메시지를 숨깁니다.
+    } else if (enteredPassword.length < 6) {
       setvalidatePasswordText('숫자,문자로 구성된 비밀번호 6글자 이상 입력해주세요');
       setValidatePasswordNoticeClassname('validate');
     } else {
-      setvalidatePasswordText('올바른 비밀번호 형식입니다.');
+      setvalidatePasswordText('비밀번호가 일치합니다');
       setValidatePasswordNoticeClassname('Yeoun-green');
     }
   };
@@ -105,6 +112,7 @@ const LoginPage = () => {
                 name='username'
                 required
                 ref={emailInputRef}
+                autoComplete='off'
                 onChange={onChangeInputEmail}
               />
               <p className={validateEmailNoticeClassname}>{validateEmailText}</p>
@@ -117,6 +125,7 @@ const LoginPage = () => {
                 name='password'
                 required
                 ref={passwordInputRef}
+                autoComplete='off'
                 onChange={onChangeInputPassword}
               />
               <p className={validatePasswordNoticeClassname}>{validatePasswordText}</p>
@@ -184,7 +193,7 @@ const InputWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  height: 400px;
+  height: 40rem;
 `;
 
 const Field = styled.div`
@@ -193,11 +202,19 @@ const Field = styled.div`
   width: 100%;
   input {
     border: solid 1px #ccc;
-    padding: 20px;
+    padding: 2rem;
     border-radius: 4px;
   }
+  input:focus {
+    outline: none !important;
+    border: solid 2px var(--main-btn-color);
+  }
+  input:invalid {
+    background-color: var(--btn-text-color);
+  }
+
   .validate {
-    color: var(--alert-color);
+    color: var(--alert-color) !important;
     padding: 0.5rem;
   }
   p {

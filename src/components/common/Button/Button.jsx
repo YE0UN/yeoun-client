@@ -8,14 +8,14 @@ const SIZES = {
   `,
   md: css`
     --button-width: 10rem;
-    --button-font-size: var(--fs-md); // --fs-lg
+    --button-font-size: var(--fs-lg); // --fs-lg
     --button-height: 4.5rem;
     --button-radius: 8px;
   `,
   lg: css`
     --button-width: 10rem;
     --button-height: 5.4rem;
-    --button-font-size: var(--fs-md);
+    --button-font-size: var(--fs-lg);
     --button-radius: 8px;
   `,
   xl: css`
@@ -27,15 +27,24 @@ const SIZES = {
 };
 
 const VARIANTS = {
+  duplicate: css`
+    --button-height: 6rem;
+    --button-color: var(--btn-text-color);
+    --button-bg-color: var(--main-btn-color);
+    --button-hover-bg-color: var(--main-btn-hover-color);
+    --button-font-weight: 700;
+  `,
   main: css`
     --button-color: var(--btn-text-color);
     --button-bg-color: var(--main-btn-color);
     --button-hover-bg-color: var(--main-btn-hover-color);
+    --button-font-weight: 700;
   `,
   region: css`
     --button-color: var(--btn-text-color);
     --button-bg-color: var(--sub-text-color);
     --button-hover-bg-color: var(--input-border-color);
+    --button-font-weight: 700;
   `,
 };
 const Button = ({ disabled, size, variants, children }) => {
@@ -62,6 +71,7 @@ const MainBtn = styled.button`
   font-size: var(--button-font-size);
   padding: var(--button-padding);
   margin: var(--button-margin);
+  font-weight: var(--button-font-weight);
 
   &:active,
   &:focus,
