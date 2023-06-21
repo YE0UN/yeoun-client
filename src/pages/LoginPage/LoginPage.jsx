@@ -9,8 +9,6 @@ import Button from '../../components/common/Button/Button';
 const LoginPage = () => {
   const [validateEmailText, setValidateEmailText] = useState('');
   const [validatePasswordText, setvalidatePasswordText] = useState('');
-  const [validateDisplayNameText, setValidateDisplayNameText] = useState('');
-  const [validateDisplayNameNoticeClassname, setValidateDisplayNameNoticeClassname] = useState('validate');
   const [validateEmailNoticeClassname, setValidateEmailNoticeClassname] = useState('validate');
   const [validatePasswordNoticeClassname, setValidatePasswordNoticeClassname] = useState('validate');
   const validateEmail = (email) => {
