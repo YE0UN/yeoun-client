@@ -41,10 +41,13 @@ const LoginPage = () => {
       setValidatePasswordNoticeClassname('Yeoun-green');
     }
   };
+
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const navigate = useNavigate();
-
+  const signupHandler = () => {
+    navigate('/users/signup');
+  };
   useEffect(() => {
     if (sessionStorage.getItem('isLogin')) {
       navigate(`/`);
@@ -123,6 +126,9 @@ const LoginPage = () => {
             </Button>
           </InputWrapper>
         </Form>
+        <SignUpLink type='button' onClick={signupHandler}>
+          회원가입
+        </SignUpLink>
       </Layout>
     </InnerLayout>
   );
@@ -159,6 +165,9 @@ const Form = styled.form`
   border-radius: 10px;
   align-items: center;
   font-size: var(--fs-sm);
+  box-shadow: 2px 5px 5px 0px rgba(0, 0, 0, 0.18);
+  -webkit-box-shadow: 2x 5px 5px 0px rgba(0, 0, 0, 0.18);
+  -moz-box-shadow: 2px 5px 5px 0px rgba(0, 0, 0, 0.18);
 `;
 
 const LogoImg = styled.img`
@@ -190,5 +199,17 @@ const Field = styled.div`
   .validate {
     color: var(--alert-color);
     padding: 0.5rem;
+  }
+  p {
+    margin-top: 8px;
+  }
+`;
+const SignUpLink = styled.div`
+  font-size: var(--fs-sm);
+  margin: 30px 15px;
+  font-weight: 700;
+  color: var(--sub-text-color);
+  &:hover {
+    color: var(--main-btn-color);
   }
 `;
