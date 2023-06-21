@@ -9,7 +9,40 @@ import Button from '../../components/common/Button/Button';
 const LoginPage = () => {
   const [validateEmailText, setValidateEmailText] = useState('');
   const [validatePasswordText, setvalidatePasswordText] = useState('');
+  const [validateDisplayNameText, setValidateDisplayNameText] = useState('');
+  const [validateDisplayNameNoticeClassname, setValidateDisplayNameNoticeClassname] = useState('validate');
+  const [validateEmailNoticeClassname, setValidateEmailNoticeClassname] = useState('validate');
+  const [validatePasswordNoticeClassname, setValidatePasswordNoticeClassname] = useState('validate');
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      );
+  };
 
+  const onChangeInputEmail = (e) => {
+    const enteredEmail = e.target.value;
+
+    if (validateEmail(enteredEmail) === null) {
+      setValidateEmailText('이메일 형식으로 입력해 주세요');
+      setValidateEmailNoticeClassname('validate');
+    } else {
+      setValidateEmailText('올바른 이메일 형식입니다.');
+      setValidateEmailNoticeClassname('Yeoun-green');
+    }
+  };
+
+  const onChangeInputPassword = (e) => {
+    const enteredPassword = e.target.value;
+    if (enteredPassword.length < 6) {
+      setvalidatePasswordText('숫자,문자로 구성된 비밀번호 6글자 이상 입력해주세요');
+      setValidatePasswordNoticeClassname('validate');
+    } else {
+      setvalidatePasswordText('올바른 비밀번호 형식입니다.');
+      setValidatePasswordNoticeClassname('Yeoun-green');
+    }
+  };
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const navigate = useNavigate();
@@ -28,6 +61,7 @@ const LoginPage = () => {
           /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         );
     };
+
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
 
@@ -63,8 +97,16 @@ const LoginPage = () => {
         <Form onSubmit={(e) => e.preventDefault()}>
           <InputWrapper>
             <Field>
-              <input type='text' placeholder='아이디' id='email' name='username' required ref={emailInputRef} />
-              <p className='validate'>{validateEmailText}</p>
+              <input
+                type='text'
+                placeholder='아이디'
+                id='email'
+                name='username'
+                required
+                ref={emailInputRef}
+                onChange={onChangeInputEmail}
+              />
+              <p className={validateEmailNoticeClassname}>{validateEmailText}</p>
             </Field>
             <Field>
               <input
@@ -74,8 +116,9 @@ const LoginPage = () => {
                 name='password'
                 required
                 ref={passwordInputRef}
+                onChange={onChangeInputPassword}
               />
-              <p className='validate'>{validatePasswordText}</p>
+              <p className={validatePasswordNoticeClassname}>{validatePasswordText}</p>
             </Field>
             <Button variants='main' size='xl' onClick={usesubmitHandler}>
               로그인
@@ -99,6 +142,15 @@ const Layout = styled.div`
 `;
 
 const Form = styled.form`
+  .validate {
+    color: var(--alert-color);
+    padding: 0.5rem;
+    border-color: var(--alert-color);
+  }
+  .Yeoun-green {
+    color: green;
+    padding: 0.5rem;
+  }
   margin: 0 auto;
   width: 60rem;
   padding: 1.3rem;
