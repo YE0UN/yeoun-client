@@ -4,25 +4,21 @@ const SIZES = {
     --button-width: 6.5rem;
     --button-height: 3.5rem;
     --button-font-size: var(--fs-sm);
-    --button-radius: 8px;
   `,
   md: css`
     --button-width: 10rem;
     --button-font-size: var(--fs-lg); // --fs-lg
     --button-height: 4.5rem;
-    --button-radius: 8px;
   `,
   lg: css`
     --button-width: 10rem;
     --button-height: 5.4rem;
     --button-font-size: var(--fs-lg);
-    --button-radius: 8px;
   `,
   xl: css`
     --button-width: 45rem;
     --button-height: 6rem;
     --button-font-size: var(--fs-lg);
-    --button-radius: 8px;
   `,
 };
 
