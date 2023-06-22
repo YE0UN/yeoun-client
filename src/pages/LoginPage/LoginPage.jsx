@@ -161,7 +161,7 @@ const Form = styled.form`
     border-color: var(--alert-color);
   }
   .Yeoun-green {
-    color: green;
+    color: var(--main-btn-color);
     padding: 0.5rem;
   }
   margin: 0 auto;
