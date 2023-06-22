@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Carousel from '../../../Carousel/Carousel';
-import InnerLayout from '../../../common/layout/InnerLayout/InnerLayout';
-import Post from '../../../common/Post/Post';
-import HeadingLayout from '../../../common/layout/HeadingLayout/HeadingLayout';
-import Button from '../../../common/Button/Button';
+import Carousel from './../../../components/Carousel/Carousel';
+import InnerLayout from '../../../components/common/layout/InnerLayout/InnerLayout';
+import Post from '../../../components/common/Post/Post';
+import HeadingLayout from '../../../components/common/layout/HeadingLayout/HeadingLayout';
+import Button from '../../../components/common/Button/Button';
 import RegionFilterButton from '../RegionFilterButton/RegionFilterButton';
-import chevronUpIcon from '../../../../assets/images/chevron-up-icon.svg';
-import chevronDownIcon from '../../../../assets/images/chevron-down-icon.svg';
-import searchIcon from '../../../../assets/images/search-icon.svg';
+import chevronUpIcon from '../../../assets/images/chevron-up-icon.svg';
+import chevronDownIcon from '../../../assets/images/chevron-down-icon.svg';
+import searchIcon from '../../../assets/images/search-icon.svg';
 
 const HomePage = () => {
   // (지역) 드롭 다운 버튼 클릭 시
@@ -43,6 +43,15 @@ const HomePage = () => {
         <HeadingLayout heading='여행 피드' />
         <Ul>
           <Li>
+            {/* {isClicked ? (
+              <DropDownButtonOverlay
+                onClick={() => {
+                  setIsClicked((cur) => !cur);
+                }}
+              ></DropDownButtonOverlay>
+            ) : (
+              <></>
+            )} */}
             <DropDownButton
               type='button'
               onClick={() => {
@@ -123,6 +132,17 @@ const Li = styled.li`
     display: flex;
   }
 `;
+
+// 빈 화면 클릭 시, 드롭 다운 사라지게 (보류)
+// const DropDownButtonOverlay = styled.div`
+//   position: fixed;
+//   left: 0;
+//   top: 0rem;
+//   width: 100vw;
+//   height: 100vh;
+//   z-index: 1;
+//   background: black;
+// `;
 
 const DropDownButton = styled.button`
   width: 27.4rem;
