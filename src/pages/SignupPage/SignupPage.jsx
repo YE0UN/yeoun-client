@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import InnerLayout from '../../components/common/layout/InnerLayout/InnerLayout';
 import YeounLogo from '../../assets/images/logo.svg';
 import Button from '../../components/common/Button/Button';
-
 const SignupPage = () => {
   const [validateEmailText, setValidateEmailText] = useState('');
   const [validatePasswordText, setValidatePasswordText] = useState('');
@@ -28,12 +27,21 @@ const SignupPage = () => {
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       );
   };
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{6,}$/;
+    return passwordRegex.test(password);
+  };
 
   const navigate = useNavigate();
   const onChangeInputDisplayName = (e) => {
     const enteredDisplayName = e.target.value;
-    if (enteredDisplayName.length < 2) {
-      setValidateDisplayNameText(' 닉네임을 2글자 이상 입력해 주세요 ');
+    if (enteredDisplayName.trim() === '') {
+      setValidateDisplayNameText('');
+      setValidateDisplayNameNoticeClassname('');
+      return;
+    }
+    if (enteredDisplayName.length < 2 || enteredDisplayName.length >= 14) {
+      setValidateDisplayNameText('닉네임을 2글자 이상 15글자 미만으로 입력해 주세요');
       setValidateDisplayNameNoticeClassname('validate');
     } else {
       setValidateDisplayNameText('올바른 닉네임 형식입니다.');
@@ -43,6 +51,12 @@ const SignupPage = () => {
 
   const onChangeInputEmail = (e) => {
     const enteredEmail = e.target.value;
+
+    if (enteredEmail.trim() === '') {
+      setValidateEmailText('');
+      setValidateEmailNoticeClassname('');
+      return;
+    }
 
     if (validateEmail(enteredEmail) === null) {
       setValidateEmailText('이메일 형식으로 입력해 주세요');
@@ -55,24 +69,34 @@ const SignupPage = () => {
 
   const onChangeInputPassword = (e) => {
     const enteredPassword = e.target.value;
-    const enteredPasswordConfirm = passwordConfirm.current.value;
 
-    if (enteredPassword.length < 6) {
-      setValidatePasswordText('숫자 또는 문자로 구성된 비밀번호 6글자 이상 입력해주세요');
+    if (enteredPassword.trim() === '') {
+      setValidatePasswordText('');
+      setValidatePasswordNoticeClassname('');
+    } else if (!validatePassword(enteredPassword)) {
+      setValidatePasswordText('숫자와 문자로 구성된 비밀번호 6글자 이상 입력해주세요');
       setValidatePasswordNoticeClassname('validate');
     } else {
       setValidatePasswordText('');
       setValidatePasswordNoticeClassname('');
     }
+  };
+  const onChangeInputPasswordConfirm = (e) => {
+    const enteredPasswordConfirm = e.target.value;
+    const enteredPassword = passwordInputRef.current.value; // 비밀번호 입력란의 값을 가져옴
 
-    if (enteredPasswordConfirm !== enteredPassword) {
+    if (enteredPasswordConfirm.trim() === '') {
+      setValidatePasswordConfirmText('');
+      setValidatePasswordConfirmTextClassName('');
+    } else if (enteredPasswordConfirm !== enteredPassword) {
       setValidatePasswordConfirmText('비밀번호와 일치하지 않습니다.');
       setValidatePasswordConfirmTextClassName('validate');
     } else {
-      setValidatePasswordConfirmText(''); // 비밀번호가 일치할 때 메시지를 빈 문자열로 설정
-      setValidatePasswordConfirmTextClassName(''); // 클래스 이름도 빈 문자열로 설정
+      setValidatePasswordConfirmText('');
+      setValidatePasswordConfirmTextClassName('');
     }
   };
+
   useEffect(() => {
     if (sessionStorage.getItem('isLogin')) {
       navigate(`/`);
@@ -120,72 +144,71 @@ const SignupPage = () => {
       <Layout>
         <LogoImg src={YeounLogo} alt='여운로고'></LogoImg>
         <Form onSubmit={(e) => e.preventDefault()}>
-          <InputWrapper>
-            <Field>
-              <label htmlFor='displayName'>아이디</label>
-              <div className='button-container'>
-                <input
-                  type='text'
-                  placeholder='아이디'
-                  id='email'
-                  name='username'
-                  required
-                  ref={emailInputRef}
-                  onChange={onChangeInputEmail}
-                />
-                <Button size='lg' onClick={onClickHandler}>
-                  중복확인
-                </Button>
-              </div>
-              <p className={validateEmailNoticeClassname}>{validateEmailText}</p>
-            </Field>
-            <Field>
-              <label htmlFor='nickName'>닉네임</label>
-              <div className='button-container'>
-                <input
-                  type='text'
-                  placeholder='닉네임'
-                  id='nickname'
-                  name='nickname'
-                  required
-                  ref={displaynameInputRef}
-                  onChange={onChangeInputDisplayName}
-                />
-                <Button size='lg' onClick={onClickHandler}>
-                  중복확인
-                </Button>
-              </div>
-              <p className={validateDisplayNameNoticeClassname}>{validateDisplayNameText}</p>
-            </Field>
-            <Field>
-              <label>비밀번호</label>
+          <Field>
+            <label htmlFor='displayName'>아이디</label>
+            <div className='button-container'>
               <input
-                type='password'
-                placeholder='비밀번호'
-                id='password'
-                name='password'
+                type='text'
+                placeholder='아이디'
+                id='email'
+                name='username'
                 required
-                ref={passwordInputRef}
-                onChange={onChangeInputPassword}
+                ref={emailInputRef}
+                onChange={onChangeInputEmail}
               />
-              <p className={validatePasswordNoticeClassname}>{validatePasswordText}</p>
-            </Field>
-            <Field>
-              <label>비밀번호 확인</label>
+              <Button size='lg' onClick={onClickHandler}>
+                중복확인
+              </Button>
+            </div>
+            <P className={validateEmailNoticeClassname}>{validateEmailText}</P>
+          </Field>
+          <Field>
+            <label htmlFor='nickName'>닉네임</label>
+            <div className='button-container'>
               <input
-                type='password'
-                placeholder='비밀번호 확인'
-                id='password-confirm'
-                name='password-confirm'
+                type='text'
+                placeholder='닉네임'
+                id='nickname'
+                name='nickname'
                 required
-                ref={passwordConfirm}
+                ref={displaynameInputRef}
+                onChange={onChangeInputDisplayName}
               />
-              <p className={validatePasswordConfirmTextClassName}>{validatePasswordConfirmText}</p>
-            </Field>
-            <Button variants='main' size='xl' onClick={onClickHandler}>
-              가입하기
-            </Button>
-          </InputWrapper>
+              <Button size='lg' onClick={onClickHandler}>
+                중복확인
+              </Button>
+            </div>
+            <P className={validateDisplayNameNoticeClassname}>{validateDisplayNameText}</P>
+          </Field>
+          <Field>
+            <label>비밀번호</label>
+            <input
+              type='password'
+              placeholder='비밀번호'
+              id='password'
+              name='password'
+              required
+              ref={passwordInputRef}
+              onChange={onChangeInputPassword}
+            />
+            <P className={validatePasswordNoticeClassname}>{validatePasswordText}</P>
+          </Field>
+          <Field>
+            <label>비밀번호 확인</label>
+            <input
+              type='password'
+              placeholder='비밀번호 확인'
+              id='password-confirm'
+              name='password-confirm'
+              required
+              ref={passwordConfirm}
+              onChange={onChangeInputPasswordConfirm}
+            />
+            <P className={validatePasswordConfirmTextClassName}>{validatePasswordConfirmText}</P>
+          </Field>
+          <Button variants='main' size='xl' onClick={onClickHandler}>
+            가입하기
+          </Button>
         </Form>
       </Layout>
     </InnerLayout>
@@ -206,15 +229,13 @@ const Layout = styled.div`
 const Form = styled.form`
   .validate {
     color: var(--alert-color);
-    padding: 0.5rem;
     border-color: var(--alert-color);
   }
   .Yeoun-green {
     color: var(--main-btn-color);
-    padding: 0.5rem;
   }
-  min-width: 60rem;
-  padding: 3rem;
+  width: 60rem;
+  padding: 4rem 5rem;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -232,28 +253,27 @@ const LogoImg = styled.img`
   margin-bottom: 2rem;
 `;
 
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  height: 100%;
-`;
-
 const Field = styled.div`
   display: flex;
-  gap: 16px;
   flex-direction: column;
   width: 100%;
   margin: 1rem 0;
+
+  &:nth-child(4) {
+    margin-bottom: 5.2rem;
+  }
   input {
     border: solid 1px var(--input-border-color);
     padding: 20px;
     border-radius: 4px;
     display: flex;
     gap: 8px;
-    width: 50rem;
+    width: 38.4rem;
     height: 5.4rem;
+
+    &:nth-child(2) {
+      width: 50rem;
+    }
   }
   input:focus {
     outline: none !important;
@@ -270,8 +290,12 @@ const Field = styled.div`
   }
   .button-container {
     display: flex;
-    gap: 8px;
+    gap: 18px;
     align-items: center;
     max-width: 50rem;
   }
+`;
+
+const P = styled.p`
+  margin-top: 0.8rem;
 `;
