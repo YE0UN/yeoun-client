@@ -10,15 +10,15 @@ const Header = () => {
     <HeaderContainer>
       <InnerLayout>
         <HeaderWrapper>
-          <LogoImg src={Logo} alt='여운 로고' />
+          <h1>
+            <LogoImg src={Logo} alt='여운 로고' />
+          </h1>
           <Nav>
             <Ul>
               <Li>관광지</Li>
               <Li>새 글 작성</Li>
               <Li>
-                <Button variants='main' size='md'>
-                  로그인
-                </Button>
+                <Button size='md'>로그인</Button>
               </Li>
             </Ul>
           </Nav>

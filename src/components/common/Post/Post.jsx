@@ -75,9 +75,6 @@ const Post = ({ bookMark, profileImage, userName, content, postImage, likeCount,
 export default Post;
 
 const Article = styled.article`
-  margin: 10rem 0;
-  background: var(--main-bg-color);
-
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
@@ -87,6 +84,7 @@ const Article = styled.article`
   height: 50rem;
   border-radius: 25px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+  background: var(--main-bg-color);
 `;
 
 const BookMark = styled.img`
