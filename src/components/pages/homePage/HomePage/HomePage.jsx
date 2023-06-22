@@ -186,4 +186,5 @@ const PostContainer = styled.div`
   flex-wrap: wrap;
   gap: 3rem;
   margin-top: ${(props) => props.postContainerLayout};
+  margin-bottom: 9rem;
 `;
