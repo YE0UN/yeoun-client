@@ -10,7 +10,9 @@ const Header = () => {
     <HeaderContainer>
       <InnerLayout>
         <HeaderWrapper>
-          <LogoImg src={Logo} alt='여운 로고' />
+          <h1>
+            <LogoImg src={Logo} alt='여운 로고' />
+          </h1>
           <Nav>
             <Ul>
               <Li>관광지</Li>
