@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Footer from '../../Footer/Footer';
 import Header from '../../Header/Header';
 import mapIcon from '../../../../assets/images/map-icon.svg';
 import chevronIcon from '../../../../assets/images/chevron-icon.svg';
+import MapModal from '../../../map/MapModal/MapModal';
 
 // 사이드 버튼은 default로 true이며, 사이드 버튼이 필요없는 페이지는 false로 사용
 const Layout = ({ children, sideButton = true }) => {
   // 지도 버튼 기능
+  const [isClicked, setIsClicked] = useState(false);
+
   const Map = () => {
     console.log('지도 기능이 들어갈 곳입니다.');
+    setIsClicked((cur) => !cur);
   };
 
   // 탑 버튼 기능
@@ -20,9 +24,25 @@ const Layout = ({ children, sideButton = true }) => {
     });
   };
 
+  const CloseButtonHandler = () => {
+    setIsClicked((cur) => !cur);
+  };
+
   return (
     <>
       <MainContainer>
+        {isClicked ? (
+          <>
+            <ModalOverlay
+              onClick={() => {
+                setIsClicked((cur) => !cur);
+              }}
+            ></ModalOverlay>
+            <MapModal CloseButtonHandler={CloseButtonHandler} />
+          </>
+        ) : (
+          <></>
+        )}
         <Header />
         <SubContainer>{children}</SubContainer>
         {sideButton ? (
@@ -54,6 +74,15 @@ const SubContainer = styled.div`
   min-height: calc(100vh - 38rem);
 `;
 
+// 빈 화면 클릭 시, 지도 닫히게
+const ModalOverlay = styled.div`
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 150;
+  background: rgba(0, 0, 0, 0.7);
+`;
+
 const MapButton = styled.button`
   position: fixed;
   bottom: 12.8rem;
@@ -64,6 +93,7 @@ const MapButton = styled.button`
   border: 1px solid var(--sub-text-color);
   background: ${`url(${mapIcon})`} no-repeat center/65% #ffffff;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
   &:hover {
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
   }

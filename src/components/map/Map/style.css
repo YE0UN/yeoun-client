@@ -1,0 +1,25 @@
+.land {
+  fill: #cccccc;
+  fill-opacity: 1;
+  stroke: white;
+  stroke-opacity: 1;
+  stroke-width: 0.5;
+  cursor: pointer;
+}
+
+.land:hover {
+  fill: var(--region-color);
+}
+
+#text {
+  display: none;
+  position: absolute;
+  padding: 0.6rem;
+  border: 1px solid var(--sub-text-color);
+  border-radius: 7px;
+  font-size: var(--fs-md);
+  font-weight: 500;
+  background: var(--main-btn-color);
+  color: var(--main-btn-text-color);
+  white-space: nowrap;
+}
