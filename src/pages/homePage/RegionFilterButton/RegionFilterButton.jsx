@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import checkIcon from '../../../../assets/images/check-icon.svg';
-import deleteLightIcon from '../../../../assets/images/delete-light-icon.svg';
+import checkIcon from '../../../assets/images/check-icon.svg';
+import deleteLightIcon from '../../../assets/images/delete-light-icon.svg';
 
 // 전국을 포함한 지역명
 const regions = [
