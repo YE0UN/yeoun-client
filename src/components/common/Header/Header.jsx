@@ -18,9 +18,7 @@ const Header = () => {
               <Li>관광지</Li>
               <Li>새 글 작성</Li>
               <Li>
-                <Button variants='main' size='md'>
-                  로그인
-                </Button>
+                <Button size='md'>로그인</Button>
               </Li>
             </Ul>
           </Nav>

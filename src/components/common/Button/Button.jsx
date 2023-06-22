@@ -22,7 +22,7 @@ const Button = ({ size, disabled, children, onClickHandler }) => {
   const styleSize = SIZES[size];
 
   return (
-    <MainBtn styleSize={styleSize} disabled={disabled} onClick={() => onClickHandler()}>
+    <MainBtn styleSize={styleSize} disabled={disabled} onClick={() => (onClickHandler ? onClickHandler() : '')}>
       {children}
     </MainBtn>
   );
