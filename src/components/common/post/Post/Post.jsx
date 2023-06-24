@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import userIcon from '../../../assets/images/user-icon.svg';
-import bookMarkIcon from '../../../assets/images/bookmark-icon.svg';
-import bookMarkFillIcon from '../../../assets/images/bookmark-fill-icon.svg';
-import heartIcon from '../../../assets/images/heart-icon.svg';
-import heartFillIcon from '../../../assets/images/heart-fill-icon.svg';
-import commentIcon from '../../../assets/images/comment-icon.svg';
+import userIcon from '../../../../assets/images/user-icon.svg';
+import bookMarkIcon from '../../../../assets/images/bookmark-icon.svg';
+import bookMarkFillIcon from '../../../../assets/images/bookmark-fill-icon.svg';
+import heartIcon from '../../../../assets/images/heart-icon.svg';
+import heartFillIcon from '../../../../assets/images/heart-fill-icon.svg';
+import commentIcon from '../../../../assets/images/comment-icon.svg';
 
 const Post = ({ bookMark, profileImage, userName, content, postImage, likeCount, commentCount, postDate }) => {
   // 유저 프로필 이미지 alt
