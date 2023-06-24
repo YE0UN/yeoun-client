@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import InnerLayout from '../../../components/common/layout/InnerLayout/InnerLayout';
 import HeadingLayout from '../../../components/common/layout/HeadingLayout/HeadingLayout';
 import styled from 'styled-components';
 import UploadPost from '../../../components/common/post/UploadPost/UploadPost';
+import axios from 'axios';
+import { Navigate } from 'react-router-dom';
+import { AuthContextStore } from '../../../context/AuthContext';
 
 const regions = [
   '전국',
@@ -25,9 +28,58 @@ const regions = [
   '세종',
 ];
 
-const CreatePostPage = ({ onClickPostModificationHandler }) => {
+const PostUploadPage = () => {
+  const { userToken } = useContext(AuthContextStore);
+
   const [selectedRegion, setSelectedRegion] = useState('전국');
-  console.log(selectedRegion);
+
+  const [postData, setPostData] = useState({
+    siDo: '',
+    title: '',
+    content: '',
+    img: '',
+    userId: '',
+  });
+
+  // UploadPost.jsx에서 데이터 받아오기
+  const getUploadData = useCallback(
+    (value) => {
+      setPostData({
+        siDo: selectedRegion,
+        title: value.title,
+        content: value.postContent,
+        img: value.imagePreview,
+        userId: userToken,
+      });
+      console.log(selectedRegion);
+      console.log(value.title);
+      console.log(value.postContent);
+      console.log(value.imagePreview);
+    },
+    [userToken, selectedRegion],
+  );
+
+  // 새 글 작성 클릭 기능
+  const onClickPostRegistrationHandler = () => {
+    const option = {
+      url: '여운url/posts',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-type': 'application/json',
+      },
+      data: postData,
+    };
+    axios(option)
+      .then(() => {
+        Navigate('/');
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    console.log('게시물이 업로드 되었습니다!');
+  };
 
   return (
     <>
@@ -43,14 +95,18 @@ const CreatePostPage = ({ onClickPostModificationHandler }) => {
           ))}
         </RegionButtonWrapper>
         <UploadPostLayout>
-          <UploadPost userName='userName' onClickPostModificationHandler={onClickPostModificationHandler} />
+          <UploadPost
+            userName='userName'
+            onClickPostRegistrationHandler={onClickPostRegistrationHandler}
+            getUploadData={getUploadData}
+          />
         </UploadPostLayout>
       </InnerLayout>
     </>
   );
 };
 
-export default CreatePostPage;
+export default PostUploadPage;
 
 const RegionButtonWrapper = styled.ul`
   display: flex;
