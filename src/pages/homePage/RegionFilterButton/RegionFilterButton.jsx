@@ -72,31 +72,29 @@ const RegionFilterButton = ({ isClicked, getRigionsLengthHandler }) => {
 
   return (
     <>
-      <Test>
-        <CheckboxWrapper isClicked={isClicked}>
-          {regions.map((region) => (
-            <CustomLabel key={region}>
-              <CustomInput
-                type='checkbox'
-                checked={selectedRegions.includes(region)}
-                onChange={() => handleRegionChange(region)}
-              />
-              {region}
-            </CustomLabel>
-          ))}
-        </CheckboxWrapper>
-        <RegionButtonWrapper>
-          {selectedRegions.map((region) =>
-            region !== '전국' ? (
-              <RegionButton key={region} onClick={() => handleButtonClick(region)}>
-                {region}
-              </RegionButton>
-            ) : (
-              ''
-            ),
-          )}
-        </RegionButtonWrapper>
-      </Test>
+      <CheckboxWrapper isClicked={isClicked}>
+        {regions.map((region) => (
+          <CustomLabel key={region}>
+            <CustomInput
+              type='checkbox'
+              checked={selectedRegions.includes(region)}
+              onChange={() => handleRegionChange(region)}
+            />
+            {region}
+          </CustomLabel>
+        ))}
+      </CheckboxWrapper>
+      <RegionButtonWrapper>
+        {selectedRegions.map((region) =>
+          region !== '전국' ? (
+            <li key={region}>
+              <RegionButton onClick={() => handleButtonClick(region)}>{region}</RegionButton>
+            </li>
+          ) : (
+            ''
+          ),
+        )}
+      </RegionButtonWrapper>
     </>
   );
 };
@@ -143,7 +141,7 @@ const CustomInput = styled.input`
 `;
 
 // 지역 버튼
-const RegionButtonWrapper = styled.div`
+const RegionButtonWrapper = styled.ul`
   /* width: 120rem; */
   top: 5.7rem;
   left: 29rem;
@@ -165,9 +163,4 @@ const RegionButton = styled.button`
   &:hover {
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
   }
-`;
-
-const Test = styled.div`
-  background-color: aliceblue;
-  display: flex;
 `;

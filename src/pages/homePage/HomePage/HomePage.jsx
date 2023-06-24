@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Carousel from './../../../components/Carousel/Carousel';
 import InnerLayout from '../../../components/common/layout/InnerLayout/InnerLayout';
-import Post from '../../../components/common/Post/Post';
+import Post from '../../../components/common/post/Post/Post';
 import HeadingLayout from '../../../components/common/layout/HeadingLayout/HeadingLayout';
 import Button from '../../../components/common/Button/Button';
 import RegionFilterButton from '../RegionFilterButton/RegionFilterButton';
