@@ -30,6 +30,8 @@
   --modal-bg-color: #e4e9ea;
   --main-bg-color: #eceeee;
   --region-color: #9bccea;
+  --region-btn-color-active: #94afc6;
+  --image-label-bg: #d9d9d9;
 }
 
 .ellipsis {
