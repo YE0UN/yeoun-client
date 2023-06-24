@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
 import Button from '../../Button/Button';
@@ -12,16 +12,27 @@ const UploadPost = ({
   postImage,
   likeCount,
   commentCount,
+
+  buttonName,
+
+  getUploadData,
+  getModificationData,
+
+  onClickPostRegistrationHandler,
   onClickPostModificationHandler,
+
+  initialTitle,
+  initialContent,
+  initialImage,
 }) => {
   // 유저 프로필 이미지 alt
   const ProfileImgAlt = `${userName} 이미지`;
 
-  const [title, setTitle] = useState('');
-  const [postContent, setPostContent] = useState('');
+  const [title, setTitle] = useState(initialTitle ? initialTitle : '');
+  const [postContent, setPostContent] = useState(initialContent ? initialContent : '');
+  const [imagePreview, setImagePreview] = useState(initialImage ? initialImage : null);
   const [isTitleValid, setIsTitleValid] = useState(false);
   const [isContentValid, setIsContentValid] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
 
   // 제목
   const handleTitleChange = (e) => {
@@ -49,14 +60,6 @@ const UploadPost = ({
     }
   };
 
-  // 작성완료 버튼 기능
-  const handlePostSubmit = () => {
-    if (title !== '' && postContent !== '') {
-      // 게시물 작성 완료 시 처리할 로직이 들어갈 곳
-      console.log('게시물 작성 완료!');
-    }
-  };
-
   // 게시물 업로드 날짜 및 시간 가져오기
   const getCurrentDate = () => {
     const date = new Date();
@@ -68,6 +71,22 @@ const UploadPost = ({
 
     return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}`;
   };
+
+  // 새 글 작성 페이지로 데이터 보내기
+  useEffect(() => {
+    if (getUploadData) {
+      getUploadData({ title, postContent, imagePreview });
+      console.log('새 글 작성 페이지로 데이터 보내기');
+    }
+  }, [title, postContent, imagePreview, getUploadData]);
+
+  // 글 수정 페이지로 데이터 보내기
+  useEffect(() => {
+    if (getModificationData) {
+      getModificationData({ title, postContent, imagePreview });
+      console.log('글 수정 페이지로 데이터 보내기');
+    }
+  }, [title, postContent, imagePreview, getModificationData]);
 
   return (
     <>
@@ -100,10 +119,12 @@ const UploadPost = ({
           <PostDateSpan>{getCurrentDate()}</PostDateSpan>
           <Button
             size='md'
-            onClickHandler={onClickPostModificationHandler ? onClickPostModificationHandler : handlePostSubmit}
+            onClickHandler={
+              onClickPostRegistrationHandler ? onClickPostRegistrationHandler : onClickPostModificationHandler
+            }
             disabled={!isTitleValid || !isContentValid}
           >
-            작성완료
+            {buttonName ? buttonName : '작성완료'}
           </Button>
         </PostInfo>
       </Article>
