@@ -1,232 +1,163 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import InnerLayout from '../../components/common/layout/InnerLayout/InnerLayout';
-import YeounLogo from '../../assets/images/logo.svg';
-import Button from '../../components/common/Button/Button';
+import Button from './../../components/common/Button/Button';
+import axios from 'axios';
+import { AuthContextStore } from '../../context/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
+import HeadingLayout from './../../components/common/layout/HeadingLayout/HeadingLayout';
 
-const LoginPage = () => {
-  const [validateEmailText, setValidateEmailText] = useState('');
-  const [validatePasswordText, setvalidatePasswordText] = useState('');
-  const [validateEmailNoticeClassname, setValidateEmailNoticeClassname] = useState('validate');
-  const [validatePasswordNoticeClassname, setValidatePasswordNoticeClassname] = useState('validate');
-  const validateEmail = (email) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      );
-  };
-
-  const onChangeInputEmail = (e) => {
-    const enteredEmail = e.target.value;
-
-    if (enteredEmail.trim() === '') {
-      setValidateEmailText(''); // 빈 문자열로 설정하여 메시지를 숨깁니다.
-      setValidateEmailNoticeClassname('validate hidden'); // 추가된 CSS 클래스로 메시지를 숨깁니다.
-    } else if (validateEmail(enteredEmail) === null) {
-      setValidateEmailText('이메일 형식으로 입력해 주세요');
-      setValidateEmailNoticeClassname('validate');
-    } else {
-      setValidateEmailText('올바른 이메일 형식입니다.');
-      setValidateEmailNoticeClassname('Yeoun-green');
-    }
-  };
-
-  const onChangeInputPassword = (e) => {
-    const enteredPassword = e.target.value;
-
-    if (enteredPassword.trim() === '') {
-      setvalidatePasswordText(''); // 빈 문자열로 설정하여 메시지를 숨깁니다.
-      setValidatePasswordNoticeClassname('validate hidden'); // 추가된 CSS 클래스로 메시지를 숨깁니다.
-    } else if (enteredPassword.length < 6) {
-      setvalidatePasswordText('숫자,문자로 구성된 비밀번호 6글자 이상 입력해주세요');
-      setValidatePasswordNoticeClassname('validate');
-    } else {
-      setvalidatePasswordText('비밀번호가 일치합니다');
-      setValidatePasswordNoticeClassname('Yeoun-green');
-    }
-  };
-
-  const emailInputRef = useRef();
-  const passwordInputRef = useRef();
+const Login = () => {
+  const { setUserId } = useContext(AuthContextStore);
   const navigate = useNavigate();
-  const signupHandler = () => {
-    navigate('/users/signup');
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isValidEmail, setIsValidEmail] = useState(false);
+  const [isValidPassword, setIsValidPassword] = useState(false);
+  const [loginFail, setLoginFail] = useState(false);
+
+  const onChangeEmailHandler = (e) => {
+    setEmail(e.target.value);
   };
-  useEffect(() => {
-    if (sessionStorage.getItem('isLogin')) {
-      navigate(`/`);
-    }
-  }, []);
-  const usesubmitHandler = async (e) => {
-    e.preventDefault();
-    const validateEmail = (email) => {
-      return String(email)
-        .toLowerCase()
-        .match(
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        );
+
+  const onChangePasswordHandler = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleLogin = () => {
+    const option = {
+      url: 'http://localhost:3000/users/signin',
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      data: {
+        email: email,
+        password: password,
+      },
     };
 
-    const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = passwordInputRef.current.value;
-
-    if (validateEmail(enteredEmail) === null) {
-      setValidateEmailText('이메일 형식을 입력해 주세요');
-      return;
-    }
-
-    if (enteredPassword.length < 6) {
-      setvalidatePasswordText('비밀번호 6글자 이상 입력해주세요');
-      return;
-    }
-    try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/user/signin`, {
-        email: enteredEmail,
-        password: enteredPassword,
-      });
-
-      if (response.status === 200) {
-        sessionStorage.setItem('isLogin', true);
+    axios(option)
+      .then((res) => {
+        console.log('로그인 성공!');
+        setLoginFail(false);
+        saveUserInfo(res);
         navigate('/');
-      } else {
-        // Handle unsuccessful login here
-      }
-    } catch (error) {
-      // Handle error here
-    }
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.status === 404) {
+            console.log('아이디 또는 비밀번호가 일치하지 않습니다.');
+            setLoginFail(true);
+          }
+        }
+        console.log(err);
+      });
   };
+
+  const saveUserInfo = (res) => {
+    const userId = res.data.userId;
+    localStorage.setItem('userId', userId);
+    setUserId(userId);
+  };
+
   return (
-    <InnerLayout>
-      <Layout>
-        <LogoImg src={YeounLogo} alt='여운로고'></LogoImg>
-        <Form onSubmit={(e) => e.preventDefault()}>
-          <InputWrapper>
-            <Field>
-              <input
+    <>
+      <InnerLayout>
+        <HeadingLayout heading='로그인' />
+        <LoginContainer>
+          <InputContainer>
+            <EmailWrapper>
+              <Input
                 type='text'
                 placeholder='아이디'
-                id='email'
-                name='username'
-                required
-                ref={emailInputRef}
-                autoComplete='off'
-                onChange={onChangeInputEmail}
+                value={email}
+                onChange={onChangeEmailHandler}
+                isValidEmail={isValidEmail}
               />
-              <p className={validateEmailNoticeClassname}>{validateEmailText}</p>
-            </Field>
-            <Field>
-              <input
+            </EmailWrapper>
+            <PasswordWrapper>
+              <Input
                 type='password'
                 placeholder='비밀번호'
-                id='password'
-                name='password'
-                required
-                ref={passwordInputRef}
-                autoComplete='off'
-                onChange={onChangeInputPassword}
+                value={password}
+                onChange={onChangePasswordHandler}
+                isValidPassword={isValidPassword}
               />
-              <p className={validatePasswordNoticeClassname}>{validatePasswordText}</p>
-            </Field>
-            <Button variants='main' size='xl' onClick={usesubmitHandler}>
-              로그인
-            </Button>
-          </InputWrapper>
-        </Form>
-        <SignUpLink type='button' onClick={signupHandler}>
-          회원가입
-        </SignUpLink>
-      </Layout>
-    </InnerLayout>
+            </PasswordWrapper>
+          </InputContainer>
+          <ErrorMsg show={loginFail}>아이디 또는 비밀번호가 일치하지 않습니다.</ErrorMsg>
+          <Button size='xl' disabled={!email || !password} onClickHandler={handleLogin}>
+            로그인
+          </Button>
+        </LoginContainer>
+        <LinkCustom to='/join'>회원가입</LinkCustom>
+      </InnerLayout>
+    </>
   );
 };
 
-export default LoginPage;
+export default Login;
 
-const Layout = styled.div`
-  height: 100vh;
-  width: 100%;
+const LoginContainer = styled.div`
   display: flex;
-  align-items: center;
   flex-direction: column;
-  justify-content: center;
-`;
-
-const Form = styled.form`
-  .validate {
-    color: var(--alert-color);
-    padding: 0.5rem;
-    border-color: var(--alert-color);
-  }
-  .Yeoun-green {
-    color: var(--main-btn-color);
-    padding: 0.5rem;
-  }
-  margin: 0 auto;
+  align-items: center;
   width: 60rem;
-  padding: 1.3rem;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  border: 1px solid #ccc;
+  height: 35rem;
+  padding: 5rem 5rem 4rem;
+  margin: 12rem auto 0;
+  border: 1px solid var(--input-border-color);
   border-radius: 10px;
-  align-items: center;
-  font-size: var(--fs-sm);
-  box-shadow: 2px 5px 5px 0px rgba(0, 0, 0, 0.18);
-  -webkit-box-shadow: 2x 5px 5px 0px rgba(0, 0, 0, 0.18);
-  -moz-box-shadow: 2px 5px 5px 0px rgba(0, 0, 0, 0.18);
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const LogoImg = styled.img`
-  width: 12rem;
-  height: 6rem;
-  align-items: center;
-  cursor: pointer;
-  margin-bottom: 2rem;
-`;
-
-const InputWrapper = styled.div`
-  display: flex;
-  width: 45rem;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  height: 40rem;
-`;
-
-const Field = styled.div`
+const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  input {
-    border: solid 1px #ccc;
-    padding: 2rem;
-    border-radius: 4px;
-  }
-  input:focus {
-    outline: none !important;
-    border: solid 2px var(--main-btn-color);
-  }
-  input:invalid {
-    background-color: var(--btn-text-color);
-  }
+  gap: 3.5rem;
+`;
 
-  .validate {
-    color: var(--alert-color) !important;
-    padding: 0.5rem;
-  }
-  p {
-    margin-top: 8px;
+const EmailWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const PasswordWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Input = styled.input`
+  width: 50rem;
+  height: 5.4rem;
+  padding: 1.5rem;
+  font-size: var(--fs-md);
+  font-weight: 500;
+  border: 1px solid var(--input-border-color);
+  border-radius: 8px;
+  outline: none;
+  &:focus {
+    border: 1px solid var(--input-border-focus-color);
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   }
 `;
-const SignUpLink = styled.div`
+
+const ErrorMsg = styled.strong`
+  align-self: flex-start;
   font-size: var(--fs-sm);
-  margin: 30px 15px;
-  font-weight: 700;
+  margin: 1rem 0 3rem;
+  color: var(--main-alert-color);
+  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
+`;
+
+const LinkCustom = styled(Link)`
+  width: 6rem;
+  display: flex;
+  justify-content: center;
+  margin: 4rem auto 12rem;
+  font-size: var(--fs-sm);
   color: var(--sub-text-color);
   &:hover {
-    color: var(--main-btn-color);
+    transform: scale(1.05);
   }
 `;
