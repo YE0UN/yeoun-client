@@ -32,7 +32,7 @@ export default Button;
 
 const MainBtn = styled.button`
   ${(p) => p.styleSize}
-  width: var(--button-width);
+  min-width: var(--button-width);
   height: var(--button-height);
   font-size: var(--button-font-size);
   font-weight: 700;
