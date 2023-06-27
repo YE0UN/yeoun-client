@@ -4,7 +4,7 @@ import HeadingLayout from '../../../components/common/layout/HeadingLayout/Headi
 import styled from 'styled-components';
 import UploadPost from '../../../components/common/post/UploadPost/UploadPost';
 import axios from 'axios';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../context/AuthContext';
 
 const regions = [
@@ -29,7 +29,9 @@ const regions = [
 ];
 
 const PostUploadPage = () => {
-  const { userToken } = useContext(AuthContextStore);
+  const { userId } = useContext(AuthContextStore);
+
+  const navigate = useNavigate();
 
   const [selectedRegion, setSelectedRegion] = useState('전국');
 
@@ -49,33 +51,52 @@ const PostUploadPage = () => {
         title: value.title,
         content: value.postContent,
         img: value.imagePreview,
-        userId: userToken,
+        userId: userId,
       });
       console.log(selectedRegion);
       console.log(value.title);
       console.log(value.postContent);
       console.log(value.imagePreview);
     },
-    [userToken, selectedRegion],
+    [userId, selectedRegion],
   );
 
   // 새 글 작성 클릭 기능
+  // const onClickPostRegistrationHandler = () => {
+  //   const option = {
+  //     url: '여운url/posts',
+  //     method: 'POST',
+  //     headers: {
+  //       Authorization: `Bearer ${userToken}`,
+  //       'Content-type': 'application/json',
+  //     },
+  //     data: postData,
+  //   };
+  //   axios(option)
+  //     .then(() => {
+  //       Navigate('/');
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+
+  // };
+
   const onClickPostRegistrationHandler = () => {
     const option = {
-      url: '여운url/posts',
+      url: 'http://localhost:3000/posts',
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        'Content-type': 'application/json',
-      },
       data: postData,
     };
+
     axios(option)
-      .then(() => {
-        Navigate('/');
+      .then((res) => {
+        // 작성 성공 시
+        console.log(res);
+        navigate('/');
       })
       .catch((err) => {
-        console.error(err);
+        console.log(err);
       });
 
     console.log('게시물이 업로드 되었습니다!');
