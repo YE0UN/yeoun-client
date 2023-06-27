@@ -4,7 +4,7 @@ import HeadingLayout from '../../../components/common/layout/HeadingLayout/Headi
 import styled from 'styled-components';
 import UploadPost from '../../../components/common/post/UploadPost/UploadPost';
 import axios from 'axios';
-import { Navigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContextStore } from '../../../context/AuthContext';
 
 const regions = [
@@ -29,13 +29,15 @@ const regions = [
 ];
 
 const PostModificationPage = () => {
-  const { userToken } = useContext(AuthContextStore);
+  const { userId } = useContext(AuthContextStore);
   const params = useParams();
 
-  const [selectedRegion, setSelectedRegion] = useState('전국');
+  const navigate = useNavigate();
+  console.log(params);
 
   // 게시물 내용 상태값
   const [postContent, setPostContent] = useState(null);
+  console.log(postContent);
 
   // UploadPost.jsx에서 데이터 가져와 사용하기
   const [postData, setPostData] = useState({
@@ -46,6 +48,9 @@ const PostModificationPage = () => {
     userId: '',
   });
 
+  const [selectedRegion, setSelectedRegion] = useState('');
+  console.log(selectedRegion);
+
   // UploadPost.jsx에서 title, content, img 데이터 받아오기
   const getModificationData = useCallback(
     (value) => {
@@ -54,14 +59,14 @@ const PostModificationPage = () => {
         title: value.title,
         content: value.postContent,
         img: value.imagePreview,
-        userId: userToken,
+        userId: userId,
       });
       console.log(selectedRegion);
       console.log(value.title);
       console.log(value.postContent);
       console.log(value.imagePreview);
     },
-    [userToken, selectedRegion],
+    [userId, selectedRegion],
   );
 
   // 서버에서 게시물 데이터 가져오기
@@ -70,44 +75,56 @@ const PostModificationPage = () => {
 
     const GetPostInfo = async () => {
       const option = {
-        url: `여운url/posts/${params.postid}`,
+        url: `http://localhost:3000/posts/${params.id}`,
         method: 'GET',
-        headers: { Authorization: `Bearer ${userToken}`, 'Content-type': 'application/json' },
       };
 
       await axios(option)
         .then((res) => {
           console.log(res);
-          // setPostContent(res)
+          setPostContent(res.data);
+          setSelectedRegion(res.data.siDo);
         })
         .catch((err) => {
           console.error(err);
         });
     };
     GetPostInfo();
-  }, [userToken, params]);
+  }, [userId, params]);
 
   // 수정하기 클릭 기능
-  const onClickPostModificationHandler = () => {
+  const onClickPostModificationHandler = async () => {
     const option = {
-      url: `여운url/posts/${params.productid}`,
+      url: `http://localhost:3000/posts/${params.id}`,
       method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        'Content-type': 'application/json',
-      },
       data: postData,
     };
 
-    axios(option)
+    await axios(option)
       .then(() => {
-        Navigate('/');
+        console.log('게시물이 수정 되었습니다!');
+        navigate('/');
       })
       .catch((err) => {
         console.error(err);
       });
+  };
 
-    console.log('게시물이 수정 되었습니다!');
+  const onClickRemovePostHandler = async () => {
+    const option = {
+      url: `http://localhost:3000/posts/${params.id}`,
+      method: 'DELETE',
+      data: { userId: userId },
+    };
+
+    await axios(option)
+      .then(() => {
+        console.log('게시물이 삭제 되었습니다!');
+        navigate('/');
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
@@ -124,15 +141,22 @@ const PostModificationPage = () => {
           ))}
         </RegionButtonWrapper>
         <UploadPostLayout>
-          <UploadPost
-            userName='userName'
-            buttonName='수정완료'
-            onClickPostModificationHandler={onClickPostModificationHandler}
-            getModificationData={getModificationData}
-            // initialTitle={postContent.title} // 게시물 제목을 초기값으로 설정
-            // initialContent={postContent.content} // 게시물 내용을 초기값으로 설정
-            // initialImage={postContent.image} // 게시물 이미지를 초기값으로 설정
-          />
+          {postContent ? (
+            <UploadPost
+              userName='userName'
+              buttonName='수정완료'
+              onClickPostModificationHandler={onClickPostModificationHandler}
+              onClickRemovePostHandler={onClickRemovePostHandler}
+              getModificationData={getModificationData}
+              initialRegion={postContent.siDo}
+              initialTitle={postContent.title} // 게시물 제목을 초기값으로 설정
+              initialContent={postContent.content} // 게시물 내용을 초기값으로 설정
+              initialImage={postContent.img} // 게시물 이미지를 초기값으로 설정
+              params={params} // 버튼 활성화를 위해 전달
+            />
+          ) : (
+            <></>
+          )}
         </UploadPostLayout>
       </InnerLayout>
     </>

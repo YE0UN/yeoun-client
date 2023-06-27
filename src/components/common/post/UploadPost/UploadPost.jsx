@@ -14,12 +14,14 @@ const UploadPost = ({
   commentCount,
 
   buttonName,
+  params,
 
   getUploadData,
   getModificationData,
 
   onClickPostRegistrationHandler,
   onClickPostModificationHandler,
+  onClickRemovePostHandler,
 
   initialTitle,
   initialContent,
@@ -99,6 +101,7 @@ const UploadPost = ({
         <TitleInput
           type='text'
           placeholder='제목'
+          maxLength='50'
           autoFocus
           value={title}
           onChange={handleTitleChange}
@@ -106,6 +109,7 @@ const UploadPost = ({
         />
         <ContentTextArea
           placeholder='내용'
+          maxLength='600'
           value={postContent}
           onChange={handleContentChange}
           isValid={isContentValid}
@@ -116,13 +120,20 @@ const UploadPost = ({
         <ImageInput id='contentImage' type='file' accept='image/*' onChange={handleImageChange} />
 
         <PostInfo>
-          <PostDateSpan>{getCurrentDate()}</PostDateSpan>
+          <SpanWrapper>
+            <PostDateSpan>{getCurrentDate()}</PostDateSpan>
+            {onClickRemovePostHandler ? (
+              <RemoveSpan onClick={onClickRemovePostHandler}>게시물 삭제하기</RemoveSpan>
+            ) : (
+              <></>
+            )}
+          </SpanWrapper>
           <Button
             size='md'
             onClickHandler={
               onClickPostRegistrationHandler ? onClickPostRegistrationHandler : onClickPostModificationHandler
             }
-            disabled={!isTitleValid || !isContentValid}
+            disabled={params ? false : !isTitleValid || !isContentValid}
           >
             {buttonName ? buttonName : '작성완료'}
           </Button>
@@ -140,7 +151,7 @@ const Article = styled.article`
   gap: 1.6rem;
   padding: 3rem;
   width: 58rem;
-  height: 84.5rem;
+  height: 82.5rem;
   border-radius: 25px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
   background: var(--main-bg-color);
@@ -204,7 +215,7 @@ const ImageInput = styled.input`
 
 const ImageLabel = styled.label`
   display: block;
-  width: 100%;
+  width: 52rem;
   height: 38rem;
   border-radius: 30px;
   cursor: pointer;
@@ -212,10 +223,11 @@ const ImageLabel = styled.label`
 `;
 
 const ImagePreview = styled.img`
-  width: 100%;
+  width: 52rem;
   height: 38rem;
   border-radius: 30px;
   border: 1px solid var(--input-border-color);
+  object-fit: cover;
 `;
 
 // 하단 날짜 및 작성완료 버튼
@@ -225,6 +237,25 @@ const PostInfo = styled.div`
   justify-content: space-between;
 `;
 
+// 게시물 시간, 게시물 삭제
+const SpanWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: baseline;
+  gap: 1.4em;
+`;
+
 const PostDateSpan = styled.span`
   color: var(--sub-text-color);
+`;
+
+const RemoveSpan = styled.span`
+  font-size: var(--fs-sm);
+  color: var(--sub-text-color);
+  cursor: pointer;
+  &:hover {
+    border-radius: 4px;
+    background: var(--sub-text-color);
+    color: #ffffff;
+  }
 `;
