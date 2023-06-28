@@ -42,6 +42,7 @@ const Login = () => {
         setLoginFail(false);
         saveUserInfo(res);
         navigate('/');
+        window.location.reload();
       })
       .catch((err) => {
         if (err.response) {

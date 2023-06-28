@@ -6,6 +6,7 @@ import UploadPost from '../../../components/common/post/UploadPost/UploadPost';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContextStore } from '../../../context/AuthContext';
+import Loading from '../../../components/Loading/Loading';
 
 const regions = [
   '전국',
@@ -34,6 +35,10 @@ const PostModificationPage = () => {
 
   const navigate = useNavigate();
   console.log(params);
+
+  // 로딩 중
+  const [isLoading, setIsLoading] = useState(false);
+  const [description, setDescription] = useState('데이터를 불러오는 중입니다...');
 
   // 게시물 내용 상태값
   const [postContent, setPostContent] = useState(null);
@@ -84,9 +89,11 @@ const PostModificationPage = () => {
           console.log(res);
           setPostContent(res.data);
           setSelectedRegion(res.data.siDo);
+          setIsLoading(true);
         })
         .catch((err) => {
           console.error(err);
+          setIsLoading(true);
         });
     };
     GetPostInfo();
@@ -94,6 +101,8 @@ const PostModificationPage = () => {
 
   // 수정하기 클릭 기능
   const onClickPostModificationHandler = async () => {
+    setIsLoading(false);
+    setDescription('게시물을 수정 중입니다...');
     const option = {
       url: `http://localhost:3000/posts/${params.id}`,
       method: 'PUT',
@@ -102,7 +111,6 @@ const PostModificationPage = () => {
 
     await axios(option)
       .then(() => {
-        console.log('게시물이 수정 되었습니다!');
         navigate('/');
       })
       .catch((err) => {
@@ -110,7 +118,10 @@ const PostModificationPage = () => {
       });
   };
 
+  // 삭제하기
   const onClickRemovePostHandler = async () => {
+    setIsLoading(false);
+    setDescription('게시물을 삭제 중입니다...');
     const option = {
       url: `http://localhost:3000/posts/${params.id}`,
       method: 'DELETE',
@@ -119,7 +130,6 @@ const PostModificationPage = () => {
 
     await axios(option)
       .then(() => {
-        console.log('게시물이 삭제 되었습니다!');
         navigate('/');
       })
       .catch((err) => {
@@ -140,24 +150,28 @@ const PostModificationPage = () => {
             </li>
           ))}
         </RegionButtonWrapper>
-        <UploadPostLayout>
-          {postContent ? (
-            <UploadPost
-              userName='userName'
-              buttonName='수정완료'
-              onClickPostModificationHandler={onClickPostModificationHandler}
-              onClickRemovePostHandler={onClickRemovePostHandler}
-              getModificationData={getModificationData}
-              initialRegion={postContent.siDo}
-              initialTitle={postContent.title} // 게시물 제목을 초기값으로 설정
-              initialContent={postContent.content} // 게시물 내용을 초기값으로 설정
-              initialImage={postContent.img} // 게시물 이미지를 초기값으로 설정
-              params={params} // 버튼 활성화를 위해 전달
-            />
-          ) : (
-            <></>
-          )}
-        </UploadPostLayout>
+        {isLoading ? (
+          <UploadPostLayout>
+            {postContent ? (
+              <UploadPost
+                nickname={postContent.user.nickname}
+                buttonName='수정완료'
+                onClickPostModificationHandler={onClickPostModificationHandler}
+                onClickRemovePostHandler={onClickRemovePostHandler}
+                getModificationData={getModificationData}
+                initialRegion={postContent.siDo}
+                initialTitle={postContent.title} // 게시물 제목을 초기값으로 설정
+                initialContent={postContent.content} // 게시물 내용을 초기값으로 설정
+                initialImage={postContent.img} // 게시물 이미지를 초기값으로 설정
+                params={params} // 버튼 활성화를 위해 전달
+              />
+            ) : (
+              <></>
+            )}
+          </UploadPostLayout>
+        ) : (
+          <Loading description={description} margin='20rem' />
+        )}
       </InnerLayout>
     </>
   );

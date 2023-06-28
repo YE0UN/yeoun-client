@@ -7,10 +7,14 @@ import { useParams } from 'react-router-dom';
 import { AuthContextStore } from '../../../context/AuthContext';
 import axios from 'axios';
 import styled from 'styled-components';
+import Loading from './../../../components/Loading/Loading';
 
 const PostDetailPage = () => {
   const { userId } = useContext(AuthContextStore);
   const params = useParams();
+
+  // 로딩 중
+  const [isLoading, setIsLoading] = useState(false);
 
   // 게시물 내용 상태값
   const [postContent, setPostContent] = useState(null);
@@ -30,9 +34,11 @@ const PostDetailPage = () => {
         .then((res) => {
           console.log(res);
           setPostContent(res.data);
+          setIsLoading(true);
         })
         .catch((err) => {
           console.error(err);
+          setIsLoading(true);
         });
     };
     GetPostInfo();
@@ -42,7 +48,7 @@ const PostDetailPage = () => {
     <>
       <InnerLayout>
         <HeadingLayout heading='게시물 상세' />
-        {postContent ? (
+        {postContent && isLoading ? (
           <PostLayout>
             <PostContent
               profileImage={postContent.user.profileImage}
@@ -59,7 +65,7 @@ const PostDetailPage = () => {
             <PostComment profileImage={''} nickname={'익명'} comment={'댓글 테스트'} createdAt={'2023년 06월 28일'} />
           </PostLayout>
         ) : (
-          <></>
+          <Loading description='데이터를 불러오는 중입니다...' margin='20rem' />
         )}
       </InnerLayout>
     </>

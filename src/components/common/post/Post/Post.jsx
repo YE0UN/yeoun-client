@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
 import bookMarkIcon from '../../../../assets/images/bookmark-icon.svg';
@@ -7,8 +7,10 @@ import heartIcon from '../../../../assets/images/heart-icon.svg';
 import heartFillIcon from '../../../../assets/images/heart-fill-icon.svg';
 import commentIcon from '../../../../assets/images/comment-icon.svg';
 import { useNavigate } from 'react-router-dom';
+import { AuthContextStore } from '../../../../context/AuthContext';
 
 const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, createdAt, postId }) => {
+  const { userId } = useContext(AuthContextStore);
   const navigate = useNavigate();
 
   // 유저 프로필 이미지 alt
@@ -22,6 +24,11 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
 
   // 좋아요 카운트 기능
   const [likeCountSpan, setLikeCountSpan] = useState(2);
+
+  // 게시물 내용 클릭 시, 상세 게시물 페이지로 이동
+  const onClickMovePageHandler = () => {
+    userId ? navigate(`/post/${postId}`) : alert('로그인 후 이용 가능합니다.');
+  };
 
   return (
     <>
@@ -39,12 +46,7 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
           {/* <ProfileImg src={profileImage} alt={ProfileImgAlt} /> */}
           <UserNameP>{nickname}</UserNameP>
         </ProfileInfoDiv>
-        <ContentP
-          className='ellipsis'
-          onClick={() => {
-            navigate(`/post/${postId}`);
-          }}
-        >
+        <ContentP className='ellipsis' onClick={onClickMovePageHandler}>
           {content}
         </ContentP>
         {/* <ContentImg src={'https://source.unsplash.com/random/?trip'} /> */}
@@ -53,16 +55,14 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
             src={img}
             alt=''
             onError={(e) => {
-              console.log('이미지 불러오기 오류');
-              e.target.src = 'https://source.unsplash.com/random/?trip';
+              console.log('이미지 불러오기 오류! 랜덤 이미지로 대체합니다.');
+              e.target.src = 'https://picsum.photos/600/600/?random';
             }}
-            onClick={() => {
-              navigate(`/post/${postId}`);
-            }}
+            onClick={onClickMovePageHandler}
           />
         ) : (
           <ContentImg
-            src={'https://source.unsplash.com/random/?trip'}
+            src={'https://picsum.photos/600/600/?random'}
             alt=''
             onClick={() => {
               navigate(`/post/${postId}`);
