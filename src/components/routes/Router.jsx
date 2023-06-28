@@ -11,7 +11,9 @@ import LoginPage from './../../pages/LoginPage/LoginPage';
 import PostUploadPage from '../../pages/postPage/PostUploadPage/PostUploadPage';
 import PostModificationPage from '../../pages/postPage/PostModificationPage/PostModificationPage';
 import PostDetailPage from '../../pages/postPage/postDetailPage/PostDetailPage';
+import ProgileSettingsPage from '../../pages/ProfileSettingsPage/ProgileSettingsPage';
 import NotFoundPage from '../../pages/NotFoundPage/NotFoundPage';
+import Mypage from '../../pages/myPage/MyPage/Mypage';
 
 const Router = () => {
   const { userId } = useContext(AuthContextStore);
@@ -31,6 +33,8 @@ const Router = () => {
         <Route path='/post' element={<PostUploadPage />} />
         <Route path='/post/:postId' element={<PostDetailPage />} />
         <Route path='/post/edit/:id' element={<PostModificationPage />} />
+        <Route path='/mypage' element={<Mypage />} />
+        <Route path='/profile/edit' element={<ProgileSettingsPage />} />
       </Route>
     </Routes>
   );
