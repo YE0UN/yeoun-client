@@ -65,7 +65,7 @@ const ProfileSettingsPage = () => {
     axios(option)
       .then((res) => {
         console.log(res);
-        res.data.user.profileImage && setImagePreview(res.data.user.profileImage);
+        res.data.user.profileImage ? setImagePreview(res.data.user.profileImage) : setImagePreview(userIcon);
       })
       .catch((err) => {
         console.log(err);
