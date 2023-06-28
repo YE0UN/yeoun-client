@@ -16,7 +16,7 @@ const SignupPage = () => {
   const [nickname, setNickname] = useState();
   const [password, setPassword] = useState();
 
-  console.log(`email:${email}\nnickname:${nickname}\npassword:${password}`);
+  // console.log(`email:${email}\nnickname:${nickname}\npassword:${password}`);
 
   // 각각의 인풋 컴포넌트에서 데이터 가져오기
   const getEmail = (value) => {
@@ -31,7 +31,7 @@ const SignupPage = () => {
 
   // 회원가입 기능
   const onClickJoinHandler = () => {
-    console.log(`email:${email}\nnickname:${nickname}\npassword:${password}`);
+    // console.log(`email:${email}\nnickname:${nickname}\npassword:${password}`);
 
     const option = {
       url: 'http://localhost:3000/users/signup',
@@ -47,7 +47,6 @@ const SignupPage = () => {
     axios(option)
       .then((res) => {
         // 회원가입 성공 시
-        console.log('회원가입 성공!');
         nvigate('/login');
       })
       .catch((err) => {

@@ -10,7 +10,6 @@ import chevronUpIcon from '../../../assets/images/chevron-up-icon.svg';
 import chevronDownIcon from '../../../assets/images/chevron-down-icon.svg';
 import searchIcon from '../../../assets/images/search-icon.svg';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 import Loading from './../../../components/Loading/Loading';
 
 const HomePage = () => {
@@ -48,7 +47,7 @@ const HomePage = () => {
 
   // 전체 게시물 상태관리
   const [post, setPost] = useState([]);
-  console.log(post);
+  // console.log(post);
 
   // 선택 지역 게시물 조회 기능
   const ViewSelectedPosts = useCallback(() => {
@@ -62,7 +61,7 @@ const HomePage = () => {
       };
       axios(option)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           setPost(res.data);
           setIsLoading(true);
         })
@@ -112,7 +111,7 @@ const HomePage = () => {
               size='md'
               variants='main'
               onClickHandler={() => {
-                console.log('최신 순 버튼 클릭!');
+                // console.log('최신 순 버튼 클릭!');
               }}
             >
               최신 순
@@ -123,7 +122,7 @@ const HomePage = () => {
               size='md'
               variants='main'
               onClickHandler={() => {
-                console.log('인기 순 버튼 클릭!');
+                // console.log('인기 순 버튼 클릭!');
               }}
               disabled
             >
@@ -135,7 +134,7 @@ const HomePage = () => {
               size='md'
               variants='main'
               onClickHandler={() => {
-                console.log('댓글 순 버튼 클릭!');
+                // console.log('댓글 순 버튼 클릭!');
               }}
               disabled
             >

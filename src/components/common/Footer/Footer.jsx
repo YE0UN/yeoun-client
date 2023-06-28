@@ -9,14 +9,18 @@ const Footer = () => {
   return (
     <FooterTag>
       <InnerLayout>
-        <LogoImg src={logo} alt='여운 로고' />
+        <a href='/'>
+          <LogoImg src={logo} alt='여운 로고' />
+        </a>
         <Line></Line>
         <Address>
           <CopyrightP>
             <CopyrightImg src={copyrightIcon} alt='저작권 아이콘' />
-            <Strong>2023 여운 All rights reserved.</Strong>
+            <Strong>2023 yeoun All rights reserved.</Strong>
           </CopyrightP>
-          <OctocatImg src={octocatIcon} alt='옥토캣' />
+          <a href='https://github.com/YE0UN'>
+            <OctocatImg src={octocatIcon} alt='옥토캣' />
+          </a>
         </Address>
       </InnerLayout>
     </FooterTag>
@@ -33,7 +37,7 @@ const FooterTag = styled.footer`
 `;
 
 const LogoImg = styled.img`
-  width: 8rem;
+  width: 16rem;
   height: 4.5rem;
   cursor: pointer;
 `;

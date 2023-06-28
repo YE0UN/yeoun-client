@@ -7,7 +7,7 @@ import bookMarkFillIcon from '../../../../assets/images/bookmark-fill-icon.svg';
 import heartIcon from '../../../../assets/images/heart-icon.svg';
 import heartFillIcon from '../../../../assets/images/heart-fill-icon.svg';
 import commentIcon from '../../../../assets/images/comment-icon.svg';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContextStore } from './../../../../context/AuthContext';
 
 const PostContent = ({
@@ -45,7 +45,7 @@ const PostContent = ({
   };
 
   // 좋아요 카운트 기능
-  const [likeCountSpan, setLikeCountSpan] = useState(2);
+  const [likeCountSpan, setLikeCountSpan] = useState(0);
 
   return (
     <>
@@ -72,7 +72,7 @@ const PostContent = ({
           }}
         />
         <ProfileInfoDiv>
-          <ProfileImg src={userIcon} alt={ProfileImgAlt} />
+          <ProfileImg src={profileImage ? profileImage : userIcon} alt={ProfileImgAlt} />
           {/* <ProfileImg src={profileImage} alt={ProfileImgAlt} /> */}
           <UserNameP>{nickname}</UserNameP>
         </ProfileInfoDiv>
@@ -107,7 +107,7 @@ const PostContent = ({
             </LikeWrapper>
             <CommentWrapper>
               <img src={commentIcon} alt='댓글 아이콘' />
-              <span>5</span>
+              <span>1</span>
             </CommentWrapper>
           </Container>
           <PostDateSpan>2023년 06월 28일</PostDateSpan>

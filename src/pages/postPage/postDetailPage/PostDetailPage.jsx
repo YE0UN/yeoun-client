@@ -18,12 +18,9 @@ const PostDetailPage = () => {
 
   // 게시물 내용 상태값
   const [postContent, setPostContent] = useState(null);
-  console.log(postContent);
 
   // 서버에서 게시물 데이터 가져오기
   useEffect(() => {
-    console.log('초기값 가져오기');
-
     const GetPostInfo = async () => {
       const option = {
         url: `http://localhost:3000/posts/${params.postId}`,
@@ -32,7 +29,6 @@ const PostDetailPage = () => {
 
       await axios(option)
         .then((res) => {
-          console.log(res);
           setPostContent(res.data);
           setIsLoading(true);
         })
