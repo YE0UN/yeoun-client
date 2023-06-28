@@ -7,13 +7,16 @@ const Map = (props) => {
 
     ELEMENT.forEach((el) => {
       // console.log(x.getAttribute('title'));
+      el.addEventListener('click', () => {
+        alert('지역 인기도 및 관광 페이지를 준비 중입니다.');
+      });
 
       el.addEventListener('mousemove', (e) => {
         regionText.style.display = 'block';
         regionText.innerText = el.getAttribute('title');
         regionText.style.top = `${e.offsetY - 45}px`;
         regionText.style.left = `${e.offsetX}px`;
-        console.log(e.offsetX, e.offsetY);
+        // console.log(e.offsetX, e.offsetY);
       });
 
       el.addEventListener('mouseleave', () => {

@@ -9,9 +9,12 @@ import styled from 'styled-components';
 import { AuthContextStore } from '../../context/AuthContext';
 import imageCompression from 'browser-image-compression';
 import userIcon from '../../assets/images/user-icon.svg';
+import { useNavigate } from 'react-router';
 
 const ProfileSettingsPage = () => {
   const { userId } = useContext(AuthContextStore);
+
+  const navigate = useNavigate();
 
   const [imagePreview, setImagePreview] = useState(userIcon);
   const [email, setEmail] = useState('');
@@ -85,6 +88,10 @@ const ProfileSettingsPage = () => {
 
     axios(option)
       .then((res) => {
+        const newPath = `/mypage`;
+        navigate(newPath);
+        // 페이지 전환 시, 새로고침
+        window.location.href = newPath;
         console.log(res);
       })
       .catch((err) => {

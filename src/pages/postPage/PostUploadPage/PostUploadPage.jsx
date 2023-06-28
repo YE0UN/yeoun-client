@@ -58,10 +58,10 @@ const PostUploadPage = () => {
         img: value.imagePreview,
         userId: userId,
       });
-      console.log(selectedRegion);
-      console.log(value.title);
-      console.log(value.postContent);
-      console.log(value.imagePreview);
+      // console.log(selectedRegion);
+      // console.log(value.title);
+      // console.log(value.postContent);
+      // console.log(value.imagePreview);
     },
     [userId, selectedRegion],
   );
@@ -99,14 +99,11 @@ const PostUploadPage = () => {
     axios(option)
       .then((res) => {
         // 작성 성공 시
-        console.log(res);
         navigate('/');
       })
       .catch((err) => {
         console.log(err);
       });
-
-    console.log('게시물이 업로드 되었습니다!');
   };
 
   return (

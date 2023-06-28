@@ -38,7 +38,6 @@ const Login = () => {
 
     axios(option)
       .then((res) => {
-        console.log('로그인 성공!');
         setLoginFail(false);
         saveUserInfo(res);
         navigate('/');

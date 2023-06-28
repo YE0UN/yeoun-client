@@ -12,7 +12,7 @@ const Layout = ({ children, sideButton = true }) => {
   const [isClicked, setIsClicked] = useState(false);
 
   const Map = () => {
-    console.log('지도 기능이 들어갈 곳입니다.');
+    // console.log('지도 기능이 들어갈 곳입니다.');
     setIsClicked((cur) => !cur);
   };
 

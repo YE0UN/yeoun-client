@@ -23,11 +23,18 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
   const [isLiked, setIsLiked] = useState(false);
 
   // 좋아요 카운트 기능
-  const [likeCountSpan, setLikeCountSpan] = useState(2);
+  const [likeCountSpan, setLikeCountSpan] = useState(0);
 
   // 게시물 내용 클릭 시, 상세 게시물 페이지로 이동
   const onClickMovePageHandler = () => {
-    userId ? navigate(`/post/${postId}`) : alert('로그인 후 이용 가능합니다.');
+    if (userId) {
+      const newPath = `/post/${postId}`;
+      navigate(newPath);
+      // 페이지 전환 시, 의도하지 않은 스크롤 발생 방지
+      window.location.href = newPath;
+    } else {
+      alert('로그인 후 이용 가능합니다.');
+    }
   };
 
   return (
@@ -42,7 +49,7 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
           }}
         />
         <ProfileInfoDiv>
-          <ProfileImg src={userIcon} alt={ProfileImgAlt} />
+          <ProfileImg src={profileImage ? profileImage : userIcon} alt={ProfileImgAlt} />
           {/* <ProfileImg src={profileImage} alt={ProfileImgAlt} /> */}
           <UserNameP>{nickname}</UserNameP>
         </ProfileInfoDiv>
@@ -61,13 +68,7 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
             onClick={onClickMovePageHandler}
           />
         ) : (
-          <ContentImg
-            src={'https://picsum.photos/600/600/?random'}
-            alt=''
-            onClick={() => {
-              navigate(`/post/${postId}`);
-            }}
-          />
+          <ContentImg src={'https://picsum.photos/600/600/?random'} alt='' onClick={onClickMovePageHandler} />
         )}
 
         <ContentInfo>
@@ -85,7 +86,7 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
             </LikeWrapper>
             <CommentWrapper>
               <img src={commentIcon} alt='댓글 아이콘' />
-              <span>5</span>
+              <span>1</span>
             </CommentWrapper>
           </Container>
           <PostDateSpan>2023년 06월 28일</PostDateSpan>

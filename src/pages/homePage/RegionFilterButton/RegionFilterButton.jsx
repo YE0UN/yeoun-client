@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import checkIcon from '../../../assets/images/check-icon.svg';
 import deleteLightIcon from '../../../assets/images/delete-light-icon.svg';
-import axios from 'axios';
 
 const regions = [
   '전국',
@@ -61,7 +60,7 @@ const RegionFilterButton = ({ isClicked, getRigionsHandler }) => {
       setSelectedRegions([]);
     } else {
       setSelectedRegions(selectedRegions.filter((r) => r !== region));
-      console.log(`${region}지역 필터 삭제!`);
+      // console.log(`${region}지역 필터 삭제!`);
     }
   };
 

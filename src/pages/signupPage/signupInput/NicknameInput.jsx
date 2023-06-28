@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../../components/common/Button/Button';
 import styled from 'styled-components';
-import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 
 const NicknameInput = ({ getNickname }) => {

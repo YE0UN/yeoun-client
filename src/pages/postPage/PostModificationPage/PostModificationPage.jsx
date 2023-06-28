@@ -34,7 +34,6 @@ const PostModificationPage = () => {
   const params = useParams();
 
   const navigate = useNavigate();
-  console.log(params);
 
   // 로딩 중
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +41,6 @@ const PostModificationPage = () => {
 
   // 게시물 내용 상태값
   const [postContent, setPostContent] = useState(null);
-  console.log(postContent);
 
   // UploadPost.jsx에서 데이터 가져와 사용하기
   const [postData, setPostData] = useState({
@@ -54,7 +52,6 @@ const PostModificationPage = () => {
   });
 
   const [selectedRegion, setSelectedRegion] = useState('');
-  console.log(selectedRegion);
 
   // UploadPost.jsx에서 title, content, img 데이터 받아오기
   const getModificationData = useCallback(
@@ -66,18 +63,16 @@ const PostModificationPage = () => {
         img: value.imagePreview,
         userId: userId,
       });
-      console.log(selectedRegion);
-      console.log(value.title);
-      console.log(value.postContent);
-      console.log(value.imagePreview);
+      // console.log(selectedRegion);
+      // console.log(value.title);
+      // console.log(value.postContent);
+      // console.log(value.imagePreview);
     },
     [userId, selectedRegion],
   );
 
   // 서버에서 게시물 데이터 가져오기
   useEffect(() => {
-    console.log('초기값 가져오기');
-
     const GetPostInfo = async () => {
       const option = {
         url: `http://localhost:3000/posts/${params.id}`,
@@ -86,7 +81,6 @@ const PostModificationPage = () => {
 
       await axios(option)
         .then((res) => {
-          console.log(res);
           setPostContent(res.data);
           setSelectedRegion(res.data.siDo);
           setIsLoading(true);
@@ -154,6 +148,7 @@ const PostModificationPage = () => {
           <UploadPostLayout>
             {postContent ? (
               <UploadPost
+                profileImage={postContent.user.profileImage}
                 nickname={postContent.user.nickname}
                 buttonName='수정완료'
                 onClickPostModificationHandler={onClickPostModificationHandler}

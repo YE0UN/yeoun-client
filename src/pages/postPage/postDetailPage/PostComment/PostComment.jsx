@@ -24,7 +24,7 @@ const PostComment = ({ profileImage, nickname, comment, createdAt }) => {
 
   // 댓글 작성 시 기능구현
   const [commentValue, setCommentValue] = useState('');
-  console.log(commentValue);
+  // console.log(commentValue);
 
   const onChangeCommentInputHandler = (e) => {
     setCommentValue(e.target.value);
@@ -42,7 +42,7 @@ const PostComment = ({ profileImage, nickname, comment, createdAt }) => {
         <CommentContainer>
           <CommentInfoDIv>
             <ProfileInfoDiv>
-              <ProfileImg src={userIcon} alt={ProfileImgAlt} />
+              <ProfileImg src={profileImage ? profileImage : userIcon} alt={ProfileImgAlt} />
               {/* <ProfileImg src={profileImage} alt={ProfileImgAlt} /> */}
               <UserNameP>{nickname}</UserNameP>
             </ProfileInfoDiv>

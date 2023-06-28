@@ -92,7 +92,6 @@ const UploadPost = ({
   useEffect(() => {
     if (getUploadData) {
       getUploadData({ title, postContent, imagePreview });
-      console.log('새 글 작성 페이지로 데이터 보내기');
     }
   }, [title, postContent, imagePreview, getUploadData]);
 
@@ -100,7 +99,6 @@ const UploadPost = ({
   useEffect(() => {
     if (getModificationData) {
       getModificationData({ title, postContent, imagePreview });
-      console.log('글 수정 페이지로 데이터 보내기');
     }
   }, [title, postContent, imagePreview, getModificationData]);
 
@@ -109,7 +107,7 @@ const UploadPost = ({
       <Article>
         <h3 className='sr-only'>{nickname}의 Post</h3>
         <ProfileInfoDiv>
-          <ProfileImg src={userIcon} alt={ProfileImgAlt} />
+          <ProfileImg src={profileImage ? profileImage : userIcon} alt={ProfileImgAlt} />
           <UserNameP>{nickname}</UserNameP>
         </ProfileInfoDiv>
         <TitleInput
