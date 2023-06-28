@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
 import Button from '../../Button/Button';
 import photoIcon from '../../../../assets/images/photo-icon.svg';
+import imageCompression from 'browser-image-compression';
 
 const UploadPost = ({
   bookMark,
   profileImage,
-  userName,
+  nickname,
   content,
   postImage,
   likeCount,
@@ -28,7 +29,7 @@ const UploadPost = ({
   initialImage,
 }) => {
   // 유저 프로필 이미지 alt
-  const ProfileImgAlt = `${userName} 이미지`;
+  const ProfileImgAlt = `${nickname} 이미지`;
 
   const [title, setTitle] = useState(initialTitle ? initialTitle : '');
   const [postContent, setPostContent] = useState(initialContent ? initialContent : '');
@@ -48,15 +49,28 @@ const UploadPost = ({
     setIsContentValid(e.target.value !== '');
   };
 
-  // 이미지 미리보기 기능
-  const handleImageChange = (e) => {
+  // 이미지 리사이징이 포함된 이미지 미리보기 기능
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const options = {
+          maxSizeMB: 0.2, // 최대 파일 크기 (메가바이트 단위)
+          maxWidthOrHeight: 1920, // 최대 폭 또는 높이 (픽셀 단위)
+          maxWidth: 1920, // 최대 폭 (픽셀 단위)
+          maxHeight: 1080, // 최대 높이 (픽셀 단위)
+          useWebWorker: true, // 웹 워커 사용 활성화
+        };
+
+        const compressedFile = await imageCompression(file, options);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result);
+        };
+        reader.readAsDataURL(compressedFile);
+      } catch (error) {
+        console.log('이미지 압축 에러:', error);
+      }
     } else {
       setImagePreview(null);
     }
@@ -93,10 +107,10 @@ const UploadPost = ({
   return (
     <>
       <Article>
-        <h3 className='sr-only'>{userName}의 Post</h3>
+        <h3 className='sr-only'>{nickname}의 Post</h3>
         <ProfileInfoDiv>
           <ProfileImg src={userIcon} alt={ProfileImgAlt} />
-          <UserNameP>{userName}</UserNameP>
+          <UserNameP>{nickname}</UserNameP>
         </ProfileInfoDiv>
         <TitleInput
           type='text'
@@ -241,8 +255,10 @@ const PostInfo = styled.div`
 const SpanWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: baseline;
-  gap: 1.4em;
+  justify-content: center;
+  align-items: center;
+  gap: 1.6rem;
+  transform: translateY(0.6rem);
 `;
 
 const PostDateSpan = styled.span`
@@ -252,6 +268,8 @@ const PostDateSpan = styled.span`
 const RemoveSpan = styled.span`
   font-size: var(--fs-sm);
   color: var(--sub-text-color);
+  padding: 0.4rem;
+  margin-top: -0.8rem;
   cursor: pointer;
   &:hover {
     border-radius: 4px;

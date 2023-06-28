@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import Carousel from './../../../components/Carousel/Carousel';
 import InnerLayout from '../../../components/common/layout/InnerLayout/InnerLayout';
@@ -9,8 +9,13 @@ import RegionFilterButton from '../RegionFilterButton/RegionFilterButton';
 import chevronUpIcon from '../../../assets/images/chevron-up-icon.svg';
 import chevronDownIcon from '../../../assets/images/chevron-down-icon.svg';
 import searchIcon from '../../../assets/images/search-icon.svg';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import Loading from './../../../components/Loading/Loading';
 
 const HomePage = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   // (지역) 드롭 다운 버튼 클릭 시
   const [isClicked, setIsClicked] = useState(false);
   const dropDownState = {
@@ -18,10 +23,15 @@ const HomePage = () => {
     false: chevronDownIcon,
   };
 
+  // 선택된 지역
+  const [selectedRegion, setSelectedRegion] = useState();
+  // console.log(selectedRegion);
+
   // 지역 버튼 개수에 따른 화면 레이아웃 변화 기능
   const [regionsCount, setRegionsCount] = useState();
-  const getRigionsLengthHandler = (count) => {
-    setRegionsCount(count);
+  const getRigionsHandler = (region) => {
+    setRegionsCount(region.length);
+    setSelectedRegion(region);
   };
 
   const [postContainerLayout, setPostContainerLayout] = useState('12rem');
@@ -35,6 +45,40 @@ const HomePage = () => {
       setPostContainerLayout('12rem');
     }
   }, [regionsCount]);
+
+  // 전체 게시물 상태관리
+  const [post, setPost] = useState([]);
+  console.log(post);
+
+  // 선택 지역 게시물 조회 기능
+  const ViewSelectedPosts = useCallback(() => {
+    setIsLoading(false);
+    if (selectedRegion && selectedRegion.length > 0) {
+      const regions = selectedRegion.map((region) => `siDo=${region}`).join('&');
+
+      const option = {
+        url: `http://localhost:3000/posts?${regions}&sort=createdAt`,
+        method: 'GET',
+      };
+      axios(option)
+        .then((res) => {
+          console.log(res);
+          setPost(res.data);
+          setIsLoading(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(true);
+        });
+    } else {
+      setPost([]);
+      setIsLoading(true);
+    }
+  }, [selectedRegion]);
+
+  useEffect(() => {
+    ViewSelectedPosts();
+  }, [selectedRegion, ViewSelectedPosts]);
 
   return (
     <>
@@ -61,10 +105,7 @@ const HomePage = () => {
             >
               지역
             </DropDownButton>
-            <RegionFilterButton
-              isClicked={isClicked}
-              getRigionsLengthHandler={getRigionsLengthHandler}
-            ></RegionFilterButton>
+            <RegionFilterButton isClicked={isClicked} getRigionsHandler={getRigionsHandler}></RegionFilterButton>
           </Li>
           <Li>
             <Button
@@ -103,16 +144,37 @@ const HomePage = () => {
           </Li>
           <Li>
             <SearchInput type='search' placeholder='검색' />
-            <SearchImage src={searchIcon} alt='검색하기 아이콘' />
+            <SearchImage
+              src={searchIcon}
+              alt='검색하기 아이콘'
+              onClick={() => {
+                alert('준비 중입니다.');
+              }}
+            />
           </Li>
         </Ul>
-        <PostContainer postContainerLayout={postContainerLayout}>
-          <Post userName='userName' />
-          <Post userName='userName' />
-          <Post userName='userName' />
-          <Post userName='userName' />
-          <Post userName='userName' />
-        </PostContainer>
+        {isLoading ? (
+          <PostContainer postContainerLayout={postContainerLayout}>
+            {post.map((post, index) => {
+              return (
+                <Post
+                  key={post._id}
+                  profileImage={post.user.profileImage}
+                  nickname={post.user.nickname}
+                  bookMark={''}
+                  content={post.content}
+                  img={post.img}
+                  like={''}
+                  comment={''}
+                  createdAt={post.createdAt}
+                  postId={post._id}
+                />
+              );
+            })}
+          </PostContainer>
+        ) : (
+          <Loading description='데이터를 불러오는 중입니다...' margin='20rem 0 10rem' />
+        )}
       </InnerLayout>
     </>
   );

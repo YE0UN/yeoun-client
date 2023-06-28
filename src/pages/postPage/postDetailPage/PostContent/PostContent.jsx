@@ -85,11 +85,11 @@ const PostContent = ({
             alt=''
             onError={(e) => {
               console.log('이미지 불러오기 오류');
-              e.target.src = 'https://source.unsplash.com/random/?trip';
+              e.target.src = 'https://picsum.photos/600/600/?random';
             }}
           />
         ) : (
-          <ContentImg src={'https://source.unsplash.com/random/?trip'} alt='' />
+          <ContentImg src={'https://picsum.photos/600/600/?random'} alt='' />
         )}
 
         <ContentInfo>
@@ -186,6 +186,7 @@ const ContentP = styled.p`
   border-radius: 8px;
   line-height: 2.1rem;
   padding: 0.6rem 0.8rem;
+  overflow: auto;
 `;
 
 const ContentImg = styled.img`

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import checkIcon from '../../../assets/images/check-icon.svg';
 import deleteLightIcon from '../../../assets/images/delete-light-icon.svg';
+import axios from 'axios';
 
-// 전국을 포함한 지역명
 const regions = [
   '전국',
   '서울',
@@ -25,25 +25,22 @@ const regions = [
   '세종',
 ];
 
-const RegionFilterButton = ({ isClicked, getRigionsLengthHandler }) => {
+const RegionFilterButton = ({ isClicked, getRigionsHandler }) => {
   const [selectedRegions, setSelectedRegions] = useState([...regions]);
-  console.log(selectedRegions);
 
   useEffect(() => {
-    getRigionsLengthHandler(selectedRegions.length);
-  }, [selectedRegions, getRigionsLengthHandler]);
+    getRigionsHandler(selectedRegions);
+  }, [selectedRegions, getRigionsHandler]);
 
-  // 전국이 체크된 상태에서 다른 지역 체크 해제 시, 전국도 체크 해제되는 기능
   if (selectedRegions[0] === '전국' && selectedRegions.length < 18) {
     selectedRegions.shift();
   }
-  // 전국을 제외한 모든 지역 체크 시, 전국에 체크되는 기능
+
   if (selectedRegions[0] !== '전국' && selectedRegions.length === 17) {
     setSelectedRegions([...regions]);
   }
 
   const handleRegionChange = (region) => {
-    // 전국 체크 or 체크 해제 시, 모든 지역 체크 or 체크 해제되는 기능
     if (region === '전국') {
       if (selectedRegions.length === regions.length) {
         setSelectedRegions([]);
@@ -51,7 +48,6 @@ const RegionFilterButton = ({ isClicked, getRigionsLengthHandler }) => {
         setSelectedRegions([...regions]);
       }
     } else {
-      // 전국 이외의 지역
       if (selectedRegions.includes(region)) {
         setSelectedRegions(selectedRegions.filter((r) => r !== region));
       } else {
@@ -60,7 +56,6 @@ const RegionFilterButton = ({ isClicked, getRigionsLengthHandler }) => {
     }
   };
 
-  // 버튼 클릭 시 해당 지역 체크 박스 해제 및 버튼 삭제
   const handleButtonClick = (region) => {
     if (region === '전국') {
       setSelectedRegions([]);
@@ -78,7 +73,9 @@ const RegionFilterButton = ({ isClicked, getRigionsLengthHandler }) => {
             <CustomInput
               type='checkbox'
               checked={selectedRegions.includes(region)}
-              onChange={() => handleRegionChange(region)}
+              onChange={() => {
+                handleRegionChange(region);
+              }}
             />
             {region}
           </CustomLabel>
@@ -88,7 +85,13 @@ const RegionFilterButton = ({ isClicked, getRigionsLengthHandler }) => {
         {selectedRegions.map((region) =>
           region !== '전국' ? (
             <li key={region}>
-              <RegionButton onClick={() => handleButtonClick(region)}>{region}</RegionButton>
+              <RegionButton
+                onClick={() => {
+                  handleButtonClick(region);
+                }}
+              >
+                {region}
+              </RegionButton>
             </li>
           ) : (
             ''
@@ -119,7 +122,6 @@ const CheckboxWrapper = styled.div`
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.5);
 `;
 
-// 체크박스 커스텀
 const CustomLabel = styled.label`
   display: flex;
   align-items: center;
@@ -140,9 +142,7 @@ const CustomInput = styled.input`
   }
 `;
 
-// 지역 버튼
 const RegionButtonWrapper = styled.ul`
-  /* width: 120rem; */
   top: 5.7rem;
   left: 29rem;
   position: absolute;

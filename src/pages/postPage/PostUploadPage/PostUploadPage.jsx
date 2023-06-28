@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import InnerLayout from '../../../components/common/layout/InnerLayout/InnerLayout';
 import HeadingLayout from '../../../components/common/layout/HeadingLayout/HeadingLayout';
 import styled from 'styled-components';
@@ -6,6 +6,7 @@ import UploadPost from '../../../components/common/post/UploadPost/UploadPost';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../context/AuthContext';
+import Loading from '../../../components/Loading/Loading';
 
 const regions = [
   '전국',
@@ -33,8 +34,12 @@ const PostUploadPage = () => {
 
   const navigate = useNavigate();
 
-  const [selectedRegion, setSelectedRegion] = useState('전국');
+  // 로딩 중
+  const [isLoading, setIsLoading] = useState(true);
+  const [description, setDescription] = useState('데이터를 불러오는 중입니다...');
 
+  const [nickname, setNickname] = useState();
+  const [selectedRegion, setSelectedRegion] = useState('전국');
   const [postData, setPostData] = useState({
     siDo: '',
     title: '',
@@ -61,28 +66,30 @@ const PostUploadPage = () => {
     [userId, selectedRegion],
   );
 
+  // 유저 닉네임 가져오기
+  useEffect(() => {
+    const getUserNickname = () => {
+      const option = {
+        url: `http://localhost:3000/users/${userId}/profile`,
+        method: 'GET',
+      };
+
+      axios(option)
+        .then((res) => {
+          setNickname(res.data.user.nickname);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    getUserNickname();
+  }, [userId]);
+
   // 새 글 작성 클릭 기능
-  // const onClickPostRegistrationHandler = () => {
-  //   const option = {
-  //     url: '여운url/posts',
-  //     method: 'POST',
-  //     headers: {
-  //       Authorization: `Bearer ${userToken}`,
-  //       'Content-type': 'application/json',
-  //     },
-  //     data: postData,
-  //   };
-  //   axios(option)
-  //     .then(() => {
-  //       Navigate('/');
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-
-  // };
-
   const onClickPostRegistrationHandler = () => {
+    setIsLoading(false);
+    setDescription('새 글을 작성 중입니다...');
     const option = {
       url: 'http://localhost:3000/posts',
       method: 'POST',
@@ -115,13 +122,17 @@ const PostUploadPage = () => {
             </li>
           ))}
         </RegionButtonWrapper>
-        <UploadPostLayout>
-          <UploadPost
-            userName='userName'
-            onClickPostRegistrationHandler={onClickPostRegistrationHandler}
-            getUploadData={getUploadData}
-          />
-        </UploadPostLayout>
+        {isLoading ? (
+          <UploadPostLayout>
+            <UploadPost
+              nickname={nickname}
+              onClickPostRegistrationHandler={onClickPostRegistrationHandler}
+              getUploadData={getUploadData}
+            />
+          </UploadPostLayout>
+        ) : (
+          <Loading description={description} margin='20rem' />
+        )}
       </InnerLayout>
     </>
   );
