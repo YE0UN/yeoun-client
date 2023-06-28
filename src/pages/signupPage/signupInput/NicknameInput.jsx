@@ -10,7 +10,8 @@ const NicknameInput = ({ getNickname }) => {
 
   // 닉네임 validation
   useEffect(() => {
-    const regexNickname = /^[a-z0-9A-Z_.]{0,}$/;
+    // const regexNickname = /^[a-z0-9A-Z_.]{0,}$/;
+    const regexNickname = /^[a-z0-9A-Z_.가-힣]{0,}$/;
 
     if (!regexNickname.test(nickname) && nickname !== '') {
       setIsValidatedNickname(false);

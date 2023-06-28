@@ -70,7 +70,14 @@ const Header = () => {
                 </Link>
               </Li>
               <Li>
-                <Link to='/post'>새 글 작성</Link>
+                <Link
+                  to='/post'
+                  onClick={() => {
+                    userId ? <></> : alert('로그인 후 이용 가능합니다.');
+                  }}
+                >
+                  새 글 작성
+                </Link>
               </Li>
               {userId ? (
                 <Li>

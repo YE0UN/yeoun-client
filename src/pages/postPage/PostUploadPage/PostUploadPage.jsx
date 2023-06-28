@@ -38,6 +38,7 @@ const PostUploadPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [description, setDescription] = useState('데이터를 불러오는 중입니다...');
 
+  const [profileImage, setProfileImage] = useState();
   const [nickname, setNickname] = useState();
   const [selectedRegion, setSelectedRegion] = useState('전국');
   const [postData, setPostData] = useState({
@@ -77,6 +78,7 @@ const PostUploadPage = () => {
       axios(option)
         .then((res) => {
           setNickname(res.data.user.nickname);
+          setProfileImage(res.data.user.profileImage);
         })
         .catch((err) => {
           console.log(err);
@@ -123,6 +125,7 @@ const PostUploadPage = () => {
           <UploadPostLayout>
             <UploadPost
               nickname={nickname}
+              profileImage={profileImage}
               onClickPostRegistrationHandler={onClickPostRegistrationHandler}
               getUploadData={getUploadData}
             />
