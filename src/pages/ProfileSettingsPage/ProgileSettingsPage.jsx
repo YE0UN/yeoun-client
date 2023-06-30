@@ -139,7 +139,7 @@ const ProfileSettingsPage = () => {
 
   return (
     <InnerLayout>
-      <HeadingLayout heading='회원 정보 수정' />
+      <HeadingLayout heading='회원 정보 설정' />
       <SettingContainer>
         <ImageLabel htmlFor='contentImage' imagePreview={imagePreview}>
           {imagePreview === null ? '' : <ImagePreview src={imagePreview} alt='미리보기 이미지' />}
