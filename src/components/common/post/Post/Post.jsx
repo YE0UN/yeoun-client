@@ -157,6 +157,7 @@ const ContentImg = styled.img`
   height: 30rem;
   border-radius: 30px;
   background: #ffffff;
+  object-fit: cover;
   cursor: pointer;
   &:hover {
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);

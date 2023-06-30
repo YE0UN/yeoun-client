@@ -207,7 +207,7 @@ const TitleInput = styled.input`
 // 내용
 const ContentTextArea = styled.textarea`
   width: 100%;
-  height: 16.2rem;
+  height: 15rem;
   border: 2px solid ${(props) => (props.isValid ? 'var(--input-border-focus-color)' : 'var(--input-border-color)')};
   border-radius: 8px;
   padding: 1rem 1.5rem;
@@ -235,8 +235,8 @@ const ImageLabel = styled.label`
 `;
 
 const ImagePreview = styled.img`
-  width: 52rem;
-  height: 38rem;
+  width: 100%;
+  height: 100%;
   border-radius: 30px;
   border: 1px solid var(--input-border-color);
   object-fit: cover;

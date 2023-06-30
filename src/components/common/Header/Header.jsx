@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Logo from '../../../assets/images/logo.svg';
 import Button from '../Button/Button';
 import InnerLayout from '../layout/InnerLayout/InnerLayout';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../context/AuthContext';
 import userIcon from '../../../assets/images/user-icon.svg';
 import { useCallback } from 'react';
@@ -30,18 +30,19 @@ const Header = () => {
 
   // 유저 정보 가져오기
   const getUserData = useCallback(() => {
-    const option = {
-      url: `http://localhost:3000/users/${userId}/profile`,
-      method: 'GET',
-    };
-
-    axios(option)
-      .then((res) => {
-        res.data.user.profileImage ? setUserProfile(res.data.user.profileImage) : setUserProfile(userIcon);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (userId) {
+      const option = {
+        url: `http://localhost:3000/users/${userId}/profile`,
+        method: 'GET',
+      };
+      axios(option)
+        .then((res) => {
+          res.data.user.profileImage ? setUserProfile(res.data.user.profileImage) : setUserProfile(userIcon);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, [userId]);
 
   useEffect(() => {

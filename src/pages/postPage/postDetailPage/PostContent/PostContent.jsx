@@ -195,6 +195,7 @@ const ContentImg = styled.img`
   border: 0;
   border-radius: 30px;
   background: #ffffff;
+  object-fit: cover;
 `;
 
 const ContentInfo = styled.div`
