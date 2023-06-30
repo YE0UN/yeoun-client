@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-const PasswordInput = ({ getPassword }) => {
+const PasswordInput = ({ getPassword, handleKeyDown }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -74,6 +74,7 @@ const PasswordInput = ({ getPassword }) => {
           maxLength={14}
           value={confirmPassword}
           onChange={onChangeConfirmPasswordHandler}
+          onKeyDown={handleKeyDown}
         />
         {ValidationMessage ? (
           <ValidationMessage error={confirmPasswordError}>{confirmPasswordValidationMessage}</ValidationMessage>

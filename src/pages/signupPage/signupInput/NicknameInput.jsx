@@ -3,32 +3,48 @@ import Button from '../../../components/common/Button/Button';
 import styled from 'styled-components';
 import axios from 'axios';
 
-const NicknameInput = ({ getNickname }) => {
+const NicknameInput = ({ getNickname, handleKeyDown, initialNickname, editNickname, nicknameChecker }) => {
   const [nickname, setNickname] = useState('');
   const [isValidatedNickname, setIsValidatedNickname] = useState('');
-  const [validationMessage, setValidationMessage] = useState('');
+  const [confirmNickname, setConfirmNickname] = useState('');
+
+  // 프로필 설정 초기값 (ProgileSettingsPage)
+  useEffect(() => {
+    if (initialNickname) {
+      setNickname(initialNickname);
+    }
+  }, [initialNickname]);
+
+  // 닉네임 중복 검사 및 수정하기 버튼을 위한 기능 (ProgileSettingsPage)
+  useEffect(() => {
+    if (isValidatedNickname && (confirmNickname === true || !confirmNickname === '')) {
+      nicknameChecker && nicknameChecker('true');
+    } else if (initialNickname === nickname) {
+      nicknameChecker && nicknameChecker('initial');
+    } else {
+      nicknameChecker && nicknameChecker('false');
+    }
+  });
 
   // 닉네임 validation
   useEffect(() => {
     // const regexNickname = /^[a-z0-9A-Z_.]{0,}$/;
-    const regexNickname = /^[a-z0-9A-Z_.가-힣]{0,}$/;
+    const regexNickname = /^[a-z0-9A-Z_.가-힣]{2,}$/;
 
     if (!regexNickname.test(nickname) && nickname !== '') {
       setIsValidatedNickname(false);
-      setValidationMessage('올바른 닉네임 형식이 아닙니다.');
     } else if (nickname === '') {
       setIsValidatedNickname(false);
-      setValidationMessage('');
     } else {
       setIsValidatedNickname(true);
-      setValidationMessage('');
     }
   }, [nickname]);
 
   const onChangeNicknameHandler = (e) => {
     setNickname(e.target.value);
-    setValidationMessage('');
-    getNickname('');
+    getNickname && getNickname('');
+    setConfirmNickname('');
+    editNickname && editNickname(e.target.value);
   };
 
   const onClickCheckHandler = () => {
@@ -43,20 +59,37 @@ const NicknameInput = ({ getNickname }) => {
 
     axios(option)
       .then((res) => {
-        setValidationMessage('사용 가능한 닉네임입니다.');
-        getNickname(nickname);
+        setConfirmNickname(true);
+        getNickname && getNickname(nickname);
       })
       .catch((err) => {
-        console.log(err.response.status);
         if (err.response.status === 409) {
-          setIsValidatedNickname(false);
-          setValidationMessage('이미 사용중인 닉네임입니다.');
-          getNickname('');
+          setConfirmNickname(false);
+          getNickname && getNickname('');
           return;
         }
-        console.error(err);
       });
   };
+
+  let validationMessage = '';
+
+  if (!isValidatedNickname && nickname !== '') {
+    validationMessage = '올바른 닉네임 형식이 아닙니다.';
+  } else if (confirmNickname === false && isValidatedNickname === true) {
+    validationMessage = '이미 사용중인 닉네임입니다.';
+  } else if (confirmNickname === true && isValidatedNickname === true) {
+    validationMessage = '사용 가능한 닉네임입니다.';
+  }
+
+  // 버튼 상태관리
+  const [disabledButton, setDisabledButton] = useState();
+  useEffect(() => {
+    if (!(nickname.length >= 2) || !isValidatedNickname || initialNickname === nickname) {
+      setDisabledButton(true);
+    } else {
+      setDisabledButton(false);
+    }
+  }, [initialNickname, nickname, isValidatedNickname]);
 
   return (
     <>
@@ -72,17 +105,16 @@ const NicknameInput = ({ getNickname }) => {
             maxLength={10}
             value={nickname}
             onChange={onChangeNicknameHandler}
+            onKeyDown={handleKeyDown}
           />
-          <Button
-            size='lg'
-            disabled={!(nickname.length >= 2) || !isValidatedNickname}
-            onClickHandler={onClickCheckHandler}
-          >
+          <Button size='lg' disabled={disabledButton} onClickHandler={onClickCheckHandler}>
             중복 확인
           </Button>
         </EmailWrapper>
         {ValidationMessage ? (
-          <ValidationMessage error={!isValidatedNickname}>{validationMessage}</ValidationMessage>
+          <ValidationMessage error={!isValidatedNickname || confirmNickname === '' || confirmNickname === false}>
+            {validationMessage}
+          </ValidationMessage>
         ) : (
           <></>
         )}

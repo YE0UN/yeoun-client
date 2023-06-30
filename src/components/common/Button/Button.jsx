@@ -3,8 +3,8 @@ import styled, { css } from 'styled-components';
 const SIZES = {
   md: css`
     --button-width: 10rem;
-    --button-font-size: var(--fs-lg);
     --button-height: 4.5rem;
+    --button-font-size: var(--fs-lg);
   `,
   lg: css`
     --button-width: 10rem;
@@ -14,6 +14,16 @@ const SIZES = {
   xl: css`
     --button-width: 45rem;
     --button-height: 6rem;
+    --button-font-size: var(--fs-lg);
+  `,
+  myPage: css`
+    --button-width: 14.5rem;
+    --button-height: 4.5rem;
+    --button-font-size: var(--fs-lg);
+  `,
+  profileSetting: css`
+    --button-width: 40rem;
+    --button-height: 5.4rem;
     --button-font-size: var(--fs-lg);
   `,
 };
