@@ -70,15 +70,26 @@ const SignupPage = () => {
     alert('중복확인을 모두 진행해 주세요.');
   };
 
+  // enter로 가입 완료
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      if (email && nickname && password) {
+        onClickJoinHandler();
+      } else {
+        alertHandler();
+      }
+    }
+  };
+
   return (
     <>
       <InnerLayout>
         <HeadingLayout heading='회원가입' />
         <SignupContainer>
           <InputContainer>
-            <EmailInput getEmail={getEmail} />
-            <NicknameInput getNickname={getNickname} />
-            <PasswordInput getPassword={getPassword} />
+            <EmailInput getEmail={getEmail} handleKeyDown={handleKeyDown} />
+            <NicknameInput getNickname={getNickname} handleKeyDown={handleKeyDown} />
+            <PasswordInput getPassword={getPassword} handleKeyDown={handleKeyDown} />
           </InputContainer>
           <Button
             size='xl'

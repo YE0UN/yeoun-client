@@ -3,10 +3,28 @@ import Button from '../../../components/common/Button/Button';
 import styled from 'styled-components';
 import axios from 'axios';
 
-const EmailInput = ({ getEmail }) => {
+const EmailInput = ({ getEmail, handleKeyDown, initialEmail, editEmail, emailChecker }) => {
   const [email, setEmail] = useState('');
   const [isValidatedEmail, setIsValidatedEmail] = useState();
-  const [validationMessage, setValidationMessage] = useState('');
+  const [confirmEmail, setConfirmEmail] = useState('');
+
+  // 프로필 설정 초기값 (ProgileSettingsPage)
+  useEffect(() => {
+    if (initialEmail) {
+      setEmail(initialEmail);
+    }
+  }, [initialEmail]);
+
+  // 이메일 중복 검사 및 수정하기 버튼을 위한 기능 (ProgileSettingsPage)
+  useEffect(() => {
+    if (isValidatedEmail && (confirmEmail === true || !confirmEmail === '')) {
+      emailChecker && emailChecker('true');
+    } else if (initialEmail === email) {
+      emailChecker && emailChecker('initial');
+    } else {
+      emailChecker && emailChecker('false');
+    }
+  });
 
   // 이메일 validation
   useEffect(() => {
@@ -15,20 +33,18 @@ const EmailInput = ({ getEmail }) => {
 
     if (!regexEmail.test(email) && email !== '') {
       setIsValidatedEmail(false);
-      setValidationMessage('올바른 이메일 형식이 아닙니다.');
     } else if (email === '') {
       setIsValidatedEmail('');
-      setValidationMessage('');
     } else {
       setIsValidatedEmail(true);
-      setValidationMessage('');
     }
   }, [email]);
 
   const onChangeEmailHandler = (e) => {
     setEmail(e.target.value);
-    setValidationMessage('');
-    getEmail('');
+    getEmail && getEmail('');
+    setConfirmEmail('');
+    editEmail && editEmail(e.target.value);
   };
 
   const onClickCheckHandler = () => {
@@ -43,20 +59,38 @@ const EmailInput = ({ getEmail }) => {
 
     axios(option)
       .then((res) => {
-        setIsValidatedEmail(true);
-        setValidationMessage('사용 가능한 아이디입니다.');
-        getEmail(email);
+        setConfirmEmail(true);
+        getEmail && getEmail(email);
       })
       .catch((err) => {
         if (err.response.status === 409) {
-          setIsValidatedEmail(false);
-          setValidationMessage('이미 사용중인 아이디입니다.');
-          getEmail('');
+          setConfirmEmail(false);
+          getEmail && getEmail('');
           return;
         }
         console.error(err);
       });
   };
+
+  let validationMessage = '';
+
+  if (!isValidatedEmail && email !== '') {
+    validationMessage = '올바른 이메일 형식이 아닙니다.';
+  } else if (confirmEmail === false && isValidatedEmail === true) {
+    validationMessage = '이미 사용중인 아이디입니다.';
+  } else if (confirmEmail === true && isValidatedEmail === true) {
+    validationMessage = '사용 가능한 아이디입니다.';
+  }
+
+  // 버튼 상태관리
+  const [disabledButton, setDisabledButton] = useState();
+  useEffect(() => {
+    if (initialEmail === email || !isValidatedEmail) {
+      setDisabledButton(true);
+    } else {
+      setDisabledButton(false);
+    }
+  }, [initialEmail, email, isValidatedEmail]);
 
   return (
     <>
@@ -72,16 +106,15 @@ const EmailInput = ({ getEmail }) => {
             maxLength={30}
             value={email}
             onChange={onChangeEmailHandler}
+            onKeyDown={handleKeyDown}
           />
-          <Button size='lg' disabled={!isValidatedEmail} onClickHandler={onClickCheckHandler}>
+          <Button size='lg' disabled={disabledButton} onClickHandler={onClickCheckHandler}>
             중복 확인
           </Button>
         </EmailWrapper>
-        {ValidationMessage ? (
-          <ValidationMessage error={!isValidatedEmail}>{validationMessage}</ValidationMessage>
-        ) : (
-          <></>
-        )}
+        <ValidationMessage error={!isValidatedEmail || confirmEmail === '' || confirmEmail === false}>
+          {validationMessage}
+        </ValidationMessage>
       </InputWrapper>
     </>
   );
