@@ -19,10 +19,12 @@ const Login = () => {
 
   const onChangeEmailHandler = (e) => {
     setEmail(e.target.value);
+    setLoginFail(false);
   };
 
   const onChangePasswordHandler = (e) => {
     setPassword(e.target.value);
+    setLoginFail(false);
   };
 
   const handleLogin = () => {
@@ -46,11 +48,9 @@ const Login = () => {
       .catch((err) => {
         if (err.response) {
           if (err.response.status === 404) {
-            console.log('아이디 또는 비밀번호가 일치하지 않습니다.');
             setLoginFail(true);
           }
         }
-        console.log(err);
       });
   };
 
@@ -58,6 +58,15 @@ const Login = () => {
     const userId = res.data.userId;
     localStorage.setItem('userId', userId);
     setUserId(userId);
+  };
+
+  // enter로 로그인
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      if (email && password) {
+        handleLogin();
+      }
+    }
   };
 
   return (
@@ -72,6 +81,7 @@ const Login = () => {
                 placeholder='아이디'
                 value={email}
                 onChange={onChangeEmailHandler}
+                onKeyDown={handleKeyDown}
                 isValidEmail={isValidEmail}
               />
             </EmailWrapper>
@@ -81,6 +91,7 @@ const Login = () => {
                 placeholder='비밀번호'
                 value={password}
                 onChange={onChangePasswordHandler}
+                onKeyDown={handleKeyDown}
                 isValidPassword={isValidPassword}
               />
             </PasswordWrapper>
