@@ -11,16 +11,19 @@ import chevronDownIcon from '../../../assets/images/chevron-down-icon.svg';
 import searchIcon from '../../../assets/images/search-icon.svg';
 import axios from 'axios';
 import Loading from './../../../components/Loading/Loading';
+import useModal from '../../../hooks/useModal';
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // (지역) 드롭 다운 버튼 클릭 시
-  const [isClicked, setIsClicked] = useState(false);
   const dropDownState = {
     true: chevronUpIcon,
     false: chevronDownIcon,
   };
+
+  // UseModal
+  const [modalOpen, toggle, firstRef, secondRef] = useModal();
 
   // 선택된 지역
   const [selectedRegion, setSelectedRegion] = useState();
@@ -61,7 +64,6 @@ const HomePage = () => {
       };
       axios(option)
         .then((res) => {
-          // console.log(res);
           setPost(res.data);
           setIsLoading(true);
         })
@@ -86,25 +88,14 @@ const HomePage = () => {
         <HeadingLayout heading='여행 피드' />
         <Ul>
           <Li>
-            {/* {isClicked ? (
-              <DropDownButtonOverlay
-                onClick={() => {
-                  setIsClicked((cur) => !cur);
-                }}
-              ></DropDownButtonOverlay>
-            ) : (
-              <></>
-            )} */}
-            <DropDownButton
-              type='button'
-              onClick={() => {
-                setIsClicked((cur) => !cur);
-              }}
-              dropDownState={dropDownState[isClicked]}
-            >
+            <DropDownButton type='button' onClick={toggle} ref={firstRef} dropDownState={dropDownState[modalOpen]}>
               지역
             </DropDownButton>
-            <RegionFilterButton isClicked={isClicked} getRigionsHandler={getRigionsHandler}></RegionFilterButton>
+            <RegionFilterButton
+              modalOpen={modalOpen}
+              modalRef={secondRef}
+              getRigionsHandler={getRigionsHandler}
+            ></RegionFilterButton>
           </Li>
           <Li>
             <Button
@@ -193,17 +184,6 @@ const Li = styled.li`
     display: flex;
   }
 `;
-
-// 빈 화면 클릭 시, 드롭 다운 사라지게 (보류)
-// const DropDownButtonOverlay = styled.div`
-//   position: fixed;
-//   left: 0;
-//   top: 0rem;
-//   width: 100vw;
-//   height: 100vh;
-//   z-index: 1;
-//   background: black;
-// `;
 
 const DropDownButton = styled.button`
   width: 27.4rem;
