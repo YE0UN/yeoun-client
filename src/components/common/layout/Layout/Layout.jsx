@@ -5,16 +5,12 @@ import Header from '../../Header/Header';
 import mapIcon from '../../../../assets/images/map-icon.svg';
 import chevronIcon from '../../../../assets/images/chevron-icon.svg';
 import MapModal from '../../../map/MapModal/MapModal';
+import useModal from '../../../../hooks/useModal';
 
 // 사이드 버튼은 default로 true이며, 사이드 버튼이 필요없는 페이지는 false로 사용
 const Layout = ({ children, sideButton = true }) => {
-  // 지도 버튼 기능
-  const [isClicked, setIsClicked] = useState(false);
-
-  const Map = () => {
-    // console.log('지도 기능이 들어갈 곳입니다.');
-    setIsClicked((cur) => !cur);
-  };
+  // 지도 버튼 기능 UseModal
+  const [openModal, toggle, firstRef, secondRef] = useModal();
 
   // 탑 버튼 기능
   const scrollToTop = () => {
@@ -24,21 +20,13 @@ const Layout = ({ children, sideButton = true }) => {
     });
   };
 
-  const CloseButtonHandler = () => {
-    setIsClicked((cur) => !cur);
-  };
-
   return (
     <>
       <MainContainer>
-        {isClicked ? (
+        {openModal ? (
           <>
-            <ModalOverlay
-              onClick={() => {
-                setIsClicked((cur) => !cur);
-              }}
-            ></ModalOverlay>
-            <MapModal CloseButtonHandler={CloseButtonHandler} />
+            <ModalOverlay onClick={toggle}></ModalOverlay>
+            <MapModal toggle={toggle} modalRef={secondRef} />
           </>
         ) : (
           <></>
@@ -47,7 +35,7 @@ const Layout = ({ children, sideButton = true }) => {
         <SubContainer>{children}</SubContainer>
         {sideButton ? (
           <>
-            <MapButton type='button' onClick={Map}></MapButton>
+            <MapButton type='button' onClick={toggle} ref={firstRef}></MapButton>
             <TopButton type='button' onClick={scrollToTop}></TopButton>
           </>
         ) : (

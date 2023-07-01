@@ -3,18 +3,12 @@ import Map from '../Map/Map';
 import styled from 'styled-components';
 import closeIcon from '../../../assets/images/close-icon.svg';
 
-const MapModal = ({ CloseButtonHandler }) => {
+const MapModal = ({ toggle, modalRef }) => {
   return (
     <>
-      <MapContainer>
+      <MapContainer ref={modalRef}>
         <Map width='800' height='800' />
-        <Img
-          src={closeIcon}
-          alt='닫기 버튼'
-          onClick={() => {
-            CloseButtonHandler();
-          }}
-        />
+        <Img src={closeIcon} alt='닫기 버튼' onClick={toggle} />
       </MapContainer>
     </>
   );
@@ -31,8 +25,7 @@ const MapContainer = styled.article`
   height: 800px;
   z-index: 200;
   background: #ffffff;
-  border: 3px solid var(--main-bg-color);
-  border-radius: 20px;
+  border-radius: 12px;
 `;
 
 const Img = styled.img`
@@ -44,4 +37,9 @@ const Img = styled.img`
   z-index: 999;
   cursor: pointer;
   user-select: none;
+  border: 1px solid black;
+  border-radius: 4px;
+  &:hover {
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
+  }
 `;

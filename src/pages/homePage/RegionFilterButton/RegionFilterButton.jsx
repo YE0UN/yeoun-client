@@ -24,7 +24,7 @@ const regions = [
   '세종',
 ];
 
-const RegionFilterButton = ({ isClicked, getRigionsHandler }) => {
+const RegionFilterButton = ({ modalOpen, modalRef, getRigionsHandler }) => {
   const [selectedRegions, setSelectedRegions] = useState([...regions]);
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const RegionFilterButton = ({ isClicked, getRigionsHandler }) => {
 
   return (
     <>
-      <CheckboxWrapper isClicked={isClicked}>
+      <CheckboxWrapper modalOpen={modalOpen} ref={modalRef}>
         {regions.map((region) => (
           <CustomLabel key={region}>
             <CustomInput
@@ -104,7 +104,7 @@ const RegionFilterButton = ({ isClicked, getRigionsHandler }) => {
 export default RegionFilterButton;
 
 const CheckboxWrapper = styled.div`
-  display: ${(props) => (props.isClicked ? 'flex' : 'none')};
+  display: ${(props) => (props.modalOpen ? 'flex' : 'none')};
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;

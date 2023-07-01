@@ -28,11 +28,16 @@ const SIZES = {
   `,
 };
 
-const Button = ({ size, disabled, children, onClickHandler }) => {
+const Button = ({ size, disabled, children, onClickHandler, modalRef }) => {
   const styleSize = SIZES[size];
 
   return (
-    <MainBtn styleSize={styleSize} disabled={disabled} onClick={() => (onClickHandler ? onClickHandler() : '')}>
+    <MainBtn
+      ref={modalRef}
+      styleSize={styleSize}
+      disabled={disabled}
+      onClick={() => (onClickHandler ? onClickHandler() : '')}
+    >
       {children}
     </MainBtn>
   );
