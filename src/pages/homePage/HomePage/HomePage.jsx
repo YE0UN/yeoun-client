@@ -50,7 +50,7 @@ const HomePage = () => {
 
   // 전체 게시물 상태관리
   const [post, setPost] = useState([]);
-  // console.log(post);
+  console.log(post);
 
   // 선택 지역 게시물 조회 기능
   const ViewSelectedPosts = useCallback(() => {
@@ -158,6 +158,8 @@ const HomePage = () => {
                   comment={''}
                   createdAt={post.createdAt}
                   postId={post._id}
+                  postUserId={post.user._id}
+                  // introduction={post.user.introduction}
                 />
               );
             })}
