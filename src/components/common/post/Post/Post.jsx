@@ -10,19 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../../context/AuthContext';
 import axios from 'axios';
 
-const Post = ({
-  profileImage,
-  nickname,
-  bookMark,
-  content,
-  img,
-  like,
-  comment,
-  createdAt,
-  postId,
-  // introduction,
-  postUserId,
-}) => {
+const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, createdAt, postId, introduction }) => {
   const { userId } = useContext(AuthContextStore);
   const navigate = useNavigate();
 
@@ -55,34 +43,6 @@ const Post = ({
   const onClickFlipCardHandler = () => {
     setIsFlipped(!isFlipped);
   };
-
-  const [introduction, setIntroduction] = useState([]);
-  console.log(introduction);
-
-  // 게시물 유저 프로필 정보
-  useEffect(() => {
-    const GetUserInfo = () => {
-      const option = {
-        url: `http://localhost:3000/users/${postUserId}/profile`,
-        method: 'GET',
-      };
-      axios(option)
-        .then((res) => {
-          console.log(res);
-          if (res.data.user.introduction) {
-            setIntroduction(res.data.user.introduction);
-          } else {
-            setIntroduction('작성된 소개 글이 없습니다.');
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    if (postUserId) {
-      GetUserInfo();
-    }
-  }, [postUserId]);
 
   return (
     <>
@@ -150,7 +110,7 @@ const Post = ({
               <ProfileImg className='back' src={profileImage ? profileImage : userIcon} alt={ProfileImgAlt} />
               {/* <ProfileImg src={profileImage} alt={ProfileImgAlt} /> */}
               <UserNameP className='back'>{nickname}</UserNameP>
-              <ContentP className='back'>{introduction}</ContentP>
+              <ContentP className='back'>{introduction !== '' ? introduction : '작성된 소개 글이 없습니다.'}</ContentP>
               <BackButton type='button' onClick={onClickFlipCardHandler}>
                 돌아가기
               </BackButton>
