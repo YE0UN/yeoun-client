@@ -158,6 +158,7 @@ const HomePage = () => {
                   comment={''}
                   createdAt={post.createdAt}
                   postId={post._id}
+                  introduction={post.user.introduction}
                 />
               );
             })}

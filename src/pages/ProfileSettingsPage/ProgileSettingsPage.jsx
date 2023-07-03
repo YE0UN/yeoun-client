@@ -92,7 +92,6 @@ const ProfileSettingsPage = () => {
 
   // 수정하기 기능
   const onClickHandler = () => {
-    console.log(email, nickname, introduction);
     const option = {
       url: `http://localhost:3000/users/${userId}/profile`,
       method: 'PUT',
