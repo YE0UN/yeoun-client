@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
 import bookMarkIcon from '../../../../assets/images/bookmark-icon.svg';
@@ -8,7 +8,6 @@ import heartFillIcon from '../../../../assets/images/heart-fill-icon.svg';
 import commentIcon from '../../../../assets/images/comment-icon.svg';
 import { useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../../context/AuthContext';
-import axios from 'axios';
 
 const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, createdAt, postId, introduction }) => {
   const { userId } = useContext(AuthContextStore);
@@ -75,7 +74,7 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
                 src={img}
                 alt=''
                 onError={(e) => {
-                  console.log('이미지 불러오기 오류! 랜덤 이미지로 대체합니다.');
+                  // console.log('이미지 불러오기 오류! 랜덤 이미지로 대체합니다.');
                   e.target.src = 'https://picsum.photos/600/600/?random';
                 }}
                 onClick={onClickMovePageHandler}

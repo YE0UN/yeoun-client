@@ -84,7 +84,7 @@ const PostContent = ({
             src={img}
             alt=''
             onError={(e) => {
-              console.log('이미지 불러오기 오류');
+              // console.log('이미지 불러오기 오류! 랜덤 이미지로 대체합니다.');
               e.target.src = 'https://picsum.photos/600/600/?random';
             }}
           />
