@@ -26,6 +26,18 @@ const SIZES = {
     --button-height: 5.4rem;
     --button-font-size: var(--fs-lg);
   `,
+  modalCancel: css`
+    --button-width: 8rem;
+    --button-height: 4rem;
+    --button-font-size: var(--fs-sm);
+    --main-btn-color: #e8e8e8;
+    --btn-text-color: #000000;
+  `,
+  modalConfirm: css`
+    --button-width: 8rem;
+    --button-height: 4rem;
+    --button-font-size: var(--fs-sm);
+  `,
 };
 
 const Button = ({ size, disabled, children, onClickHandler, modalRef }) => {
@@ -50,7 +62,7 @@ const MainBtn = styled.button`
   min-width: var(--button-width);
   height: var(--button-height);
   font-size: var(--button-font-size);
-  font-weight: 700;
+  font-weight: ${(p) => (p.styleSize === SIZES.modalCancel || SIZES.modalConfirm ? 500 : 700)};
   border-radius: 8px;
   background-color: var(--main-btn-color);
   color: var(--btn-text-color);
