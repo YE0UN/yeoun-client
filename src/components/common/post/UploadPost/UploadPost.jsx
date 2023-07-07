@@ -4,6 +4,8 @@ import userIcon from '../../../../assets/images/user-icon.svg';
 import Button from '../../Button/Button';
 import photoIcon from '../../../../assets/images/photo-icon.svg';
 import imageCompression from 'browser-image-compression';
+import useModal from '../../../../hooks/useModal';
+import Modal from '../../modal/Modal/Modal';
 
 const UploadPost = ({
   bookMark,
@@ -102,6 +104,9 @@ const UploadPost = ({
     }
   }, [title, postContent, imagePreview, getModificationData]);
 
+  // 삭제하기 모달
+  const [openModal, toggle, firstRef, secondRef] = useModal();
+
   return (
     <>
       <Article>
@@ -135,7 +140,11 @@ const UploadPost = ({
           <SpanWrapper>
             <PostDateSpan>{getCurrentDate()}</PostDateSpan>
             {onClickRemovePostHandler ? (
-              <RemoveSpan onClick={onClickRemovePostHandler}>게시물 삭제하기</RemoveSpan>
+              <>
+                <RemoveSpan onClick={toggle} ref={firstRef}>
+                  게시물 삭제하기
+                </RemoveSpan>
+              </>
             ) : (
               <></>
             )}
@@ -150,6 +159,14 @@ const UploadPost = ({
             {buttonName ? buttonName : '작성완료'}
           </Button>
         </PostInfo>
+        {openModal && (
+          <Modal
+            toggle={toggle}
+            secondRef={secondRef}
+            confirm={onClickRemovePostHandler}
+            modalHeading='정말로 삭제하시겠습니까?'
+          />
+        )}
       </Article>
     </>
   );
