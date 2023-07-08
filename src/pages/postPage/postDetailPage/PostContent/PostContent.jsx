@@ -9,10 +9,13 @@ import heartFillIcon from '../../../../assets/images/heart-fill-icon.svg';
 import commentIcon from '../../../../assets/images/comment-icon.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContextStore } from './../../../../context/AuthContext';
+import useModal from '../../../../hooks/useModal';
+import ProfileModal from '../../../../components/common/modal/Modal/ProfileModal/ProfileModal';
 
 const PostContent = ({
   profileImage,
   nickname,
+  introduction,
   bookMark,
   title,
   content,
@@ -47,6 +50,9 @@ const PostContent = ({
   // 좋아요 카운트 기능
   const [likeCountSpan, setLikeCountSpan] = useState(0);
 
+  // useModal
+  const [modalOpen, toggle, firstRef, secondRef] = useModal();
+
   return (
     <>
       <Article>
@@ -72,9 +78,25 @@ const PostContent = ({
           }}
         />
         <ProfileInfoDiv>
-          <ProfileImg src={profileImage ? profileImage : userIcon} alt={ProfileImgAlt} />
-          {/* <ProfileImg src={profileImage} alt={ProfileImgAlt} /> */}
-          <UserNameP>{nickname}</UserNameP>
+          <ProfileImg
+            src={profileImage ? profileImage : userIcon}
+            alt={ProfileImgAlt}
+            onClick={toggle}
+            ref={firstRef}
+          />
+          <UserNameP onClick={toggle} ref={firstRef}>
+            {nickname}
+          </UserNameP>
+          {modalOpen && (
+            <ProfileModal
+              toggle={toggle}
+              secondRef={secondRef}
+              profileImage={profileImage}
+              ProfileImgAlt={ProfileImgAlt}
+              nickname={nickname}
+              introduction={introduction}
+            />
+          )}
         </ProfileInfoDiv>
         <ContentTitle>{title}</ContentTitle>
         <ContentP>{content}</ContentP>
@@ -84,7 +106,7 @@ const PostContent = ({
             src={img}
             alt=''
             onError={(e) => {
-              console.log('이미지 불러오기 오류');
+              // console.log('이미지 불러오기 오류! 랜덤 이미지로 대체합니다.');
               e.target.src = 'https://picsum.photos/600/600/?random';
             }}
           />
@@ -156,11 +178,13 @@ const ProfileImg = styled.img`
   border: 1px solid var(--profile-border-color);
   border-radius: 50%;
   background: var(--profile-bg-color);
+  cursor: pointer;
 `;
 
 const UserNameP = styled.p`
   font-size: var(--fs-lg);
   font-weight: 500;
+  cursor: pointer;
 `;
 
 const ProfileInfoDiv = styled.div`

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
 import bookMarkIcon from '../../../../assets/images/bookmark-icon.svg';
@@ -8,7 +8,6 @@ import heartFillIcon from '../../../../assets/images/heart-fill-icon.svg';
 import commentIcon from '../../../../assets/images/comment-icon.svg';
 import { useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../../context/AuthContext';
-import axios from 'axios';
 
 const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, createdAt, postId, introduction }) => {
   const { userId } = useContext(AuthContextStore);
@@ -75,7 +74,7 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
                 src={img}
                 alt=''
                 onError={(e) => {
-                  console.log('이미지 불러오기 오류! 랜덤 이미지로 대체합니다.');
+                  // console.log('이미지 불러오기 오류! 랜덤 이미지로 대체합니다.');
                   e.target.src = 'https://picsum.photos/600/600/?random';
                 }}
                 onClick={onClickMovePageHandler}
@@ -285,23 +284,6 @@ const BackContainer = styled.div`
   flex-direction: column;
   gap: 2rem;
   align-items: center;
-`;
-
-const Introduction = styled.textarea`
-  width: 100%;
-  min-height: 20rem;
-  max-height: 20rem;
-  border: 2px solid ${(props) => (props.isValid ? 'var(--input-border-focus-color)' : 'var(--input-border-color)')};
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  font-size: var(--fs-md);
-  background: #ffffff;
-
-  &:focus {
-    outline: none;
-    border: 1px solid var(--input-border-focus-color);
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-  }
 `;
 
 const BackButton = styled.button`

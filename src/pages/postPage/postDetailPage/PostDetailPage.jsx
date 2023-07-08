@@ -49,6 +49,7 @@ const PostDetailPage = () => {
             <PostContent
               profileImage={postContent.user.profileImage}
               nickname={postContent.user.nickname}
+              introduction={postContent.user.introduction}
               bookMark={''}
               title={postContent.title}
               content={postContent.content}
