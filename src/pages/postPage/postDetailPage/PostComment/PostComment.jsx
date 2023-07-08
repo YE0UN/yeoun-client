@@ -4,12 +4,8 @@ import userIcon from '../../../../assets/images/user-icon.svg';
 import kebabIcon from '../../../../assets/images/kebab-icon.svg';
 import sendIcon from '../../../../assets/images/send-icon.svg';
 import sendFillIcon from '../../../../assets/images/send-fill-icon.svg';
-import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const PostComment = ({ profileImage, nickname, comment, createdAt }) => {
-  const params = useParams();
-  const navigate = useNavigate();
-
   // 유저 프로필 이미지 alt
   const ProfileImgAlt = `${nickname} 이미지`;
 

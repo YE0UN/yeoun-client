@@ -286,23 +286,6 @@ const BackContainer = styled.div`
   align-items: center;
 `;
 
-const Introduction = styled.textarea`
-  width: 100%;
-  min-height: 20rem;
-  max-height: 20rem;
-  border: 2px solid ${(props) => (props.isValid ? 'var(--input-border-focus-color)' : 'var(--input-border-color)')};
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  font-size: var(--fs-md);
-  background: #ffffff;
-
-  &:focus {
-    outline: none;
-    border: 1px solid var(--input-border-focus-color);
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-  }
-`;
-
 const BackButton = styled.button`
   width: 8rem;
   padding: 0.2rem;
