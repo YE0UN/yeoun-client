@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Footer from '../../Footer/Footer';
 import Header from '../../Header/Header';
@@ -68,7 +68,7 @@ const ModalOverlay = styled.div`
   width: 100vw;
   height: 100vh;
   z-index: 150;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
 `;
 
 const MapButton = styled.button`
