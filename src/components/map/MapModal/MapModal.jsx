@@ -37,8 +37,7 @@ const Img = styled.img`
   z-index: 999;
   cursor: pointer;
   user-select: none;
-  border: 1px solid black;
-  border-radius: 4px;
+  border-radius: 50%;
   &:hover {
     box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
   }

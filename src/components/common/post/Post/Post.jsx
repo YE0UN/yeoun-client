@@ -30,8 +30,6 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
     if (userId) {
       const newPath = `/post/${postId}`;
       navigate(newPath);
-      // 페이지 전환 시, 의도하지 않은 스크롤 발생 방지
-      window.location.href = newPath;
     } else {
       alert('로그인 후 이용 가능합니다.');
     }
@@ -60,10 +58,26 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
               <ProfileImg
                 src={profileImage ? profileImage : userIcon}
                 alt={ProfileImgAlt}
-                onClick={onClickFlipCardHandler}
+                onClick={() => {
+                  if (userId) {
+                    onClickFlipCardHandler();
+                  } else {
+                    alert('로그인 후 이용가능합니다.');
+                  }
+                }}
               />
               {/* <ProfileImg src={profileImage} alt={ProfileImgAlt} /> */}
-              <UserNameP onClick={onClickFlipCardHandler}>{nickname}</UserNameP>
+              <UserNameP
+                onClick={() => {
+                  if (userId) {
+                    onClickFlipCardHandler();
+                  } else {
+                    alert('로그인 후 이용가능합니다.');
+                  }
+                }}
+              >
+                {nickname}
+              </UserNameP>
             </ProfileInfoDiv>
             <ContentP className='ellipsis' onClick={onClickMovePageHandler}>
               {content}

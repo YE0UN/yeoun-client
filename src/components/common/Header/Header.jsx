@@ -157,6 +157,7 @@ const DropdownButton = styled.button`
   border: none;
   padding: 0;
   cursor: pointer;
+  vertical-align: bottom;
 `;
 
 const Img = styled.img`
