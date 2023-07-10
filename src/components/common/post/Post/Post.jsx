@@ -119,7 +119,6 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
                   <span>1</span>
                 </CommentWrapper>
               </Container>
-              {/* <PostDateSpan>2023년 06월 28일</PostDateSpan> */}
               <PostDateSpan>{formattedDate}</PostDateSpan>
             </ContentInfo>
           </CardFront>

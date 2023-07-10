@@ -91,7 +91,7 @@ const Header = () => {
                       <MenuItem
                         onClick={() => {
                           toggle();
-                          navigate('/myPage');
+                          navigate('/mypage');
                         }}
                       >
                         마이페이지
