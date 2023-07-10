@@ -11,6 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContextStore } from './../../../../context/AuthContext';
 import useModal from '../../../../hooks/useModal';
 import ProfileModal from '../../../../components/common/modal/Modal/ProfileModal/ProfileModal';
+import useFormattedDate from '../../../../hooks/useFormattedDate';
 
 const PostContent = ({
   profileImage,
@@ -52,6 +53,9 @@ const PostContent = ({
 
   // useModal
   const [modalOpen, toggle, firstRef, secondRef] = useModal();
+
+  // 서버의 createdAt 형식 변환을 위한 커스텀 훅 사용 useFormattedDate
+  const formattedDate = useFormattedDate(createdAt);
 
   return (
     <>
@@ -132,7 +136,7 @@ const PostContent = ({
               <span>1</span>
             </CommentWrapper>
           </Container>
-          <PostDateSpan>2023년 06월 28일</PostDateSpan>
+          <PostDateSpan>{formattedDate}</PostDateSpan>
         </ContentInfo>
       </Article>
     </>

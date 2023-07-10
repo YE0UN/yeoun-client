@@ -56,7 +56,7 @@ const PostDetailPage = () => {
               img={postContent.img}
               like={''}
               comment={''}
-              createdAt={''}
+              createdAt={postContent.createdAt}
               postUserId={postContent.user._id}
             />
             <PostComment profileImage={''} nickname={'익명'} comment={'댓글 테스트'} createdAt={'2023년 06월 28일'} />
