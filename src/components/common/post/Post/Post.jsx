@@ -8,6 +8,7 @@ import heartFillIcon from '../../../../assets/images/heart-fill-icon.svg';
 import commentIcon from '../../../../assets/images/comment-icon.svg';
 import { useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../../context/AuthContext';
+import useFormattedDate from './../../../../hooks/useFormattedDate';
 
 const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, createdAt, postId, introduction }) => {
   const { userId } = useContext(AuthContextStore);
@@ -40,6 +41,9 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
   const onClickFlipCardHandler = () => {
     setIsFlipped(!isFlipped);
   };
+
+  // 서버의 createdAt 형식 변환을 위한 커스텀 훅 사용 useFormattedDate
+  const formattedDate = useFormattedDate(createdAt);
 
   return (
     <>
@@ -115,7 +119,7 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
                   <span>1</span>
                 </CommentWrapper>
               </Container>
-              <PostDateSpan>2023년 06월 28일</PostDateSpan>
+              <PostDateSpan>{formattedDate}</PostDateSpan>
             </ContentInfo>
           </CardFront>
           <CardBack>
