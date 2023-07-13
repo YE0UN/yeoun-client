@@ -40,7 +40,7 @@ const SIZES = {
   `,
 };
 
-const Button = ({ size, disabled, children, onClickHandler, modalRef }) => {
+const Button = ({ size, disabled, active, children, onClickHandler, modalRef }) => {
   const styleSize = SIZES[size];
 
   return (
@@ -48,6 +48,7 @@ const Button = ({ size, disabled, children, onClickHandler, modalRef }) => {
       ref={modalRef}
       styleSize={styleSize}
       disabled={disabled}
+      active={active}
       onClick={() => (onClickHandler ? onClickHandler() : '')}
     >
       {children}
@@ -64,7 +65,12 @@ const MainBtn = styled.button`
   font-size: var(--button-font-size);
   font-weight: ${(p) => (p.styleSize === SIZES.modalCancel || SIZES.modalConfirm ? 500 : 700)};
   border-radius: 8px;
-  background-color: var(--main-btn-color);
+  background-color: ${(p) =>
+    p.active === true
+      ? 'var(--main-btn-color)'
+      : p.active === false
+      ? 'var(--main-btn-disabled-color)'
+      : 'var(--main-btn-color)'};
   color: var(--btn-text-color);
 
   &:hover {
