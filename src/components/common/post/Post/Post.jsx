@@ -9,10 +9,27 @@ import commentIcon from '../../../../assets/images/comment-icon.svg';
 import { useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../../context/AuthContext';
 import useFormattedDate from './../../../../hooks/useFormattedDate';
+import useImagePreload from '../../../../hooks/useImagePreload';
+import axios from 'axios';
 
-const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, createdAt, postId, introduction }) => {
+const Post = ({
+  profileImage,
+  nickname,
+  bookMark,
+  content,
+  img,
+  likeState,
+  likeCount,
+  comment,
+  createdAt,
+  postId,
+  introduction,
+}) => {
   const { userId } = useContext(AuthContextStore);
   const navigate = useNavigate();
+
+  // image preload
+  useImagePreload([bookMarkFillIcon, heartFillIcon]);
 
   // 유저 프로필 이미지 alt
   const ProfileImgAlt = `${nickname} 이미지`;
@@ -21,10 +38,26 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
   const [isBookMarked, setIsBookMarked] = useState(false);
 
   // 좋아요 기능
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(likeState);
 
   // 좋아요 카운트 기능
-  const [likeCountSpan, setLikeCountSpan] = useState(0);
+  const [likeCountSpan, setLikeCountSpan] = useState(likeCount);
+
+  // 좋아요
+  const togglelikeState = () => {
+    const option = {
+      url: `http://localhost:3000/likes/${postId}`,
+      method: 'POST',
+      data: { userId: userId },
+    };
+    axios(option)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((res) => {
+        console.log(res);
+      });
+  };
 
   // 게시물 내용 클릭 시, 상세 게시물 페이지로 이동
   const onClickMovePageHandler = () => {
@@ -66,7 +99,7 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
                   if (userId) {
                     onClickFlipCardHandler();
                   } else {
-                    alert('로그인 후 이용가능합니다.');
+                    alert('로그인 후 이용 가능합니다.');
                   }
                 }}
               />
@@ -76,7 +109,7 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
                   if (userId) {
                     onClickFlipCardHandler();
                   } else {
-                    alert('로그인 후 이용가능합니다.');
+                    alert('로그인 후 이용 가능합니다.');
                   }
                 }}
               >
@@ -108,8 +141,13 @@ const Post = ({ profileImage, nickname, bookMark, content, img, like, comment, c
                     src={isLiked ? heartFillIcon : heartIcon}
                     alt='좋아요 아이콘'
                     onClick={() => {
-                      setIsLiked((cur) => !cur);
-                      setLikeCountSpan((cur) => (isLiked ? cur - 1 : cur + 1));
+                      if (userId) {
+                        togglelikeState();
+                        setIsLiked((cur) => !cur);
+                        setLikeCountSpan((cur) => (isLiked ? cur - 1 : cur + 1));
+                      } else {
+                        alert('로그인 후 이용 가능합니다.');
+                      }
                     }}
                   />
                   <span>{likeCountSpan}</span>

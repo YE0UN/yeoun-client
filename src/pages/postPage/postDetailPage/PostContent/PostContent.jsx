@@ -12,6 +12,7 @@ import { AuthContextStore } from './../../../../context/AuthContext';
 import useModal from '../../../../hooks/useModal';
 import ProfileModal from '../../../../components/common/modal/Modal/ProfileModal/ProfileModal';
 import useFormattedDate from '../../../../hooks/useFormattedDate';
+import useImagePreload from '../../../../hooks/useImagePreload';
 
 const PostContent = ({
   profileImage,
@@ -30,6 +31,9 @@ const PostContent = ({
 
   const params = useParams();
   const navigate = useNavigate();
+
+  // useImagePreload
+  useImagePreload([editIcon, bookMarkFillIcon, heartFillIcon]);
 
   // 유저 프로필 이미지 alt
   const ProfileImgAlt = `${nickname} 이미지`;

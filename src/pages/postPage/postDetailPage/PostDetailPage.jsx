@@ -47,17 +47,17 @@ const PostDetailPage = () => {
         {postContent && isLoading ? (
           <PostLayout>
             <PostContent
-              profileImage={postContent.user.profileImage}
-              nickname={postContent.user.nickname}
-              introduction={postContent.user.introduction}
+              profileImage={postContent.post.user.profileImage}
+              nickname={postContent.post.user.nickname}
+              introduction={postContent.post.user.introduction}
               bookMark={''}
-              title={postContent.title}
-              content={postContent.content}
-              img={postContent.img}
+              title={postContent.post.title}
+              content={postContent.post.content}
+              img={postContent.post.img}
               like={''}
               comment={''}
-              createdAt={postContent.createdAt}
-              postUserId={postContent.user._id}
+              createdAt={postContent.post.createdAt}
+              postUserId={postContent.post.user._id}
             />
             <PostComment profileImage={''} nickname={'익명'} comment={'댓글 테스트'} createdAt={'2023년 06월 28일'} />
           </PostLayout>

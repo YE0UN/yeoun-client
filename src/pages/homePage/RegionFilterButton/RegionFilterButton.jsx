@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import checkIcon from '../../../assets/images/check-icon.svg';
 import deleteLightIcon from '../../../assets/images/delete-light-icon.svg';
+import useImagePreload from '../../../hooks/useImagePreload';
 
 const regions = [
   '전국',
@@ -25,6 +26,9 @@ const regions = [
 ];
 
 const RegionFilterButton = ({ modalOpen, modalRef, getRigionsHandler }) => {
+  // useImagePreload
+  useImagePreload([checkIcon]);
+
   const [selectedRegions, setSelectedRegions] = useState([...regions]);
 
   useEffect(() => {

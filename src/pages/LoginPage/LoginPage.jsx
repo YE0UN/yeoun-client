@@ -83,6 +83,7 @@ const Login = () => {
                 onChange={onChangeEmailHandler}
                 onKeyDown={handleKeyDown}
                 isValidEmail={isValidEmail}
+                autoFocus
               />
             </EmailWrapper>
             <PasswordWrapper>
