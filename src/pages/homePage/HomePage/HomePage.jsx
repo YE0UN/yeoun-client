@@ -12,6 +12,7 @@ import searchIcon from '../../../assets/images/search-icon.svg';
 import axios from 'axios';
 import Loading from './../../../components/Loading/Loading';
 import useModal from '../../../hooks/useModal';
+import useImagePreload from '../../../hooks/useImagePreload';
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,8 +23,11 @@ const HomePage = () => {
     false: chevronDownIcon,
   };
 
-  // UseModal
+  // useModal
   const [modalOpen, toggle, firstRef, secondRef] = useModal();
+
+  // useImagePreload
+  useImagePreload([chevronUpIcon]);
 
   // 선택된 지역
   const [selectedRegion, setSelectedRegion] = useState();
@@ -148,17 +152,18 @@ const HomePage = () => {
             {post.map((post, index) => {
               return (
                 <Post
-                  key={post._id}
-                  profileImage={post.user.profileImage}
-                  nickname={post.user.nickname}
+                  key={post.post._id}
+                  profileImage={post.post.user.profileImage}
+                  nickname={post.post.user.nickname}
                   bookMark={''}
-                  content={post.content}
-                  img={post.img}
-                  like={''}
+                  content={post.post.content}
+                  img={post.post.img}
+                  likeState={post.likeState}
+                  likeCount={post.post.likeCount}
                   comment={''}
-                  createdAt={post.createdAt}
-                  postId={post._id}
-                  introduction={post.user.introduction}
+                  createdAt={post.post.createdAt}
+                  postId={post.post._id}
+                  introduction={post.post.user.introduction}
                 />
               );
             })}

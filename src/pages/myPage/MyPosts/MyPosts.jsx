@@ -12,7 +12,7 @@ const MyPosts = () => {
 
   // 내가 쓴 게시물 전체 상태관리
   const [post, setPost] = useState([]);
-  console.log(post);
+  // console.log(post);
 
   const getMyPosts = useCallback(() => {
     const option = {
@@ -41,17 +41,18 @@ const MyPosts = () => {
           {post.map((post, index) => {
             return (
               <Post
-                key={post._id}
-                profileImage={post.user.profileImage}
-                nickname={post.user.nickname}
-                introduction={post.user.introduction}
+                key={post.post._id}
+                profileImage={post.post.user.profileImage}
+                nickname={post.post.user.nickname}
+                introduction={post.post.user.introduction}
                 bookMark={''}
-                content={post.content}
-                img={post.img}
-                like={''}
+                content={post.post.content}
+                img={post.post.img}
+                likeState={post.likeState}
+                likeCount={post.post.likeCount}
                 comment={''}
-                createdAt={post.createdAt}
-                postId={post._id}
+                createdAt={post.post.createdAt}
+                postId={post.post._id}
               />
             );
           })}
