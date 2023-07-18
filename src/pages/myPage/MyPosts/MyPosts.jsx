@@ -21,7 +21,7 @@ const MyPosts = () => {
     };
     axios(option)
       .then((res) => {
-        setPost(res.data.posts);
+        setPost(res.data);
         setIsLoading(true);
       })
       .catch((err) => {
