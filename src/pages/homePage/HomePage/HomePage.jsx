@@ -56,6 +56,12 @@ const HomePage = () => {
   const [post, setPost] = useState([]);
   // console.log(post);
 
+  // 정렬 기준
+  const [sortOrder, setSortOrder] = useState('createdAt');
+
+  // 활성화된 버튼 상태
+  const [activeButton, setActiveButton] = useState('createdAt');
+
   // 선택 지역 게시물 조회 기능
   const ViewSelectedPosts = useCallback(() => {
     setIsLoading(false);
@@ -63,7 +69,7 @@ const HomePage = () => {
       const regions = selectedRegion.map((region) => `siDo=${region}`).join('&');
 
       const option = {
-        url: `http://localhost:3000/posts?${regions}&sort=createdAt`,
+        url: `http://localhost:3000/posts?${regions}&sort=${sortOrder}`,
         method: 'GET',
       };
       axios(option)
@@ -79,7 +85,7 @@ const HomePage = () => {
       setPost([]);
       setIsLoading(true);
     }
-  }, [selectedRegion]);
+  }, [selectedRegion, sortOrder]);
 
   useEffect(() => {
     ViewSelectedPosts();
@@ -104,10 +110,11 @@ const HomePage = () => {
           <Li>
             <Button
               size='md'
-              variants='main'
               onClickHandler={() => {
-                // console.log('최신 순 버튼 클릭!');
+                setSortOrder('createdAt');
+                setActiveButton('createdAt');
               }}
+              active={activeButton === 'createdAt'}
             >
               최신 순
             </Button>
@@ -115,11 +122,11 @@ const HomePage = () => {
           <Li>
             <Button
               size='md'
-              variants='main'
               onClickHandler={() => {
-                // console.log('인기 순 버튼 클릭!');
+                setSortOrder('like');
+                setActiveButton('like');
               }}
-              disabled
+              active={activeButton === 'like'}
             >
               인기 순
             </Button>
@@ -127,11 +134,11 @@ const HomePage = () => {
           <Li>
             <Button
               size='md'
-              variants='main'
               onClickHandler={() => {
-                // console.log('댓글 순 버튼 클릭!');
+                setSortOrder('comment');
+                setActiveButton('comment');
               }}
-              disabled
+              active={activeButton === 'comment'}
             >
               댓글 순
             </Button>

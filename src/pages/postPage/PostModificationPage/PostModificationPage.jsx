@@ -81,7 +81,7 @@ const PostModificationPage = () => {
 
       await axios(option)
         .then((res) => {
-          setPostContent(res.data);
+          setPostContent(res.data.post);
           setSelectedRegion(res.data.siDo);
           setIsLoading(true);
         })

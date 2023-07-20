@@ -8,11 +8,8 @@ import MyComments from './../MyComments/MyComments';
 import MyScrapedPosts from './../MyScrapedPosts/MyScrapedPosts';
 
 const Mypage = () => {
-  const [activeButton, setActiveButton] = useState('내가 쓴 글'); // 활성화된 버튼을 추적하는 상태
-
-  const handleButtonClick = (buttonLabel) => {
-    setActiveButton(buttonLabel);
-  };
+  // 활성화된 버튼 상태
+  const [activeButton, setActiveButton] = useState('내가 쓴 글');
 
   return (
     <>
@@ -22,18 +19,18 @@ const Mypage = () => {
           <Button
             size='myPage'
             active={activeButton === '내가 쓴 글'}
-            onClickHandler={() => handleButtonClick('내가 쓴 글')}
+            onClickHandler={() => setActiveButton('내가 쓴 글')}
           >
             내가 쓴 글
           </Button>
           <Button
             size='myPage'
             active={activeButton === '내가 쓴 댓글'}
-            onClickHandler={() => handleButtonClick('내가 쓴 댓글')}
+            onClickHandler={() => setActiveButton('내가 쓴 댓글')}
           >
             내가 쓴 댓글
           </Button>
-          <Button size='myPage' active={activeButton === '스크랩'} onClickHandler={() => handleButtonClick('스크랩')}>
+          <Button size='myPage' active={activeButton === '스크랩'} onClickHandler={() => setActiveButton('스크랩')}>
             스크랩
           </Button>
         </ButtonContainer>
