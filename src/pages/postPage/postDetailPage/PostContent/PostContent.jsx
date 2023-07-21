@@ -24,6 +24,7 @@ const PostContent = ({
   img,
   like,
   comment,
+  commentCount,
   createdAt,
   postUserId,
 }) => {
@@ -137,7 +138,7 @@ const PostContent = ({
             </LikeWrapper>
             <CommentWrapper>
               <img src={commentIcon} alt='댓글 아이콘' />
-              <span>1</span>
+              <span>{commentCount}</span>
             </CommentWrapper>
           </Container>
           <PostDateSpan>{formattedDate}</PostDateSpan>

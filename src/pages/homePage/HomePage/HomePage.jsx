@@ -167,7 +167,7 @@ const HomePage = () => {
                   img={post.post.img}
                   likeState={post.likeState}
                   likeCount={post.post.likeCount}
-                  comment={''}
+                  commentCount={post.post.commentCount}
                   createdAt={post.post.createdAt}
                   postId={post.post._id}
                   introduction={post.post.user.introduction}
