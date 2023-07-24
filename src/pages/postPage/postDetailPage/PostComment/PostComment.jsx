@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
-// import kebabIcon from '../../../../assets/images/kebab-icon.svg';
 import deleteIcon from '../../../../assets/images/delete-icon.svg';
 import sendIcon from '../../../../assets/images/send-icon.svg';
 import sendFillIcon from '../../../../assets/images/send-fill-icon.svg';
@@ -9,12 +8,16 @@ import axios from 'axios';
 import { AuthContextStore } from '../../../../context/AuthContext';
 import useModal from '../../../../hooks/useModal';
 import Modal from '../../../../components/common/modal/Modal/Modal';
+import ProfileModal from '../../../../components/common/modal/ProfileModal/ProfileModal';
 
 const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
   const { userId } = useContext(AuthContextStore);
 
   // 댓글 삭제 기능
   const [deleteCommentId, setDeleteCommentId] = useState(null);
+
+  // 프로필 확인 기능
+  const [profileCommentId, setProfileCommentId] = useState(null);
 
   const onClickRemoveHandler = (comment) => {
     if (userId === comment.user._id) {
@@ -32,6 +35,7 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
           console.log(res);
         });
     } else {
+      toggleDeleteModal();
       alert('내가 쓴 댓글만 삭제할 수 있습니다.');
     }
   };
@@ -44,6 +48,12 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
   };
 
   const onClickSendHandler = () => {
+    if (!commentValue.trim().length > 0) {
+      alert('의미 있는 댓글을 작성해 주세요.');
+      setCommentValue('');
+      return;
+    }
+
     const option = {
       url: `http://localhost:3000/comments/${postId}`,
       method: 'POST',
@@ -61,14 +71,22 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
         });
   };
 
+  // 엔터 키를 눌렀을 때 댓글 작성 클릭과 동일한 효과를 주기 위한 함수
+  const onEnterKeyDownHandler = (e) => {
+    if (e.key === 'Enter') {
+      onClickSendHandler();
+    }
+  };
+
   // useModal
-  const [openModal, toggle, firstRef, secondRef] = useModal();
+  // 프로필 확인 기능에 사용될 모달과 댓글 삭제 기능에 사용될 모달을 따로 선언하여 사용
+  const [profileModalOpen, toggleProfileModal, firstProfileRef, secondProfileRef] = useModal();
+  const [deleteModalOpen, toggleDeleteModal, firstDeleteRef, secondDeleteRef] = useModal();
 
   return (
     <>
       <Article>
         <h3 className='sr-only'>{nickname}의 Post</h3>
-        {/* 여기서부터 */}
         <ScrollbarLayout>
           {comments &&
             comments.map((comment) => {
@@ -79,22 +97,45 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
                       <ProfileImg
                         src={comment.user.profileImage ? comment.user.profileImage : userIcon}
                         alt={comment.user.nickname}
+                        onClick={() => {
+                          toggleProfileModal();
+                          setProfileCommentId(comment._id);
+                        }}
+                        ref={firstProfileRef}
                       />
-                      <UserNameP>{comment.user.nickname}</UserNameP>
+                      <UserNameP
+                        onClick={() => {
+                          toggleProfileModal();
+                          setProfileCommentId(comment._id);
+                        }}
+                        ref={firstProfileRef}
+                      >
+                        {comment.user.nickname}
+                      </UserNameP>
+                      {profileModalOpen && profileCommentId === comment._id && (
+                        <ProfileModal
+                          toggle={toggleProfileModal}
+                          secondRef={secondProfileRef}
+                          profileImage={comment.user.profileImage}
+                          ProfileImgAlt={comment.user.nickname}
+                          nickname={comment.user.nickname}
+                          introduction={comment.user.introduction}
+                        />
+                      )}
                     </ProfileInfoDiv>
                     <DeleteButton
                       src={deleteIcon}
                       alt='삭제 아이콘'
                       onClick={() => {
-                        toggle();
+                        toggleDeleteModal();
                         setDeleteCommentId(comment._id);
                       }}
-                      ref={firstRef}
+                      ref={firstDeleteRef}
                     />
-                    {openModal && deleteCommentId === comment._id && (
+                    {deleteModalOpen && deleteCommentId === comment._id && (
                       <Modal
-                        toggle={toggle}
-                        secondRef={secondRef}
+                        toggle={toggleDeleteModal}
+                        secondRef={secondDeleteRef}
                         confirm={() => {
                           onClickRemoveHandler(comment);
                         }}
@@ -109,7 +150,6 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
                 </CommentContainer>
               );
             })}
-          {/* 여기까지 */}
         </ScrollbarLayout>
         <CommentInputWrapper>
           <CommentInput
@@ -117,6 +157,8 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
             placeholder='댓글 작성'
             onChange={onChangeCommentInputHandler}
             value={commentValue}
+            maxLength={600}
+            onKeyDown={onEnterKeyDownHandler}
           />
           <SendImg
             src={commentValue ? sendFillIcon : sendIcon}
@@ -191,11 +233,13 @@ const ProfileImg = styled.img`
   border: 1px solid var(--profile-border-color);
   border-radius: 50%;
   background: var(--profile-bg-color);
+  cursor: pointer;
 `;
 
 const UserNameP = styled.p`
   font-size: var(--fs-sm);
   font-weight: 500;
+  cursor: pointer;
 `;
 
 const DeleteButton = styled.img`
@@ -206,11 +250,11 @@ const DeleteButton = styled.img`
 
 const CommentP = styled.p`
   font-size: var(--fs-xs);
-  height: 6rem;
   background: #ffffff;
   border-radius: 8px;
-  line-height: 2.1rem;
+  line-height: 1.2;
   padding: 0.6rem 0.8rem;
+  word-break: break-word;
 `;
 
 const ContentInfo = styled.div`
