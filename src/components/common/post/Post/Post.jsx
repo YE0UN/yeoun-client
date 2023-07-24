@@ -20,7 +20,7 @@ const Post = ({
   img,
   likeState,
   likeCount,
-  comment,
+  commentCount,
   createdAt,
   postId,
   introduction,
@@ -152,9 +152,9 @@ const Post = ({
                   />
                   <span>{likeCountSpan}</span>
                 </LikeWrapper>
-                <CommentWrapper>
+                <CommentWrapper onClick={onClickMovePageHandler}>
                   <img src={commentIcon} alt='댓글 아이콘' />
-                  <span>1</span>
+                  <span>{commentCount}</span>
                 </CommentWrapper>
               </Container>
               <PostDateSpan>{formattedDate}</PostDateSpan>

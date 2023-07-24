@@ -10,7 +10,7 @@ import commentIcon from '../../../../assets/images/comment-icon.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContextStore } from './../../../../context/AuthContext';
 import useModal from '../../../../hooks/useModal';
-import ProfileModal from '../../../../components/common/modal/Modal/ProfileModal/ProfileModal';
+import ProfileModal from '../../../../components/common/modal/ProfileModal/ProfileModal';
 import useFormattedDate from '../../../../hooks/useFormattedDate';
 import useImagePreload from '../../../../hooks/useImagePreload';
 
@@ -24,6 +24,7 @@ const PostContent = ({
   img,
   like,
   comment,
+  commentCount,
   createdAt,
   postUserId,
 }) => {
@@ -137,7 +138,7 @@ const PostContent = ({
             </LikeWrapper>
             <CommentWrapper>
               <img src={commentIcon} alt='댓글 아이콘' />
-              <span>1</span>
+              <span>{commentCount}</span>
             </CommentWrapper>
           </Container>
           <PostDateSpan>{formattedDate}</PostDateSpan>

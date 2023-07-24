@@ -104,7 +104,7 @@ const UploadPost = ({
     }
   }, [title, postContent, imagePreview, getModificationData]);
 
-  // 삭제하기 모달
+  // useModal
   const [openModal, toggle, firstRef, secondRef] = useModal();
 
   return (

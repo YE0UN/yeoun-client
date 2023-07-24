@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import InnerLayout from '../../../components/common/layout/InnerLayout/InnerLayout';
 import HeadingLayout from '../../../components/common/layout/HeadingLayout/HeadingLayout';
 import PostContent from './PostContent/PostContent';
@@ -20,25 +20,26 @@ const PostDetailPage = () => {
   const [postContent, setPostContent] = useState(null);
 
   // 서버에서 게시물 데이터 가져오기
-  useEffect(() => {
-    const GetPostInfo = async () => {
-      const option = {
-        url: `http://localhost:3000/posts/${params.postId}`,
-        method: 'GET',
-      };
-
-      await axios(option)
-        .then((res) => {
-          setPostContent(res.data);
-          setIsLoading(true);
-        })
-        .catch((err) => {
-          console.error(err);
-          setIsLoading(true);
-        });
+  const GetPostInfo = useCallback(async () => {
+    const option = {
+      url: `http://localhost:3000/posts/${params.postId}`,
+      method: 'GET',
     };
+
+    try {
+      const res = await axios(option);
+      console.log(res.data);
+      setPostContent(res.data);
+      setIsLoading(true);
+    } catch (err) {
+      console.error(err);
+      setIsLoading(true);
+    }
+  }, [params.postId]);
+
+  useEffect(() => {
     GetPostInfo();
-  }, [userId, params]);
+  }, [userId, GetPostInfo]);
 
   return (
     <>
@@ -55,11 +56,16 @@ const PostDetailPage = () => {
               content={postContent.post.content}
               img={postContent.post.img}
               like={''}
-              comment={''}
+              commentCount={postContent.post.commentCount}
               createdAt={postContent.post.createdAt}
               postUserId={postContent.post.user._id}
             />
-            <PostComment profileImage={''} nickname={'익명'} comment={'댓글 테스트'} createdAt={'2023년 06월 28일'} />
+            <PostComment
+              nickname={postContent.post.user.nickname}
+              comments={postContent.post.comments}
+              postId={postContent.post._id}
+              GetPostInfo={GetPostInfo}
+            />
           </PostLayout>
         ) : (
           <Loading description='데이터를 불러오는 중입니다...' margin='20rem' />

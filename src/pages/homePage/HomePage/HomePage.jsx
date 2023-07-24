@@ -69,7 +69,7 @@ const HomePage = () => {
       const regions = selectedRegion.map((region) => `siDo=${region}`).join('&');
 
       const option = {
-        url: `http://localhost:3000/posts?${regions}&sort=${sortOrder}`,
+        url: `http://localhost:3000/posts?${regions}&sort=${sortOrder}&page=1`,
         method: 'GET',
       };
       axios(option)
@@ -156,7 +156,8 @@ const HomePage = () => {
         </Ul>
         {isLoading ? (
           <PostContainer postContainerLayout={postContainerLayout}>
-            {post.map((post, index) => {
+            {/* 페이지 정보를 제외한 map */}
+            {post.slice(0, -1).map((post, index) => {
               return (
                 <Post
                   key={post.post._id}
@@ -167,7 +168,7 @@ const HomePage = () => {
                   img={post.post.img}
                   likeState={post.likeState}
                   likeCount={post.post.likeCount}
-                  comment={''}
+                  commentCount={post.post.commentCount}
                   createdAt={post.post.createdAt}
                   postId={post.post._id}
                   introduction={post.post.user.introduction}
