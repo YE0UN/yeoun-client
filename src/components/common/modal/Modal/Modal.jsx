@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from '../../Button/Button';
 
 const Modal = ({ toggle, secondRef, confirm, modalHeading }) => {
+  // 엔터 누르면 확인, Esc 누르면 취소하는 기능
+  const onKeyDownHandler = useCallback(
+    (e) => {
+      if (e.key === 'Enter') {
+        confirm();
+      } else if (e.key === 'Escape') {
+        toggle();
+      }
+    },
+    [confirm, toggle],
+  );
+
+  // 컴포넌트가 마운트될 때 키 이벤트를 추가, 언마운트될 때 제거
+  useEffect(() => {
+    document.addEventListener('keydown', onKeyDownHandler);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDownHandler);
+    };
+  }, [onKeyDownHandler]);
+
   return (
     <>
       <ModalContainer ref={secondRef}>
