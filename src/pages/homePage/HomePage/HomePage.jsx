@@ -13,9 +13,32 @@ import axios from 'axios';
 import Loading from './../../../components/Loading/Loading';
 import useModal from '../../../hooks/useModal';
 import useImagePreload from '../../../hooks/useImagePreload';
+import { useInView } from 'react-intersection-observer';
 
 const HomePage = () => {
+  // 데이터 로딩
   const [isLoading, setIsLoading] = useState(false);
+  // 페이지 상태
+  const [page, setPage] = useState(1);
+  // 마지막 페이지인지 확인
+  const [lastPage, setLastPage] = useState(false);
+  // console.log(page);
+
+  // 무한 스크롤을 위한 useInView 훅 사용
+  const [ref, inView] = useInView();
+
+  // 스크롤에 따라 페이지 상태 변경
+  useEffect(() => {
+    if (inView && !lastPage) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [inView, isLoading, lastPage]);
+
+  const refreshPost = () => {
+    setPost([]);
+    setPage(1);
+    setLastPage(false);
+  };
 
   // (지역) 드롭 다운 버튼 클릭 시
   const dropDownState = {
@@ -54,7 +77,7 @@ const HomePage = () => {
 
   // 전체 게시물 상태관리
   const [post, setPost] = useState([]);
-  // console.log(post);
+  console.log(post);
 
   // 정렬 기준
   const [sortOrder, setSortOrder] = useState('createdAt');
@@ -64,28 +87,36 @@ const HomePage = () => {
 
   // 선택 지역 게시물 조회 기능
   const ViewSelectedPosts = useCallback(() => {
-    setIsLoading(false);
+    // 첫 번째 페이지에서만 로딩 컴포넌트 보이게
+    page === 1 && setIsLoading(false);
+
     if (selectedRegion && selectedRegion.length > 0) {
       const regions = selectedRegion.map((region) => `siDo=${region}`).join('&');
 
       const option = {
-        url: `http://localhost:3000/posts?${regions}&sort=${sortOrder}&page=1`,
+        url: `http://localhost:3000/posts?${regions}&sort=${sortOrder}&page=${page}`,
         method: 'GET',
       };
-      axios(option)
-        .then((res) => {
-          setPost(res.data);
-          setIsLoading(true);
-        })
-        .catch((err) => {
-          console.log(err);
-          setIsLoading(true);
-        });
+      // 이미 마지막 페이지를 가져온 경우에는 추가적인 API 호출을 하지 않도록 함.
+      !lastPage &&
+        axios(option)
+          .then((res) => {
+            // 기존 데이터와 새로운 데이터를 합쳐서 업데이트
+            setPost((prevPost) => [...prevPost, ...res.data]);
+            setIsLoading(true);
+          })
+          .catch((err) => {
+            console.log(err);
+            if (err.response.data.error === '페이지 없음') {
+              setLastPage(true);
+            }
+            setIsLoading(true);
+          });
     } else {
       setPost([]);
       setIsLoading(true);
     }
-  }, [selectedRegion, sortOrder]);
+  }, [selectedRegion, sortOrder, page, lastPage]);
 
   useEffect(() => {
     ViewSelectedPosts();
@@ -113,6 +144,7 @@ const HomePage = () => {
               onClickHandler={() => {
                 setSortOrder('createdAt');
                 setActiveButton('createdAt');
+                refreshPost();
               }}
               active={activeButton === 'createdAt'}
             >
@@ -125,6 +157,7 @@ const HomePage = () => {
               onClickHandler={() => {
                 setSortOrder('like');
                 setActiveButton('like');
+                refreshPost();
               }}
               active={activeButton === 'like'}
             >
@@ -137,6 +170,7 @@ const HomePage = () => {
               onClickHandler={() => {
                 setSortOrder('comment');
                 setActiveButton('comment');
+                refreshPost();
               }}
               active={activeButton === 'comment'}
             >
@@ -156,25 +190,31 @@ const HomePage = () => {
         </Ul>
         {isLoading ? (
           <PostContainer postContainerLayout={postContainerLayout}>
-            {/* 페이지 정보를 제외한 map */}
-            {post.slice(0, -1).map((post, index) => {
-              return (
-                <Post
-                  key={post.post._id}
-                  profileImage={post.post.user.profileImage}
-                  nickname={post.post.user.nickname}
-                  bookMark={''}
-                  content={post.post.content}
-                  img={post.post.img}
-                  likeState={post.likeState}
-                  likeCount={post.post.likeCount}
-                  commentCount={post.post.commentCount}
-                  createdAt={post.post.createdAt}
-                  postId={post.post._id}
-                  introduction={post.post.user.introduction}
-                />
-              );
+            {post.map((post, index) => {
+              // 해당 항목이 유효한 구조를 가지는지 확인
+              if (post && post.post && post.post.user) {
+                return (
+                  <Post
+                    key={post.post._id}
+                    profileImage={post.post.user.profileImage}
+                    nickname={post.post.user.nickname}
+                    bookMark={''}
+                    content={post.post.content}
+                    img={post.post.img}
+                    likeState={post.likeState}
+                    likeCount={post.post.likeCount}
+                    commentCount={post.post.commentCount}
+                    createdAt={post.post.createdAt}
+                    postId={post.post._id}
+                    introduction={post.post.user.introduction}
+                  />
+                );
+              } else {
+                // 유효하지 않은 구조를 가진 항목은 렌더링하지 않음
+                return null;
+              }
             })}
+            <div ref={ref} style={{ position: 'absolute', bottom: '0' }} />
           </PostContainer>
         ) : (
           <Loading description='데이터를 불러오는 중입니다...' margin='20rem 0 10rem' />
