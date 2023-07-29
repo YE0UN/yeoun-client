@@ -22,8 +22,6 @@ const HomePage = () => {
   const [page, setPage] = useState(1);
   // 마지막 페이지인지 확인
   const [lastPage, setLastPage] = useState(false);
-  // console.log(page);
-
   // 무한 스크롤을 위한 useInView 훅 사용
   const [ref, inView] = useInView();
 
@@ -32,7 +30,7 @@ const HomePage = () => {
     if (inView && !lastPage) {
       setPage((prevPage) => prevPage + 1);
     }
-  }, [inView, isLoading, lastPage]);
+  }, [inView, lastPage]);
 
   const refreshPost = () => {
     setPost([]);
@@ -58,10 +56,11 @@ const HomePage = () => {
 
   // 지역 버튼 개수에 따른 화면 레이아웃 변화 기능
   const [regionsCount, setRegionsCount] = useState();
-  const getRigionsHandler = (region) => {
+  const getRigionsHandler = useCallback((region) => {
+    refreshPost();
     setRegionsCount(region.length);
     setSelectedRegion(region);
-  };
+  }, []);
 
   const [postContainerLayout, setPostContainerLayout] = useState('12rem');
 
@@ -77,7 +76,7 @@ const HomePage = () => {
 
   // 전체 게시물 상태관리
   const [post, setPost] = useState([]);
-  console.log(post);
+  // console.log(post);
 
   // 정렬 기준
   const [sortOrder, setSortOrder] = useState('createdAt');
@@ -97,30 +96,38 @@ const HomePage = () => {
         url: `http://localhost:3000/posts?${regions}&sort=${sortOrder}&page=${page}`,
         method: 'GET',
       };
-      // 이미 마지막 페이지를 가져온 경우에는 추가적인 API 호출을 하지 않도록 함.
-      !lastPage &&
-        axios(option)
-          .then((res) => {
-            // 기존 데이터와 새로운 데이터를 합쳐서 업데이트
+
+      axios(option)
+        .then((res) => {
+          // 이미 마지막 페이지를 가져온 경우에는 추가적인 API 호출을 하지 않도록 함.
+          const { currentPage, maxPage } = res.data[res.data.length - 1];
+          const isLastPage = currentPage === maxPage;
+          if (isLastPage) {
+            setLastPage(true);
+          }
+
+          // 첫 번째 페이지면 새로운 데이터로 갱신
+          if (page === 1) {
+            setPost(res.data);
+          } else {
+            // 첫 번째 페이지가 아니면 기존 데이터에 새로운 데이터를 추가하여 갱신
             setPost((prevPost) => [...prevPost, ...res.data]);
-            setIsLoading(true);
-          })
-          .catch((err) => {
-            console.log(err);
-            if (err.response.data.error === '페이지 없음') {
-              setLastPage(true);
-            }
-            setIsLoading(true);
-          });
+          }
+          setIsLoading(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(true);
+        });
     } else {
       setPost([]);
       setIsLoading(true);
     }
-  }, [selectedRegion, sortOrder, page, lastPage]);
+  }, [selectedRegion, sortOrder, page]);
 
   useEffect(() => {
-    ViewSelectedPosts();
-  }, [selectedRegion, ViewSelectedPosts]);
+    !lastPage && ViewSelectedPosts();
+  }, [selectedRegion, ViewSelectedPosts, lastPage]);
 
   return (
     <>
@@ -214,7 +221,11 @@ const HomePage = () => {
                 return null;
               }
             })}
-            <div ref={ref} style={{ position: 'absolute', bottom: '0' }} />
+            <div
+              ref={ref}
+              style={{ position: 'absolute', bottom: 0 }}
+              // style={{ position: 'absolute', width: '120rem', height: '1rem', background: 'red', bottom: 0 }}
+            />
           </PostContainer>
         ) : (
           <Loading description='데이터를 불러오는 중입니다...' margin='20rem 0 10rem' />
