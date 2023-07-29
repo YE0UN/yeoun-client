@@ -13,9 +13,30 @@ import axios from 'axios';
 import Loading from './../../../components/Loading/Loading';
 import useModal from '../../../hooks/useModal';
 import useImagePreload from '../../../hooks/useImagePreload';
+import { useInView } from 'react-intersection-observer';
 
 const HomePage = () => {
+  // 데이터 로딩
   const [isLoading, setIsLoading] = useState(false);
+  // 페이지 상태
+  const [page, setPage] = useState(1);
+  // 마지막 페이지인지 확인
+  const [lastPage, setLastPage] = useState(false);
+  // 무한 스크롤을 위한 useInView 훅 사용
+  const [ref, inView] = useInView();
+
+  // 스크롤에 따라 페이지 상태 변경
+  useEffect(() => {
+    if (inView && !lastPage) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [inView, lastPage]);
+
+  const refreshPost = () => {
+    setPost([]);
+    setPage(1);
+    setLastPage(false);
+  };
 
   // (지역) 드롭 다운 버튼 클릭 시
   const dropDownState = {
@@ -35,10 +56,11 @@ const HomePage = () => {
 
   // 지역 버튼 개수에 따른 화면 레이아웃 변화 기능
   const [regionsCount, setRegionsCount] = useState();
-  const getRigionsHandler = (region) => {
+  const getRigionsHandler = useCallback((region) => {
+    refreshPost();
     setRegionsCount(region.length);
     setSelectedRegion(region);
-  };
+  }, []);
 
   const [postContainerLayout, setPostContainerLayout] = useState('12rem');
 
@@ -64,17 +86,33 @@ const HomePage = () => {
 
   // 선택 지역 게시물 조회 기능
   const ViewSelectedPosts = useCallback(() => {
-    setIsLoading(false);
+    // 첫 번째 페이지에서만 로딩 컴포넌트 보이게
+    page === 1 && setIsLoading(false);
+
     if (selectedRegion && selectedRegion.length > 0) {
       const regions = selectedRegion.map((region) => `siDo=${region}`).join('&');
 
       const option = {
-        url: `http://localhost:3000/posts?${regions}&sort=${sortOrder}&page=1`,
+        url: `http://localhost:3000/posts?${regions}&sort=${sortOrder}&page=${page}`,
         method: 'GET',
       };
+
       axios(option)
         .then((res) => {
-          setPost(res.data);
+          // 이미 마지막 페이지를 가져온 경우에는 추가적인 API 호출을 하지 않도록 함.
+          const { currentPage, maxPage } = res.data[res.data.length - 1];
+          const isLastPage = currentPage === maxPage;
+          if (isLastPage) {
+            setLastPage(true);
+          }
+
+          // 첫 번째 페이지면 새로운 데이터로 갱신
+          if (page === 1) {
+            setPost(res.data);
+          } else {
+            // 첫 번째 페이지가 아니면 기존 데이터에 새로운 데이터를 추가하여 갱신
+            setPost((prevPost) => [...prevPost, ...res.data]);
+          }
           setIsLoading(true);
         })
         .catch((err) => {
@@ -85,11 +123,11 @@ const HomePage = () => {
       setPost([]);
       setIsLoading(true);
     }
-  }, [selectedRegion, sortOrder]);
+  }, [selectedRegion, sortOrder, page]);
 
   useEffect(() => {
-    ViewSelectedPosts();
-  }, [selectedRegion, ViewSelectedPosts]);
+    !lastPage && ViewSelectedPosts();
+  }, [selectedRegion, ViewSelectedPosts, lastPage]);
 
   return (
     <>
@@ -113,6 +151,7 @@ const HomePage = () => {
               onClickHandler={() => {
                 setSortOrder('createdAt');
                 setActiveButton('createdAt');
+                refreshPost();
               }}
               active={activeButton === 'createdAt'}
             >
@@ -125,6 +164,7 @@ const HomePage = () => {
               onClickHandler={() => {
                 setSortOrder('like');
                 setActiveButton('like');
+                refreshPost();
               }}
               active={activeButton === 'like'}
             >
@@ -137,6 +177,7 @@ const HomePage = () => {
               onClickHandler={() => {
                 setSortOrder('comment');
                 setActiveButton('comment');
+                refreshPost();
               }}
               active={activeButton === 'comment'}
             >
@@ -156,25 +197,35 @@ const HomePage = () => {
         </Ul>
         {isLoading ? (
           <PostContainer postContainerLayout={postContainerLayout}>
-            {/* 페이지 정보를 제외한 map */}
-            {post.slice(0, -1).map((post, index) => {
-              return (
-                <Post
-                  key={post.post._id}
-                  profileImage={post.post.user.profileImage}
-                  nickname={post.post.user.nickname}
-                  bookMark={''}
-                  content={post.post.content}
-                  img={post.post.img}
-                  likeState={post.likeState}
-                  likeCount={post.post.likeCount}
-                  commentCount={post.post.commentCount}
-                  createdAt={post.post.createdAt}
-                  postId={post.post._id}
-                  introduction={post.post.user.introduction}
-                />
-              );
+            {post.map((post, index) => {
+              // 해당 항목이 유효한 구조를 가지는지 확인
+              if (post && post.post && post.post.user) {
+                return (
+                  <Post
+                    key={post.post._id}
+                    profileImage={post.post.user.profileImage}
+                    nickname={post.post.user.nickname}
+                    bookMark={''}
+                    content={post.post.content}
+                    img={post.post.img}
+                    likeState={post.likeState}
+                    likeCount={post.post.likeCount}
+                    commentCount={post.post.commentCount}
+                    createdAt={post.post.createdAt}
+                    postId={post.post._id}
+                    introduction={post.post.user.introduction}
+                  />
+                );
+              } else {
+                // 유효하지 않은 구조를 가진 항목은 렌더링하지 않음
+                return null;
+              }
             })}
+            <div
+              ref={ref}
+              style={{ position: 'absolute', bottom: 0 }}
+              // style={{ position: 'absolute', width: '120rem', height: '1rem', background: 'red', bottom: 0 }}
+            />
           </PostContainer>
         ) : (
           <Loading description='데이터를 불러오는 중입니다...' margin='20rem 0 10rem' />
