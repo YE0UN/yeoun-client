@@ -95,6 +95,10 @@ const Post = ({
               <ProfileImg
                 src={profileImage ? profileImage : userIcon}
                 alt={ProfileImgAlt}
+                onError={(e) => {
+                  // console.log('이미지 불러오기 오류!');
+                  e.target.src = userIcon;
+                }}
                 onClick={() => {
                   if (userId) {
                     onClickFlipCardHandler();
