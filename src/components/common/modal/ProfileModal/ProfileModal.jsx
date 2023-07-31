@@ -4,7 +4,7 @@ import userIcon from '../../../../assets/images/user-icon.svg';
 import closeIcon from '../../../../assets/images/close-icon.svg';
 
 const Modal = ({ toggle, secondRef, profileImage, ProfileImgAlt, nickname, introduction }) => {
-  // 엔터 누르면 확인, Esc 누르면 취소하는 기능
+  // Esc 누르면 취소하는 기능
   const onKeyDownHandler = useCallback(
     (e) => {
       if (e.key === 'Escape') {
