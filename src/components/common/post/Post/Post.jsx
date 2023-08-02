@@ -11,6 +11,8 @@ import { AuthContextStore } from '../../../../context/AuthContext';
 import useFormattedDate from './../../../../hooks/useFormattedDate';
 import useImagePreload from '../../../../hooks/useImagePreload';
 import axios from 'axios';
+import useModal from '../../../../hooks/useModal';
+import ScrapModal from '../../modal/ScrapModal/ScrapModal';
 
 const Post = ({
   profileImage,
@@ -78,6 +80,9 @@ const Post = ({
   // 서버의 createdAt 형식 변환을 위한 커스텀 훅 사용 useFormattedDate
   const formattedDate = useFormattedDate(createdAt);
 
+  // useModal
+  const [modalOpen, toggle, firstRef, secondRef] = useModal();
+
   return (
     <>
       <Article className={isFlipped ? 'flipped' : ''}>
@@ -89,14 +94,15 @@ const Post = ({
               alt='스크랩'
               onClick={() => {
                 setIsBookMarked((cur) => !cur);
+                !isBookMarked && toggle();
               }}
+              ref={firstRef}
             />
             <ProfileInfoDiv>
               <ProfileImg
                 src={profileImage ? profileImage : userIcon}
                 alt={ProfileImgAlt}
                 onError={(e) => {
-                  // console.log('이미지 불러오기 오류!');
                   e.target.src = userIcon;
                 }}
                 onClick={() => {
@@ -107,7 +113,6 @@ const Post = ({
                   }
                 }}
               />
-              {/* <ProfileImg src={profileImage} alt={ProfileImgAlt} /> */}
               <UserNameP
                 onClick={() => {
                   if (userId) {
@@ -123,13 +128,11 @@ const Post = ({
             <ContentP className='ellipsis' onClick={onClickMovePageHandler}>
               {content}
             </ContentP>
-            {/* <ContentImg src={'https://source.unsplash.com/random/?trip'} /> */}
             {img !== null ? (
               <ContentImg
                 src={img}
                 alt=''
                 onError={(e) => {
-                  // console.log('이미지 불러오기 오류! 랜덤 이미지로 대체합니다.');
                   e.target.src = 'https://picsum.photos/600/600/?random';
                 }}
                 onClick={onClickMovePageHandler}
@@ -166,8 +169,14 @@ const Post = ({
           </CardFront>
           <CardBack>
             <BackContainer>
-              <ProfileImg className='back' src={profileImage ? profileImage : userIcon} alt={ProfileImgAlt} />
-              {/* <ProfileImg src={profileImage} alt={ProfileImgAlt} /> */}
+              <ProfileImg
+                className='back'
+                src={profileImage ? profileImage : userIcon}
+                alt={ProfileImgAlt}
+                onError={(e) => {
+                  e.target.src = userIcon;
+                }}
+              />
               <UserNameP className='back'>{nickname}</UserNameP>
               <ContentP className='back'>{introduction !== '' ? introduction : '작성된 소개 글이 없습니다.'}</ContentP>
               <BackButton type='button' onClick={onClickFlipCardHandler}>
@@ -177,6 +186,7 @@ const Post = ({
           </CardBack>
         </CardFlipper>
       </Article>
+      {modalOpen ? <ScrapModal toggle={toggle} secondRef={secondRef} /> : <></>}
     </>
   );
 };

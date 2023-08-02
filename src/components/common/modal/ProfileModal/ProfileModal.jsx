@@ -4,7 +4,7 @@ import userIcon from '../../../../assets/images/user-icon.svg';
 import closeIcon from '../../../../assets/images/close-icon.svg';
 
 const Modal = ({ toggle, secondRef, profileImage, ProfileImgAlt, nickname, introduction }) => {
-  // 엔터 누르면 확인, Esc 누르면 취소하는 기능
+  // Esc 누르면 취소하는 기능
   const onKeyDownHandler = useCallback(
     (e) => {
       if (e.key === 'Escape') {
@@ -27,7 +27,13 @@ const Modal = ({ toggle, secondRef, profileImage, ProfileImgAlt, nickname, intro
     <>
       <ModalContainer ref={secondRef}>
         <CloseIcon src={closeIcon} alt='닫기 아이콘' onClick={toggle} />
-        <ProfileImg src={profileImage ? profileImage : userIcon} alt={ProfileImgAlt} />
+        <ProfileImg
+          src={profileImage ? profileImage : userIcon}
+          alt={ProfileImgAlt}
+          onError={(e) => {
+            e.target.src = userIcon;
+          }}
+        />
         <UserNameP>{nickname}</UserNameP>
         <ContentP>{introduction !== '' ? introduction : '작성된 소개 글이 없습니다.'}</ContentP>
       </ModalContainer>
