@@ -13,6 +13,7 @@ import useModal from '../../../../hooks/useModal';
 import ProfileModal from '../../../../components/common/modal/ProfileModal/ProfileModal';
 import useFormattedDate from '../../../../hooks/useFormattedDate';
 import useImagePreload from '../../../../hooks/useImagePreload';
+import ScrapModal from '../../../../components/common/modal/ScrapModal/ScrapModal';
 
 const PostContent = ({
   profileImage,
@@ -57,7 +58,8 @@ const PostContent = ({
   const [likeCountSpan, setLikeCountSpan] = useState(0);
 
   // useModal
-  const [modalOpen, toggle, firstRef, secondRef] = useModal();
+  const [profileModalOpen, toggleProfileModal, firstProfileRef, secondProfileRef] = useModal();
+  const [ScrapModalOpen, toggleScrapModal, firstScrapRef, secondScrapRef] = useModal();
 
   // 서버의 createdAt 형식 변환을 위한 커스텀 훅 사용 useFormattedDate
   const formattedDate = useFormattedDate(createdAt);
@@ -84,22 +86,27 @@ const PostContent = ({
           alt='스크랩'
           onClick={() => {
             setIsBookMarked((cur) => !cur);
+            !isBookMarked && toggleScrapModal();
           }}
+          ref={firstScrapRef}
         />
         <ProfileInfoDiv>
           <ProfileImg
             src={profileImage ? profileImage : userIcon}
             alt={ProfileImgAlt}
-            onClick={toggle}
-            ref={firstRef}
+            onClick={toggleProfileModal}
+            onError={(e) => {
+              e.target.src = userIcon;
+            }}
+            ref={firstProfileRef}
           />
-          <UserNameP onClick={toggle} ref={firstRef}>
+          <UserNameP onClick={toggleProfileModal} ref={firstProfileRef}>
             {nickname}
           </UserNameP>
-          {modalOpen && (
+          {profileModalOpen && (
             <ProfileModal
-              toggle={toggle}
-              secondRef={secondRef}
+              toggle={toggleProfileModal}
+              secondRef={secondProfileRef}
               profileImage={profileImage}
               ProfileImgAlt={ProfileImgAlt}
               nickname={nickname}
@@ -109,13 +116,11 @@ const PostContent = ({
         </ProfileInfoDiv>
         <ContentTitle>{title}</ContentTitle>
         <ContentP>{content}</ContentP>
-        {/* <ContentImg src={'https://source.unsplash.com/random/?trip'} /> */}
         {img !== null ? (
           <ContentImg
             src={img}
             alt=''
             onError={(e) => {
-              // console.log('이미지 불러오기 오류! 랜덤 이미지로 대체합니다.');
               e.target.src = 'https://picsum.photos/600/600/?random';
             }}
           />
@@ -144,6 +149,7 @@ const PostContent = ({
           <PostDateSpan>{formattedDate}</PostDateSpan>
         </ContentInfo>
       </Article>
+      {ScrapModalOpen ? <ScrapModal toggle={toggleScrapModal} secondRef={secondScrapRef} /> : <></>}
     </>
   );
 };

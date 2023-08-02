@@ -27,7 +27,13 @@ const Modal = ({ toggle, secondRef, profileImage, ProfileImgAlt, nickname, intro
     <>
       <ModalContainer ref={secondRef}>
         <CloseIcon src={closeIcon} alt='닫기 아이콘' onClick={toggle} />
-        <ProfileImg src={profileImage ? profileImage : userIcon} alt={ProfileImgAlt} />
+        <ProfileImg
+          src={profileImage ? profileImage : userIcon}
+          alt={ProfileImgAlt}
+          onError={(e) => {
+            e.target.src = userIcon;
+          }}
+        />
         <UserNameP>{nickname}</UserNameP>
         <ContentP>{introduction !== '' ? introduction : '작성된 소개 글이 없습니다.'}</ContentP>
       </ModalContainer>

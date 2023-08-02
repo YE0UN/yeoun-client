@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import styled from 'styled-components';
-import userIcon from '../../../../assets/images/user-icon.svg';
 import closeIcon from '../../../../assets/images/close-icon.svg';
 import checkIcon from '../../../../assets/images/check-icon.svg';
 import plusIcon from '../../../../assets/images/plus-icon.svg';
@@ -28,7 +27,7 @@ const ScrapModal = ({ toggle, secondRef, confirm }) => {
     };
   }, [onKeyDownHandler]);
 
-  const [scrapList, setScrapList] = useState(['여행', '맛집', '11', '22', '33']);
+  const [scrapList, setScrapList] = useState(['여행', '맛집']);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -72,7 +71,7 @@ const ScrapModal = ({ toggle, secondRef, confirm }) => {
   return (
     <>
       <ModalContainer ref={secondRef}>
-        <CloseIcon src={closeIcon} alt='닫기 아이콘' />
+        <CloseIcon src={closeIcon} alt='닫기 아이콘' onClick={toggle} />
         <AddCategoryButton
           onClick={() => setIsAddingCategory(true)}
           isAddingCategory={isAddingCategory}
@@ -161,7 +160,7 @@ const NewCategoryInput = styled.div`
     font-size: var(--fs-xs);
     padding: 1rem;
     border: 2px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: 0.4rem;
 
     &:focus {
       outline: none;
