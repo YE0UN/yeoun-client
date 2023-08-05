@@ -62,14 +62,7 @@ const Header = () => {
           <Nav>
             <Ul>
               <Li>
-                <Link
-                  to='/'
-                  onClick={() => {
-                    alert('준비 중입니다.');
-                  }}
-                >
-                  관광지
-                </Link>
+                <Link to='/tour'>관광지</Link>
               </Li>
               <Li>
                 <Link

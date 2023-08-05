@@ -14,6 +14,8 @@ import PostDetailPage from '../../pages/postPage/postDetailPage/PostDetailPage';
 import ProgileSettingsPage from '../../pages/ProfileSettingsPage/ProgileSettingsPage';
 import NotFoundPage from '../../pages/NotFoundPage/NotFoundPage';
 import Mypage from '../../pages/myPage/MyPage/Mypage';
+import TouristAttractionMainPage from '../../pages/touristAttractionPage/TouristAttractionMainPage/TouristAttractionMainPage';
+import TouristAttractionRegionPage from './../../pages/touristAttractionPage/TouristAttractionRegionPage/TouristAttractionRegionPage';
 
 const Router = () => {
   const { userId } = useContext(AuthContextStore);
@@ -23,6 +25,8 @@ const Router = () => {
       <Route path='*' element={<NotFoundPage />} />
       <Route path='/notfound' element={<NotFoundPage />} />
       <Route path='/' element={<HomePage />} />
+      <Route path='/tour' element={<TouristAttractionMainPage />} />
+      <Route path='/tour/:region' element={<TouristAttractionRegionPage />} />
 
       <Route element={<NonAuthRoute authenticated={userId} />}>
         <Route path='/login' element={<LoginPage />} />
