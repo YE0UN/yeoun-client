@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../../components/common/Button/Button';
 import styled from 'styled-components';
-import axios from 'axios';
+import API from '../../../api/API';
+import ENDPOINT from '../../../api/ENDPOINT';
 
 const EmailInput = ({ getEmail, handleKeyDown, initialEmail, editEmail, emailChecker }) => {
   const [email, setEmail] = useState('');
@@ -48,17 +49,9 @@ const EmailInput = ({ getEmail, handleKeyDown, initialEmail, editEmail, emailChe
   };
 
   const onClickCheckHandler = () => {
-    const option = {
-      url: `http://localhost:3000/users/validate/email/${email}`,
-      method: 'GET',
-      headers: { 'Content-type': 'application/json' },
-      data: {
-        email: email,
-      },
-    };
-
-    axios(option)
+    API(`${ENDPOINT.EMAIL_DUPLICATE_CHECK}/${email}`, 'GET')
       .then((res) => {
+        console.log(res);
         setConfirmEmail(true);
         getEmail && getEmail(email);
       })

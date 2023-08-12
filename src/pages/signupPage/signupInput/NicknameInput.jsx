@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../../components/common/Button/Button';
 import styled from 'styled-components';
-import axios from 'axios';
+import API from '../../../api/API';
+import ENDPOINT from '../../../api/ENDPOINT';
 
 const NicknameInput = ({ getNickname, handleKeyDown, initialNickname, editNickname, nicknameChecker }) => {
   const [nickname, setNickname] = useState('');
@@ -48,16 +49,7 @@ const NicknameInput = ({ getNickname, handleKeyDown, initialNickname, editNickna
   };
 
   const onClickCheckHandler = () => {
-    const option = {
-      url: `http://localhost:3000/users/validate/nickname/${nickname}`,
-      method: 'GET',
-      headers: { 'Content-type': 'application/json' },
-      data: {
-        nickname: nickname,
-      },
-    };
-
-    axios(option)
+    API(`${ENDPOINT.NICKNAME_DUPLICATE_CHECK}/${nickname}`, 'GET')
       .then((res) => {
         setConfirmNickname(true);
         getNickname && getNickname(nickname);

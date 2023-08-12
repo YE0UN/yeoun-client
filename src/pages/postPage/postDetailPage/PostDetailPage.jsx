@@ -5,9 +5,10 @@ import PostContent from './PostContent/PostContent';
 import PostComment from './PostComment/PostComment';
 import { useParams } from 'react-router-dom';
 import { AuthContextStore } from '../../../context/AuthContext';
-import axios from 'axios';
 import styled from 'styled-components';
 import Loading from './../../../components/Loading/Loading';
+import API from '../../../api/API';
+import ENDPOINT from '../../../api/ENDPOINT';
 
 const PostDetailPage = () => {
   const { userId } = useContext(AuthContextStore);
@@ -20,21 +21,17 @@ const PostDetailPage = () => {
   const [postContent, setPostContent] = useState(null);
 
   // 서버에서 게시물 데이터 가져오기
-  const GetPostInfo = useCallback(async () => {
-    const option = {
-      url: `http://localhost:3000/posts/${params.postId}`,
-      method: 'GET',
-    };
-
-    try {
-      const res = await axios(option);
-      console.log(res.data);
-      setPostContent(res.data);
-      setIsLoading(true);
-    } catch (err) {
-      console.error(err);
-      setIsLoading(true);
-    }
+  const GetPostInfo = useCallback(() => {
+    API(`${ENDPOINT.POSTS}/${params.postId}`, 'GET')
+      .then((res) => {
+        console.log(res.data);
+        setPostContent(res.data);
+        setIsLoading(true);
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsLoading(true);
+      });
   }, [params.postId]);
 
   useEffect(() => {

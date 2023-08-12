@@ -1,9 +1,10 @@
 import { useState, useEffect, useContext, useCallback } from 'react';
 import { AuthContextStore } from '../../../context/AuthContext';
-import axios from 'axios';
 import styled from 'styled-components';
 import Post from '../../../components/common/post/Post/Post';
 import Loading from '../../../components/Loading/Loading';
+import API from '../../../api/API';
+import ENDPOINT from '../../../api/ENDPOINT';
 
 const MyPosts = () => {
   const { userId } = useContext(AuthContextStore);
@@ -15,11 +16,7 @@ const MyPosts = () => {
   // console.log(post);
 
   const getMyPosts = useCallback(() => {
-    const option = {
-      url: `http://localhost:3000/users/${userId}/posts`,
-      method: 'GET',
-    };
-    axios(option)
+    API(`${ENDPOINT.MY_POSTS}`, 'GET')
       .then((res) => {
         setPost(res.data);
         setIsLoading(true);
@@ -28,7 +25,7 @@ const MyPosts = () => {
         console.log(err);
         setIsLoading(true);
       });
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
     getMyPosts();

@@ -4,11 +4,12 @@ import userIcon from '../../../../assets/images/user-icon.svg';
 import deleteIcon from '../../../../assets/images/delete-icon.svg';
 import sendIcon from '../../../../assets/images/send-icon.svg';
 import sendFillIcon from '../../../../assets/images/send-fill-icon.svg';
-import axios from 'axios';
 import { AuthContextStore } from '../../../../context/AuthContext';
 import useModal from '../../../../hooks/useModal';
 import Modal from '../../../../components/common/modal/Modal/Modal';
 import ProfileModal from '../../../../components/common/modal/ProfileModal/ProfileModal';
+import API from '../../../../api/API';
+import ENDPOINT from '../../../../api/ENDPOINT';
 
 const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
   const { userId } = useContext(AuthContextStore);
@@ -21,12 +22,7 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
 
   const onClickRemoveHandler = (comment) => {
     if (userId === comment.user._id) {
-      const option = {
-        url: `http://localhost:3000/comments/${comment._id}`,
-        method: 'DELETE',
-        data: { userId: userId },
-      };
-      axios(option)
+      API(`${ENDPOINT.COMMENTS}/${comment._id}`, 'DELETE')
         .then((res) => {
           console.log(res);
           GetPostInfo();
@@ -54,21 +50,15 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
       return;
     }
 
-    const option = {
-      url: `http://localhost:3000/comments/${postId}`,
-      method: 'POST',
-      data: { content: commentValue, userId: userId },
-    };
-    commentValue &&
-      axios(option)
-        .then((res) => {
-          console.log(res);
-          GetPostInfo();
-          setCommentValue('');
-        })
-        .catch((res) => {
-          console.log(res);
-        });
+    API(`${ENDPOINT.COMMENTS}/${postId}`, 'POST', { content: commentValue, userId: userId })
+      .then((res) => {
+        console.log(res);
+        GetPostInfo();
+        setCommentValue('');
+      })
+      .catch((res) => {
+        console.log(res);
+      });
   };
 
   // 엔터 키를 눌렀을 때 댓글 작성 클릭과 동일한 효과를 주기 위한 함수

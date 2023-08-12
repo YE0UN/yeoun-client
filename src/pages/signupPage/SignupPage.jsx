@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import styled from 'styled-components';
 import InnerLayout from '../../components/common/layout/InnerLayout/InnerLayout';
 import HeadingLayout from './../../components/common/layout/HeadingLayout/HeadingLayout';
@@ -8,6 +7,8 @@ import Button from '../../components/common/Button/Button';
 import EmailInput from './signupInput/EmailInput';
 import NicknameInput from './signupInput/NicknameInput';
 import PasswordInput from './signupInput/PasswordInput';
+import API from '../../api/API';
+import ENDPOINT from '../../api/ENDPOINT';
 
 const SignupPage = () => {
   const nvigate = useNavigate();
@@ -31,20 +32,11 @@ const SignupPage = () => {
 
   // 회원가입 기능
   const onClickJoinHandler = () => {
-    // console.log(`email:${email}\nnickname:${nickname}\npassword:${password}`);
-
-    const option = {
-      url: 'http://localhost:3000/users/signup',
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
-      data: {
-        email: email,
-        nickname: nickname,
-        password: password,
-      },
-    };
-
-    axios(option)
+    API(`${ENDPOINT.SIGNUP}`, 'POST', {
+      email: email,
+      nickname: nickname,
+      password: password,
+    })
       .then((res) => {
         // 회원가입 성공 시
         nvigate('/login');

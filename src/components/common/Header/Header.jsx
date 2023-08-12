@@ -7,8 +7,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../context/AuthContext';
 import userIcon from '../../../assets/images/user-icon.svg';
 import { useCallback } from 'react';
-import axios from 'axios';
 import useModal from '../../../hooks/useModal';
+import API from '../../../api/API';
+import ENDPOINT from '../../../api/ENDPOINT';
 
 const Header = () => {
   const { userId, setUserId } = useContext(AuthContextStore);
@@ -20,10 +21,14 @@ const Header = () => {
 
   // 로그아웃 기능
   const onClickLogoutHandler = () => {
+    API(`${ENDPOINT.LOGOUT}`, 'POST')
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+
     localStorage.removeItem('userId');
     setUserId(null);
-    navigate('/');
-    window.location.reload();
+    // navigate('/');
+    // window.location.reload();
   };
 
   // 유저 프로필
@@ -31,19 +36,14 @@ const Header = () => {
 
   // 유저 정보 가져오기
   const getUserData = useCallback(() => {
-    if (userId) {
-      const option = {
-        url: `http://localhost:3000/users/${userId}/profile`,
-        method: 'GET',
-      };
-      axios(option)
+    userId &&
+      API(`${ENDPOINT.GET_USER_INFO}`, 'GET')
         .then((res) => {
           res.data.user.profileImage ? setUserProfile(res.data.user.profileImage) : setUserProfile(userIcon);
         })
         .catch((err) => {
           console.log(err);
         });
-    }
   }, [userId]);
 
   useEffect(() => {

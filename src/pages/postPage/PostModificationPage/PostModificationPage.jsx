@@ -3,10 +3,11 @@ import InnerLayout from '../../../components/common/layout/InnerLayout/InnerLayo
 import HeadingLayout from '../../../components/common/layout/HeadingLayout/HeadingLayout';
 import styled from 'styled-components';
 import UploadPost from '../../../components/common/post/UploadPost/UploadPost';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContextStore } from '../../../context/AuthContext';
 import Loading from '../../../components/Loading/Loading';
+import API from '../../../api/API';
+import ENDPOINT from '../../../api/ENDPOINT';
 
 const regions = [
   '전국',
@@ -44,7 +45,7 @@ const PostModificationPage = () => {
 
   // UploadPost.jsx에서 데이터 가져와 사용하기
   const [postData, setPostData] = useState({
-    siDo: '',
+    region: '',
     title: '',
     content: '',
     img: '',
@@ -57,7 +58,7 @@ const PostModificationPage = () => {
   const getModificationData = useCallback(
     (value) => {
       setPostData({
-        siDo: selectedRegion,
+        region: selectedRegion,
         title: value.title,
         content: value.postContent,
         img: value.imagePreview,
@@ -73,16 +74,11 @@ const PostModificationPage = () => {
 
   // 서버에서 게시물 데이터 가져오기
   useEffect(() => {
-    const GetPostInfo = async () => {
-      const option = {
-        url: `http://localhost:3000/posts/${params.id}`,
-        method: 'GET',
-      };
-
-      await axios(option)
+    const GetPostInfo = () => {
+      API(`${ENDPOINT.POSTS}/${params.id}`, 'GET')
         .then((res) => {
           setPostContent(res.data.post);
-          setSelectedRegion(res.data.post.siDo);
+          setSelectedRegion(res.data.post.region);
           setIsLoading(true);
         })
         .catch((err) => {
@@ -94,16 +90,11 @@ const PostModificationPage = () => {
   }, [userId, params]);
 
   // 수정하기 클릭 기능
-  const onClickPostModificationHandler = async () => {
+  const onClickPostModificationHandler = () => {
     setIsLoading(false);
     setDescription('게시물을 수정 중입니다...');
-    const option = {
-      url: `http://localhost:3000/posts/${params.id}`,
-      method: 'PUT',
-      data: postData,
-    };
 
-    await axios(option)
+    API(`${ENDPOINT.POSTS}/${params.id}`, 'PUT', postData)
       .then(() => {
         navigate('/');
       })
@@ -113,16 +104,11 @@ const PostModificationPage = () => {
   };
 
   // 삭제하기
-  const onClickRemovePostHandler = async () => {
+  const onClickRemovePostHandler = () => {
     setIsLoading(false);
     setDescription('게시물을 삭제 중입니다...');
-    const option = {
-      url: `http://localhost:3000/posts/${params.id}`,
-      method: 'DELETE',
-      data: { userId: userId },
-    };
 
-    await axios(option)
+    API(`${ENDPOINT.POSTS}/${params.id}`, 'DELETE')
       .then(() => {
         navigate('/');
       })

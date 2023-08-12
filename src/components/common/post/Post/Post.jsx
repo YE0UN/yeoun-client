@@ -10,9 +10,10 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../../context/AuthContext';
 import useFormattedDate from './../../../../hooks/useFormattedDate';
 import useImagePreload from '../../../../hooks/useImagePreload';
-import axios from 'axios';
 import useModal from '../../../../hooks/useModal';
 import ScrapModal from '../../modal/ScrapModal/ScrapModal';
+import API from '../../../../api/API';
+import ENDPOINT from '../../../../api/ENDPOINT';
 
 const Post = ({
   profileImage,
@@ -47,12 +48,7 @@ const Post = ({
 
   // 좋아요
   const togglelikeState = () => {
-    const option = {
-      url: `http://localhost:3000/likes/${postId}`,
-      method: 'POST',
-      data: { userId: userId },
-    };
-    axios(option)
+    API(`${ENDPOINT.LIKE}/${postId}`, 'POST')
       .then((res) => {
         console.log(res);
       })

@@ -9,11 +9,12 @@ import RegionFilterButton from '../RegionFilterButton/RegionFilterButton';
 import chevronUpIcon from '../../../assets/images/chevron-up-icon.svg';
 import chevronDownIcon from '../../../assets/images/chevron-down-icon.svg';
 import searchIcon from '../../../assets/images/search-icon.svg';
-import axios from 'axios';
 import Loading from './../../../components/Loading/Loading';
 import useModal from '../../../hooks/useModal';
 import useImagePreload from '../../../hooks/useImagePreload';
 import { useInView } from 'react-intersection-observer';
+import API from '../../../api/API';
+import ENDPOINT from '../../../api/ENDPOINT';
 
 const HomePage = () => {
   // 데이터 로딩
@@ -90,14 +91,9 @@ const HomePage = () => {
     page === 1 && setIsLoading(false);
 
     if (selectedRegion && selectedRegion.length > 0) {
-      const regions = selectedRegion.map((region) => `siDo=${region}`).join('&');
+      const regions = selectedRegion.map((region) => `region=${region}`).join('&');
 
-      const option = {
-        url: `http://localhost:3000/posts?${regions}&sort=${sortOrder}&page=${page}`,
-        method: 'GET',
-      };
-
-      axios(option)
+      API(`${ENDPOINT.POSTS}?${regions}&sort=${sortOrder}&page=${page}`, 'GET')
         .then((res) => {
           // 이미 마지막 페이지를 가져온 경우에는 추가적인 API 호출을 하지 않도록 함.
           const { currentPage, maxPage } = res.data[res.data.length - 1];

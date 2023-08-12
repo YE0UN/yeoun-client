@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AuthContextStore } from '../../../context/AuthContext';
@@ -6,6 +5,8 @@ import deleteIcon from '../../../assets/images/delete-icon.svg';
 import useModal from '../../../hooks/useModal';
 import Modal from '../../../components/common/modal/Modal/Modal';
 import { useNavigate } from 'react-router-dom';
+import API from '../../../api/API';
+import ENDPOINT from '../../../api/ENDPOINT';
 
 const MyComments = () => {
   const { userId } = useContext(AuthContextStore);
@@ -20,11 +21,7 @@ const MyComments = () => {
 
   const getMyComments = useCallback(() => {
     if (userId) {
-      const option = {
-        url: `http://localhost:3000/users/${userId}/comments`,
-        method: 'GET',
-      };
-      axios(option)
+      API(`${ENDPOINT.MY_COMMENTS}`, 'GET')
         .then((res) => {
           // console.log(res.data);
           setComments(res.data);
@@ -43,12 +40,7 @@ const MyComments = () => {
 
   const onClickRemoveHandler = (comment) => {
     if (userId === comment.user) {
-      const option = {
-        url: `http://localhost:3000/comments/${comment._id}`,
-        method: 'DELETE',
-        data: { userId: userId },
-      };
-      axios(option)
+      API(`${ENDPOINT.COMMENTS}/${comment._id}`, 'DELETE')
         .then((res) => {
           console.log(res);
           getMyComments();
