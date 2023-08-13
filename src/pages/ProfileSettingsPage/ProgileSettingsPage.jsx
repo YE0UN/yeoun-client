@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import InnerLayout from '../../components/common/layout/InnerLayout/InnerLayout';
 import HeadingLayout from '../../components/common/layout/HeadingLayout/HeadingLayout';
-import axios from 'axios';
 import EmailInput from '../signupPage/signupInput/EmailInput';
 import NicknameInput from '../signupPage/signupInput/NicknameInput';
 import Button from '../../components/common/Button/Button';
@@ -10,6 +9,8 @@ import { AuthContextStore } from '../../context/AuthContext';
 import imageCompression from 'browser-image-compression';
 import userIcon from '../../assets/images/user-icon.svg';
 import { useNavigate } from 'react-router';
+import API from '../../api/API';
+import ENDPOINT from '../../api/ENDPOINT';
 
 const ProfileSettingsPage = () => {
   const { userId } = useContext(AuthContextStore);
@@ -67,12 +68,7 @@ const ProfileSettingsPage = () => {
 
   // 유저 정보 가져오기
   const getUserData = useCallback(() => {
-    const option = {
-      url: `http://localhost:3000/users/${userId}/profile`,
-      method: 'GET',
-    };
-
-    axios(option)
+    API(`${ENDPOINT.GET_USER_INFO}`, 'GET')
       .then((res) => {
         res.data.user.profileImage ? setImagePreview(res.data.user.profileImage) : setImagePreview(userIcon);
         setInitialEmail(res.data.user.email);
@@ -84,7 +80,7 @@ const ProfileSettingsPage = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
     getUserData();
@@ -92,20 +88,14 @@ const ProfileSettingsPage = () => {
 
   // 수정하기 기능
   const onClickHandler = () => {
-    const option = {
-      url: `http://localhost:3000/users/${userId}/profile`,
-      method: 'PUT',
-      data: {
-        profileImage: imagePreview,
-        email: email,
-        nickname: nickname,
-        // 비밀번호 수정은 보류
-        // password: password,
-        introduction: introduction,
-      },
-    };
-
-    axios(option)
+    API(`${ENDPOINT.GET_USER_INFO}`, 'PUT', {
+      profileImage: imagePreview,
+      email: email,
+      nickname: nickname,
+      // 비밀번호 수정은 보류
+      // password: password,
+      introduction: introduction,
+    })
       .then((res) => {
         alert('수정되었습니다.');
         const newPath = `/mypage`;

@@ -3,10 +3,11 @@ import InnerLayout from '../../../components/common/layout/InnerLayout/InnerLayo
 import HeadingLayout from '../../../components/common/layout/HeadingLayout/HeadingLayout';
 import styled from 'styled-components';
 import UploadPost from '../../../components/common/post/UploadPost/UploadPost';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../context/AuthContext';
 import Loading from '../../../components/Loading/Loading';
+import API from '../../../api/API';
+import ENDPOINT from '../../../api/ENDPOINT';
 
 const regions = [
   '전국',
@@ -42,7 +43,7 @@ const PostUploadPage = () => {
   const [nickname, setNickname] = useState();
   const [selectedRegion, setSelectedRegion] = useState('전국');
   const [postData, setPostData] = useState({
-    siDo: '',
+    region: '',
     title: '',
     content: '',
     img: '',
@@ -53,7 +54,7 @@ const PostUploadPage = () => {
   const getUploadData = useCallback(
     (value) => {
       setPostData({
-        siDo: selectedRegion,
+        region: selectedRegion,
         title: value.title,
         content: value.postContent,
         img: value.imagePreview,
@@ -67,15 +68,10 @@ const PostUploadPage = () => {
     [userId, selectedRegion],
   );
 
-  // 유저 닉네임 가져오기
+  // 유저정보 가져오기
   useEffect(() => {
     const getUserNickname = () => {
-      const option = {
-        url: `http://localhost:3000/users/${userId}/profile`,
-        method: 'GET',
-      };
-
-      axios(option)
+      API(`${ENDPOINT.GET_USER_INFO}`, 'GET')
         .then((res) => {
           setNickname(res.data.user.nickname);
           setProfileImage(res.data.user.profileImage);
@@ -92,13 +88,8 @@ const PostUploadPage = () => {
   const onClickPostRegistrationHandler = () => {
     setIsLoading(false);
     setDescription('새 글을 작성 중입니다...');
-    const option = {
-      url: 'http://localhost:3000/posts',
-      method: 'POST',
-      data: postData,
-    };
 
-    axios(option)
+    API(`${ENDPOINT.POSTS}`, 'POST', postData)
       .then((res) => {
         // 작성 성공 시
         navigate('/');

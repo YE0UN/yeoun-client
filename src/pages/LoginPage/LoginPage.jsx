@@ -2,10 +2,12 @@ import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import InnerLayout from '../../components/common/layout/InnerLayout/InnerLayout';
 import Button from './../../components/common/Button/Button';
-import axios from 'axios';
 import { AuthContextStore } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import HeadingLayout from './../../components/common/layout/HeadingLayout/HeadingLayout';
+import Cookies from 'js-cookie';
+import API from '../../api/API';
+import ENDPOINT from '../../api/ENDPOINT';
 
 const Login = () => {
   const { setUserId } = useContext(AuthContextStore);
@@ -28,36 +30,33 @@ const Login = () => {
   };
 
   const handleLogin = () => {
-    const option = {
-      url: 'http://localhost:3000/users/signin',
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
-      data: {
-        email: email,
-        password: password,
-      },
-    };
-
-    axios(option)
+    API(`${ENDPOINT.LOGIN}`, 'POST', {
+      email: email,
+      password: password,
+    })
       .then((res) => {
+        console.log(res);
         setLoginFail(false);
         saveUserInfo(res);
         navigate('/');
         window.location.reload();
       })
       .catch((err) => {
-        if (err.response) {
-          if (err.response.status === 404) {
-            setLoginFail(true);
-          }
+        console.log(err);
+        if (err.response.data.user === false) {
+          setLoginFail(true);
         }
       });
   };
 
   const saveUserInfo = (res) => {
-    const userId = res.data.userId;
+    const userId = res.data.user._id;
+    const token = res.data.token;
+
     localStorage.setItem('userId', userId);
     setUserId(userId);
+
+    Cookies.set('token', token, { expires: 7 });
   };
 
   // enter로 로그인
