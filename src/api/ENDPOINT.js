@@ -11,6 +11,9 @@ const ENDPOINT = {
   COMMENTS: '/comments',
   MY_POSTS: '/users/posts',
   MY_COMMENTS: '/users/comments',
+  MY_SCRAPS: '/users/scraps',
+  COLLECTIONS: '/collections',
+  SCRAPS: '/scraps',
 };
 
 export default ENDPOINT;
