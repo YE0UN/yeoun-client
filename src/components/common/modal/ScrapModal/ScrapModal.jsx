@@ -4,47 +4,72 @@ import closeIcon from '../../../../assets/images/close-icon.svg';
 import checkIcon from '../../../../assets/images/check-icon.svg';
 import plusIcon from '../../../../assets/images/plus-icon.svg';
 import Button from '../../Button/Button';
+import API from '../../../../api/API';
+import ENDPOINT from '../../../../api/ENDPOINT';
+import useSnackbar from '../../../../hooks/useSnackbar';
 
-const ScrapModal = ({ toggle, secondRef, confirm }) => {
-  // 엔터 누르면 확인, Esc 누르면 취소하는 기능
-  const onKeyDownHandler = useCallback(
-    (e) => {
-      if (e.key === 'Enter') {
-        confirm();
-      } else if (e.key === 'Escape') {
-        toggle();
-      }
-    },
-    [confirm, toggle],
-  );
-
-  // 컴포넌트가 마운트될 때 키 이벤트를 추가, 언마운트될 때 제거
-  useEffect(() => {
-    document.addEventListener('keydown', onKeyDownHandler);
-
-    return () => {
-      document.removeEventListener('keydown', onKeyDownHandler);
-    };
-  }, [onKeyDownHandler]);
-
-  const [scrapList, setScrapList] = useState(['여행', '맛집']);
-  const [selectedCategory, setSelectedCategory] = useState('');
+const ScrapModal = ({ toggle, secondRef, confirm, postId, setIsBookMarked, getMyScrapList }) => {
+  const [scrapList, setScrapList] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categoryIds, setCategoryIds] = useState([]);
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
+  console.log(selectedCategories);
+  console.log(scrapList);
 
-  const handleCategroyChange = (category) => {
-    setIsAddingCategory(false);
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
 
-    // 카테고리가 중복으로 선택됨을 방지
-    setSelectedCategory((prevSelected) => {
-      if (prevSelected.includes(category)) {
-        return prevSelected.filter((item) => item !== category);
-      } else {
-        return [category];
-      }
-    });
+  const handleSnackbarOpen = () => {
+    showSnackbar('스크랩이 해제되었습니다.', 3000);
   };
 
+  // 컬렉션 가져오기
+  const getCollections = useCallback(async () => {
+    await API(`${ENDPOINT.COLLECTIONS}/${postId}`, 'GET')
+      .then((res) => {
+        console.log(res);
+        setScrapList(res.data);
+        res.data.forEach((item) => {
+          if (item.scrap) {
+            setSelectedCategories((prev) => [...prev, item.collection.name]);
+            setIsBookMarked(true);
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [postId, setIsBookMarked]);
+
+  useEffect(() => {
+    getCollections();
+  }, [getCollections]);
+
+  // 임시 코드
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!selectedCategories.length) {
+        setIsBookMarked(false);
+      }
+    }, 100);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [selectedCategories.length, setIsBookMarked]);
+
+  //
+  const handleCategoryChange = (category) => {
+    setIsAddingCategory(false);
+
+    // 카테고리가 이미 선택된 상태인지 확인
+    if (selectedCategories.includes(category)) {
+      setSelectedCategories((prevSelected) => prevSelected.filter((item) => item !== category));
+    } else {
+      setSelectedCategories((prevSelected) => [...prevSelected, category]);
+    }
+  };
+
+  // 카테고리 추가 (컬렉션 추가)
   const handleAddCategory = () => {
     if (scrapList.length >= 10) {
       setNewCategoryName('');
@@ -63,9 +88,37 @@ const ScrapModal = ({ toggle, secondRef, confirm }) => {
       return;
     }
 
-    setScrapList((prevList) => [newCategoryName, ...prevList]);
-    setNewCategoryName('');
-    setIsAddingCategory(false);
+    API(`${ENDPOINT.COLLECTIONS}`, 'POST', { name: newCategoryName })
+      .then((res) => {
+        console.log(res);
+        getCollections();
+        setNewCategoryName('');
+        setIsAddingCategory(false);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // 스크랩 하기
+  const HandleScrap = () => {
+    API(`${ENDPOINT.SCRAPS}/${postId}`, 'POST', { collectionIds: categoryIds })
+      .then((res) => {
+        console.log(res);
+        toggle();
+        getMyScrapList && getMyScrapList();
+        setIsBookMarked(true);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // 스크랩 해제
+  const HandleCancelScrap = (collectionId) => {
+    API(`${ENDPOINT.SCRAPS}/${postId}`, 'DELETE', { collectionIds: [collectionId] })
+      .then((res) => {
+        console.log(res);
+        handleSnackbarOpen();
+        getMyScrapList && getMyScrapList();
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -73,7 +126,9 @@ const ScrapModal = ({ toggle, secondRef, confirm }) => {
       <ModalContainer ref={secondRef}>
         <CloseIcon src={closeIcon} alt='닫기 아이콘' onClick={toggle} />
         <AddCategoryButton
-          onClick={() => setIsAddingCategory(true)}
+          onClick={() => {
+            setIsAddingCategory(true);
+          }}
           isAddingCategory={isAddingCategory}
         ></AddCategoryButton>
         {isAddingCategory && (
@@ -81,8 +136,11 @@ const ScrapModal = ({ toggle, secondRef, confirm }) => {
             <input
               type='text'
               value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
+              onChange={(e) => {
+                setNewCategoryName(e.target.value);
+              }}
               placeholder='추가할 카테고리명을 입력해 주세요.'
+              autoFocus
             />
             <Button size='modalConfirm' onClickHandler={handleAddCategory}>
               확인
@@ -90,22 +148,38 @@ const ScrapModal = ({ toggle, secondRef, confirm }) => {
           </NewCategoryInput>
         )}
         {scrapList.map((category) => (
-          <CustomLabel key={category}>
+          <CustomLabel key={category.collection._id}>
             <CustomInput
-              type='radio'
-              checked={selectedCategory.includes(category)}
+              type='checkbox'
+              checked={selectedCategories.includes(category.collection.name)}
               onChange={() => {
-                handleCategroyChange(category);
+                if (selectedCategories.includes(category.collection.name)) {
+                  // 이미 선택된 카테고리를 다시 클릭하면 해제
+                  handleCategoryChange(category.collection.name);
+                  setCategoryIds((prev) => prev.filter((id) => id !== category.collection._id));
+                  HandleCancelScrap(category.collection._id); // 스크랩 취소 함수 호출
+                } else {
+                  // 선택되지 않은 카테고리를 선택
+                  handleCategoryChange(category.collection.name);
+                  setCategoryIds((prev) => [...prev, category.collection._id]);
+                }
               }}
             />
-            {category}
+            {category.collection.name}
           </CustomLabel>
         ))}
-        <Button size='md' disabled={!selectedCategory}>
+        <Button
+          size='md'
+          disabled={!selectedCategories.length}
+          onClickHandler={() => {
+            HandleScrap();
+          }}
+        >
           스크랩 하기
         </Button>
       </ModalContainer>
       <ModalOverlay></ModalOverlay>
+      <SnackbarComponent />
     </>
   );
 };
@@ -121,7 +195,6 @@ const ModalContainer = styled.article`
   flex-direction: column;
   gap: 2rem;
   min-width: 40rem;
-  min-height: 20rem;
   padding: 4rem 2rem 2rem;
   border: 1px solid var(--border-color);
   border-radius: 2rem;
