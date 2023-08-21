@@ -42,13 +42,12 @@ const MyPosts = () => {
                 profileImage={post.post.user.profileImage}
                 nickname={post.post.user.nickname}
                 introduction={post.post.user.introduction}
-                bookMark={''}
+                scrap={post.scrap}
                 content={post.post.content}
                 img={post.post.img}
                 likeState={post.likeState}
                 likeCount={post.post.likeCount}
                 commentCount={post.post.commentCount}
-                comment={''}
                 createdAt={post.post.createdAt}
                 postId={post.post._id}
               />
