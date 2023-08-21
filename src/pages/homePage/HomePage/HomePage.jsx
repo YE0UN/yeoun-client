@@ -201,9 +201,9 @@ const HomePage = () => {
                     key={post.post._id}
                     profileImage={post.post.user.profileImage}
                     nickname={post.post.user.nickname}
-                    bookMark={''}
                     content={post.post.content}
                     img={post.post.img}
+                    scrap={post.scrap}
                     likeState={post.likeState}
                     likeCount={post.post.likeCount}
                     commentCount={post.post.commentCount}
