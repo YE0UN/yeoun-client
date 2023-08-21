@@ -18,7 +18,7 @@ import ENDPOINT from '../../../../api/ENDPOINT';
 const Post = ({
   profileImage,
   nickname,
-  bookMark,
+  scrap,
   content,
   img,
   likeState,
@@ -27,6 +27,7 @@ const Post = ({
   createdAt,
   postId,
   introduction,
+  getMyScrapList,
 }) => {
   const { userId } = useContext(AuthContextStore);
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const Post = ({
   const ProfileImgAlt = `${nickname} 이미지`;
 
   // 스크랩 기능
-  const [isBookMarked, setIsBookMarked] = useState(false);
+  const [isBookMarked, setIsBookMarked] = useState(scrap);
 
   // 좋아요 기능
   const [isLiked, setIsLiked] = useState(likeState);
@@ -51,6 +52,7 @@ const Post = ({
     API(`${ENDPOINT.LIKE}/${postId}`, 'POST')
       .then((res) => {
         console.log(res);
+        getMyScrapList && getMyScrapList();
       })
       .catch((res) => {
         console.log(res);
@@ -89,8 +91,7 @@ const Post = ({
               src={isBookMarked ? bookMarkFillIcon : bookMarkIcon}
               alt='스크랩'
               onClick={() => {
-                setIsBookMarked((cur) => !cur);
-                !isBookMarked && toggle();
+                toggle();
               }}
               ref={firstRef}
             />
@@ -182,7 +183,17 @@ const Post = ({
           </CardBack>
         </CardFlipper>
       </Article>
-      {modalOpen ? <ScrapModal toggle={toggle} secondRef={secondRef} /> : <></>}
+      {modalOpen ? (
+        <ScrapModal
+          toggle={toggle}
+          secondRef={secondRef}
+          postId={postId}
+          setIsBookMarked={setIsBookMarked}
+          getMyScrapList={getMyScrapList}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };
