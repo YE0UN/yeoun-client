@@ -28,6 +28,7 @@ const Post = ({
   postId,
   introduction,
   getMyScrapList,
+  getLikeState,
 }) => {
   const { userId } = useContext(AuthContextStore);
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const Post = ({
     API(`${ENDPOINT.LIKE}/${postId}`, 'POST')
       .then((res) => {
         console.log(res);
-        getMyScrapList && getMyScrapList();
+        getLikeState && getLikeState();
       })
       .catch((res) => {
         console.log(res);

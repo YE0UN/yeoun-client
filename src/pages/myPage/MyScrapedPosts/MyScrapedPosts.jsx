@@ -14,11 +14,16 @@ const MyScrapedPosts = () => {
   const [collectionId, setCollectionId] = useState();
   console.log(scrapList);
 
+  const getLikeState = () => {
+    setScrapList([]);
+    getMyScrapList();
+  };
+
   // 스크랩 목록 가져오기
   const getMyScrapList = useCallback(() => {
     API(`${ENDPOINT.MY_SCRAPS}`, 'GET')
       .then((res) => {
-        setScrapList([...res.data]);
+        setScrapList(res.data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -104,6 +109,7 @@ const MyScrapedPosts = () => {
                       createdAt={item.post.createdAt}
                       postId={item.post._id}
                       getMyScrapList={getMyScrapList}
+                      getLikeState={getLikeState}
                     />
                   ))
                 ) : (

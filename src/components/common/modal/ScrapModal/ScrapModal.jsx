@@ -49,9 +49,9 @@ const ScrapModal = ({ toggle, secondRef, confirm, postId, setIsBookMarked, getMy
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (!selectedCategories.length) {
-        setIsBookMarked(false);
+        setIsBookMarked && setIsBookMarked(false);
       }
-    }, 100);
+    }, 300);
     return () => {
       clearTimeout(timeout);
     };
