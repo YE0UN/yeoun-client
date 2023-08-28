@@ -14,20 +14,23 @@ import ProfileModal from '../../../../components/common/modal/ProfileModal/Profi
 import useFormattedDate from '../../../../hooks/useFormattedDate';
 import useImagePreload from '../../../../hooks/useImagePreload';
 import ScrapModal from '../../../../components/common/modal/ScrapModal/ScrapModal';
+import API from '../../../../api/API';
+import ENDPOINT from '../../../../api/ENDPOINT';
 
 const PostContent = ({
   profileImage,
   nickname,
   introduction,
-  bookMark,
+  scrap,
   title,
   content,
   img,
-  like,
-  comment,
+  likeState,
+  likeCount,
   commentCount,
   createdAt,
   postUserId,
+  postId,
 }) => {
   const { userId } = useContext(AuthContextStore);
 
@@ -41,21 +44,32 @@ const PostContent = ({
   const ProfileImgAlt = `${nickname} 이미지`;
 
   // 스크랩 기능
-  const [isBookMarked, setIsBookMarked] = useState(false);
+  const [isBookMarked, setIsBookMarked] = useState(scrap);
   const bookMarkState = {
     true: bookMarkFillIcon,
     false: bookMarkIcon,
   };
 
   // 좋아요 기능
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(likeState);
   const heartIconState = {
     true: heartFillIcon,
     false: heartIcon,
   };
 
   // 좋아요 카운트 기능
-  const [likeCountSpan, setLikeCountSpan] = useState(0);
+  const [likeCountSpan, setLikeCountSpan] = useState(likeCount);
+
+  // 좋아요
+  const togglelikeState = () => {
+    API(`${ENDPOINT.LIKE}/${postId}`, 'POST')
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((res) => {
+        console.log(res);
+      });
+  };
 
   // useModal
   const [profileModalOpen, toggleProfileModal, firstProfileRef, secondProfileRef] = useModal();
@@ -85,8 +99,7 @@ const PostContent = ({
           src={bookMarkState[isBookMarked]}
           alt='스크랩'
           onClick={() => {
-            setIsBookMarked((cur) => !cur);
-            !isBookMarked && toggleScrapModal();
+            toggleScrapModal();
           }}
           ref={firstScrapRef}
         />
@@ -137,6 +150,7 @@ const PostContent = ({
                 onClick={() => {
                   setIsLiked((cur) => !cur);
                   setLikeCountSpan((cur) => (isLiked ? cur - 1 : cur + 1));
+                  togglelikeState();
                 }}
               />
               <span>{likeCountSpan}</span>
@@ -149,7 +163,16 @@ const PostContent = ({
           <PostDateSpan>{formattedDate}</PostDateSpan>
         </ContentInfo>
       </Article>
-      {ScrapModalOpen ? <ScrapModal toggle={toggleScrapModal} secondRef={secondScrapRef} /> : <></>}
+      {ScrapModalOpen ? (
+        <ScrapModal
+          toggle={toggleScrapModal}
+          secondRef={secondScrapRef}
+          postId={postId}
+          setIsBookMarked={setIsBookMarked}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };

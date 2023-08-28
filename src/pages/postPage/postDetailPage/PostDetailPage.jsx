@@ -48,14 +48,16 @@ const PostDetailPage = () => {
               profileImage={postContent.post.user.profileImage}
               nickname={postContent.post.user.nickname}
               introduction={postContent.post.user.introduction}
-              bookMark={''}
+              scrap={postContent.scrap}
               title={postContent.post.title}
               content={postContent.post.content}
               img={postContent.post.img}
-              like={''}
+              likeState={postContent.likeState}
+              likeCount={postContent.post.likeCount}
               commentCount={postContent.post.commentCount}
               createdAt={postContent.post.createdAt}
               postUserId={postContent.post.user._id}
+              postId={postContent.post._id}
             />
             <PostComment
               nickname={postContent.post.user.nickname}
