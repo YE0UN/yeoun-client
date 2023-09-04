@@ -14,6 +14,7 @@ const ENDPOINT = {
   MY_SCRAPS: '/users/scraps',
   COLLECTIONS: '/collections',
   SCRAPS: '/scraps',
+  TOURISM: '/tours',
 };
 
 export default ENDPOINT;
