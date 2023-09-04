@@ -45,6 +45,7 @@ export default TouristAttractionRegionPage;
 
 const Container = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 4rem;
   flex-wrap: wrap;
+  margin: 5rem 0;
 `;
