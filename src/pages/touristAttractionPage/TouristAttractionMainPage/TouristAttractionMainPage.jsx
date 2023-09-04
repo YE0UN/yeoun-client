@@ -72,7 +72,7 @@ const Article = styled.article`
   height: 28.5rem;
   border-radius: 2.5rem;
   overflow: hidden;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
 `;
 
 const Figure = styled.figure`
@@ -100,9 +100,7 @@ const H3 = styled.h3`
   z-index: 100;
 `;
 
-const RegionImg = styled.img`
-  border-radius: 2.5rem;
-`;
+const RegionImg = styled.img``;
 
 const ImgCover = styled.div`
   position: absolute;
