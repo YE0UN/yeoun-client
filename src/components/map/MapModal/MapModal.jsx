@@ -7,7 +7,7 @@ const MapModal = ({ toggle, modalRef }) => {
   return (
     <>
       <MapContainer ref={modalRef}>
-        <Map width='800' height='800' />
+        <Map width='800' height='800' toggle={toggle} />
         <Img src={closeIcon} alt='닫기 버튼' onClick={toggle} />
       </MapContainer>
     </>
