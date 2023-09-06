@@ -1,37 +1,80 @@
+import { useEffect, useState } from 'react';
 import style from './style.css';
+import API from './../../../api/API';
+import ENDPOINT from './../../../api/ENDPOINT';
+import useColorInterpolator from '../../../hooks/useColorInterpolator';
+import { useNavigate } from 'react-router-dom';
 
-const Map = (props) => {
-  setTimeout(() => {
-    const ELEMENT = document.querySelectorAll('.land');
-    const regionText = document.querySelector('#text');
+const Map = ({ width, height, toggle }) => {
+  const navigate = useNavigate();
 
-    ELEMENT.forEach((el) => {
-      // console.log(x.getAttribute('title'));
-      el.addEventListener('click', () => {
-        alert('지역 인기도 및 관광 페이지를 준비 중입니다.');
-      });
+  const [popularity, setPopularity] = useState([]);
 
-      el.addEventListener('mousemove', (e) => {
-        regionText.style.display = 'block';
-        regionText.innerText = el.getAttribute('title');
-        regionText.style.top = `${e.offsetY - 45}px`;
-        regionText.style.left = `${e.offsetX}px`;
-        // console.log(e.offsetX, e.offsetY);
-      });
+  const copiedPopularity = [...popularity];
+  const sortedPopularity = copiedPopularity.sort((a, b) => Object.values(a)[0] - Object.values(b)[0]);
 
-      el.addEventListener('mouseleave', () => {
-        regionText.style.display = 'none';
-      });
+  // useColorInterpolator
+  const getColor = useColorInterpolator(sortedPopularity);
+
+  useEffect(() => {
+    API(`${ENDPOINT.POPULARITY}`, 'GET')
+      .then((res) => {
+        setPopularity(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const ELEMENT = document.querySelectorAll('.land');
+  const regionText = document.querySelector('#text');
+
+  ELEMENT.forEach((el) => {
+    el.addEventListener('click', () => {
+      navigate(`/tour/${el.getAttribute('title')}`);
+      toggle();
     });
-  }, 0);
+
+    el.addEventListener('mousemove', (e) => {
+      regionText.style.display = 'block';
+      regionText.innerText = el.getAttribute('title');
+      regionText.style.top = `${e.offsetY - 40}px`;
+      regionText.style.left = `${e.offsetX}px`;
+    });
+
+    el.addEventListener('mouseleave', () => {
+      regionText.style.display = 'none';
+    });
+  });
+
+  // 각 지역별 보간된 컬러 적용
+  const svgPath = document.querySelectorAll('path');
+  svgPath.forEach((path, index) => {
+    const region = path.getAttribute('title');
+    if (popularity && popularity[index]) {
+      path.style.fill = getColor(popularity[index][region]);
+    }
+  });
 
   return (
     <>
       <div id='text'></div>
+      <div id='barWrapper'>
+        <span>인기도</span>
+        <div id='tooltip-container'>
+          <div id='tooltip'>
+            <span>?</span>
+            <div id='tooltip-text'>인기도 = 해당 지역 게시물 수 + 좋아요 수 + 댓글 수</div>
+          </div>
+        </div>
+        <div id='bar'>
+          <span>낮음</span>
+          <span>높음</span>
+        </div>
+      </div>
       <svg
         xmlns='http://www.w3.org/2000/svg'
         xmlnsXlink='http://www.w3.org/1999/xlink'
-        {...props}
+        width={width}
+        height={height}
         viewBox='-50 270 700 400'
       >
         <defs>
