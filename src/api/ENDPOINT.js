@@ -16,6 +16,7 @@ const ENDPOINT = {
   SCRAPS: '/scraps',
   TOURISM: '/tours',
   POPULARITY: '/map',
+  DELETE_ACCOUNT: '/users/delete',
 };
 
 export default ENDPOINT;
