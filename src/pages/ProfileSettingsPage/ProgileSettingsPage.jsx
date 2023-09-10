@@ -5,7 +5,6 @@ import EmailInput from '../signupPage/signupInput/EmailInput';
 import NicknameInput from '../signupPage/signupInput/NicknameInput';
 import Button from '../../components/common/Button/Button';
 import styled from 'styled-components';
-import { AuthContextStore } from '../../context/AuthContext';
 import imageCompression from 'browser-image-compression';
 import userIcon from '../../assets/images/user-icon.svg';
 import { useNavigate } from 'react-router';
@@ -13,8 +12,6 @@ import API from '../../api/API';
 import ENDPOINT from '../../api/ENDPOINT';
 
 const ProfileSettingsPage = () => {
-  const { userId } = useContext(AuthContextStore);
-
   const navigate = useNavigate();
 
   const [imagePreview, setImagePreview] = useState(userIcon);
@@ -128,7 +125,7 @@ const ProfileSettingsPage = () => {
 
   return (
     <InnerLayout>
-      <HeadingLayout heading='회원 정보 설정' />
+      <HeadingLayout heading='회원 정보 설정' subHeading='회원 탈퇴' />
       <SettingContainer>
         <ImageLabel htmlFor='contentImage' imagePreview={imagePreview}>
           {imagePreview === null ? '' : <ImagePreview src={imagePreview} alt='미리보기 이미지' />}
@@ -143,12 +140,12 @@ const ProfileSettingsPage = () => {
           />
           <Introduction placeholder='소개' maxLength='600' value={introduction} onChange={handleIntroductionChange} />
         </InputContainer>
-        <Test>
+        <ButtonWrapper>
           <Anchor href='/mypage'>취소</Anchor>
           <Button size='profileSetting' disabled={disabledButton} onClickHandler={onClickHandler}>
             수정하기
           </Button>
-        </Test>
+        </ButtonWrapper>
       </SettingContainer>
     </InnerLayout>
   );
@@ -218,10 +215,11 @@ const Introduction = styled.textarea`
   }
 `;
 
-const Test = styled.div`
+const ButtonWrapper = styled.div`
   display: flex;
-  gap: 4rem;
-  max-width: 50rem;
+  justify-content: center;
+  gap: 2rem;
+  width: 50%;
 `;
 
 const Anchor = styled.a`
@@ -231,4 +229,11 @@ const Anchor = styled.a`
   font-size: var(--fs-lg);
   color: var(--sub-text-color);
   font-weight: 500;
+  border: 1px solid var(--main-btn-color);
+  border-radius: 0.8rem;
+  min-width: 100%;
+
+  &:hover {
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  }
 `;
