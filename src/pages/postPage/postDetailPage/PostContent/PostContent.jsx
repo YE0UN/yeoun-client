@@ -99,7 +99,11 @@ const PostContent = ({
           src={bookMarkState[isBookMarked]}
           alt='스크랩'
           onClick={() => {
-            toggleScrapModal();
+            if (nickname === '탈퇴한 사용자입니다.') {
+              alert('탈퇴한 사용자의 게시물을 스크랩할 수 없습니다.');
+            } else {
+              toggleScrapModal();
+            }
           }}
           ref={firstScrapRef}
         />
@@ -148,9 +152,13 @@ const PostContent = ({
                 src={heartIconState[isLiked]}
                 alt='좋아요 아이콘'
                 onClick={() => {
-                  setIsLiked((cur) => !cur);
-                  setLikeCountSpan((cur) => (isLiked ? cur - 1 : cur + 1));
-                  togglelikeState();
+                  if (nickname === '탈퇴한 사용자입니다.') {
+                    alert('탈퇴한 사용자의 게시물에 좋아요 할 수 없습니다.');
+                  } else {
+                    setIsLiked((cur) => !cur);
+                    setLikeCountSpan((cur) => (isLiked ? cur - 1 : cur + 1));
+                    togglelikeState();
+                  }
                 }}
               />
               <span>{likeCountSpan}</span>
