@@ -95,7 +95,7 @@ const HomePage = () => {
     if (selectedRegion && selectedRegion.length > 0) {
       const regions = selectedRegion.map((region) => `region=${region}`).join('&');
 
-      API(`${ENDPOINT.POSTS}?${regions}&sort=${sortOrder}&keyword=${keyword}&page=${page}`, 'GET')
+      API(`${ENDPOINT.POSTS}?${regions}&sort=${sortOrder}${keyword ? `&keyword=${keyword}` : ''}&page=${page}`, 'GET')
         .then((res) => {
           // 이미 마지막 페이지를 가져온 경우에는 추가적인 API 호출을 하지 않도록 함.
           const { currentPage, maxPage } = res.data[res.data.length - 1];
@@ -114,6 +114,9 @@ const HomePage = () => {
           setIsLoading(true);
         })
         .catch((err) => {
+          if (err.response.data.error === '해당 지역의 검색 결과 없음') {
+            setPost([]);
+          }
           console.log(err);
           setIsLoading(true);
         });
@@ -178,11 +181,11 @@ const HomePage = () => {
             <Button
               size='md'
               onClickHandler={() => {
-                setSortOrder('like');
-                setActiveButton('like');
+                setSortOrder('likeCount');
+                setActiveButton('likeCount');
                 refreshPost();
               }}
-              active={activeButton === 'like'}
+              active={activeButton === 'likeCount'}
             >
               인기 순
             </Button>
@@ -191,11 +194,11 @@ const HomePage = () => {
             <Button
               size='md'
               onClickHandler={() => {
-                setSortOrder('comment');
-                setActiveButton('comment');
+                setSortOrder('commentCount');
+                setActiveButton('commentCount');
                 refreshPost();
               }}
-              active={activeButton === 'comment'}
+              active={activeButton === 'commentCount'}
             >
               댓글 순
             </Button>
@@ -217,6 +220,7 @@ const HomePage = () => {
         </Ul>
         {isLoading ? (
           <PostContainer postContainerLayout={postContainerLayout}>
+            {post.length === 0 && <EmptyPostMessage>등록된 게시물이 없습니다.</EmptyPostMessage>}
             {post.map((post, index) => {
               // 해당 항목이 유효한 구조를 가지는지 확인
               if (post && post.post && post.post.user) {
@@ -352,4 +356,14 @@ const PostContainer = styled.div`
   gap: 3rem;
   margin-top: ${(props) => props.postContainerLayout};
   margin-bottom: 9rem;
+`;
+
+// 등록된 게시물 없을 때
+const EmptyPostMessage = styled.p`
+  width: 100%;
+  height: 18rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--fs-sm);
 `;
