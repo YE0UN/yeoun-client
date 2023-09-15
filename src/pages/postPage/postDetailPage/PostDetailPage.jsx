@@ -45,9 +45,9 @@ const PostDetailPage = () => {
         {postContent && isLoading ? (
           <PostLayout>
             <PostContent
-              profileImage={postContent.post.user.profileImage}
-              nickname={postContent.post.user.nickname}
-              introduction={postContent.post.user.introduction}
+              profileImage={postContent.post.user ? postContent.post.user.profileImage : null}
+              nickname={postContent.post.user ? postContent.post.user.nickname : '탈퇴한 사용자입니다.'}
+              introduction={postContent.post.user ? postContent.post.user.introduction : null}
               scrap={postContent.scrap}
               title={postContent.post.title}
               content={postContent.post.content}
@@ -56,11 +56,11 @@ const PostDetailPage = () => {
               likeCount={postContent.post.likeCount}
               commentCount={postContent.post.commentCount}
               createdAt={postContent.post.createdAt}
-              postUserId={postContent.post.user._id}
+              postUserId={postContent.post.user ? postContent.post.user._id : null}
               postId={postContent.post._id}
             />
             <PostComment
-              nickname={postContent.post.user.nickname}
+              nickname={postContent.post.user ? postContent.post.user.nickname : '탈퇴한 사용자입니다.'}
               comments={postContent.post.comments}
               postId={postContent.post._id}
               GetPostInfo={GetPostInfo}

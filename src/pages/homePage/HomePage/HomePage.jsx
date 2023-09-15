@@ -25,6 +25,8 @@ const HomePage = () => {
   const [lastPage, setLastPage] = useState(false);
   // 무한 스크롤을 위한 useInView 훅 사용
   const [ref, inView] = useInView();
+  // 검색 키워드
+  const [keyword, setKeyword] = useState('');
 
   // 스크롤에 따라 페이지 상태 변경
   useEffect(() => {
@@ -93,7 +95,7 @@ const HomePage = () => {
     if (selectedRegion && selectedRegion.length > 0) {
       const regions = selectedRegion.map((region) => `region=${region}`).join('&');
 
-      API(`${ENDPOINT.POSTS}?${regions}&sort=${sortOrder}&page=${page}`, 'GET')
+      API(`${ENDPOINT.POSTS}?${regions}&sort=${sortOrder}${keyword ? `&keyword=${keyword}` : ''}&page=${page}`, 'GET')
         .then((res) => {
           // 이미 마지막 페이지를 가져온 경우에는 추가적인 API 호출을 하지 않도록 함.
           const { currentPage, maxPage } = res.data[res.data.length - 1];
@@ -112,6 +114,9 @@ const HomePage = () => {
           setIsLoading(true);
         })
         .catch((err) => {
+          if (err.response.data.error === '해당 지역의 검색 결과 없음') {
+            setPost([]);
+          }
           console.log(err);
           setIsLoading(true);
         });
@@ -119,11 +124,29 @@ const HomePage = () => {
       setPost([]);
       setIsLoading(true);
     }
-  }, [selectedRegion, sortOrder, page]);
+  }, [selectedRegion, sortOrder, page, keyword]);
 
   useEffect(() => {
-    !lastPage && ViewSelectedPosts();
+    if (!lastPage) {
+      ViewSelectedPosts();
+    }
   }, [selectedRegion, ViewSelectedPosts, lastPage]);
+
+  const [searchInput, setSearchInput] = useState(''); // 검색어 상태 추가
+
+  // 검색 버튼 클릭 시 검색 수행
+  const handleSearch = () => {
+    setKeyword(searchInput); // 검색어를 상태에 업데이트
+    setPage(1); // 페이지를 초기화
+    setLastPage(false); // 마지막 페이지 상태 초기화
+  };
+
+  // 엔터로 검색
+  const handleKeyDowm = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   return (
     <>
@@ -158,11 +181,11 @@ const HomePage = () => {
             <Button
               size='md'
               onClickHandler={() => {
-                setSortOrder('like');
-                setActiveButton('like');
+                setSortOrder('likeCount');
+                setActiveButton('likeCount');
                 refreshPost();
               }}
-              active={activeButton === 'like'}
+              active={activeButton === 'likeCount'}
             >
               인기 순
             </Button>
@@ -171,28 +194,33 @@ const HomePage = () => {
             <Button
               size='md'
               onClickHandler={() => {
-                setSortOrder('comment');
-                setActiveButton('comment');
+                setSortOrder('commentCount');
+                setActiveButton('commentCount');
                 refreshPost();
               }}
-              active={activeButton === 'comment'}
+              active={activeButton === 'commentCount'}
             >
               댓글 순
             </Button>
           </Li>
           <Li>
-            <SearchInput type='search' placeholder='검색' />
+            <SearchInput
+              type='search'
+              placeholder='검색'
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={handleKeyDowm}
+            />
             <SearchImage
               src={searchIcon}
               alt='검색하기 아이콘'
-              onClick={() => {
-                alert('준비 중입니다.');
-              }}
+              onClick={handleSearch} // 검색 버튼 클릭 시 검색 수행
             />
           </Li>
         </Ul>
         {isLoading ? (
           <PostContainer postContainerLayout={postContainerLayout}>
+            {post.length === 0 && <EmptyPostMessage>등록된 게시물이 없습니다.</EmptyPostMessage>}
             {post.map((post, index) => {
               // 해당 항목이 유효한 구조를 가지는지 확인
               if (post && post.post && post.post.user) {
@@ -212,16 +240,35 @@ const HomePage = () => {
                     introduction={post.post.user.introduction}
                   />
                 );
+              } else if (post && post.post && post.post.user === null) {
+                return (
+                  <Post
+                    key={post.post._id}
+                    profileImage={null}
+                    nickname='탈퇴한 사용자입니다.'
+                    content={post.post.content}
+                    img={post.post.img}
+                    scrap={post.scrap}
+                    likeState={post.likeState}
+                    likeCount={post.post.likeCount}
+                    commentCount={post.post.commentCount}
+                    createdAt={post.post.createdAt}
+                    postId={post.post._id}
+                    introduction={null}
+                  />
+                );
               } else {
                 // 유효하지 않은 구조를 가진 항목은 렌더링하지 않음
                 return null;
               }
             })}
-            <div
-              ref={ref}
-              style={{ position: 'absolute', bottom: 0 }}
-              // style={{ position: 'absolute', width: '120rem', height: '1rem', background: 'red', bottom: 0 }}
-            />
+            {post.length !== 0 && (
+              <div
+                ref={ref}
+                style={{ position: 'absolute', bottom: 0 }}
+                // style={{ position: 'absolute', width: '120rem', height: '1rem', background: 'red', bottom: 0 }}
+              />
+            )}
           </PostContainer>
         ) : (
           <Loading description='데이터를 불러오는 중입니다...' margin='20rem 0 10rem' />
@@ -309,4 +356,14 @@ const PostContainer = styled.div`
   gap: 3rem;
   margin-top: ${(props) => props.postContainerLayout};
   margin-bottom: 9rem;
+`;
+
+// 등록된 게시물 없을 때
+const EmptyPostMessage = styled.p`
+  width: 100%;
+  height: 18rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--fs-sm);
 `;

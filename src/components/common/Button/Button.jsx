@@ -22,7 +22,7 @@ const SIZES = {
     --button-font-size: var(--fs-lg);
   `,
   profileSetting: css`
-    --button-width: 40rem;
+    --button-width: 100%;
     --button-height: 5.4rem;
     --button-font-size: var(--fs-lg);
   `,
