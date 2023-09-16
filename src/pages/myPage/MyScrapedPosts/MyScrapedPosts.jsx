@@ -7,6 +7,7 @@ import deleteIcon from '../../../assets/images/delete-icon.svg';
 import editIcon from '../../../assets/images/edit-icon.svg';
 import useModal from '../../../hooks/useModal';
 import CategoryEditModal from './../../../components/common/modal/CategoryEditModal/CategoryEditModal';
+import Modal from '../../../components/common/modal/Modal/Modal';
 
 const MyScrapedPosts = () => {
   const [scrapList, setScrapList] = useState([]);
@@ -55,8 +56,11 @@ const MyScrapedPosts = () => {
       .catch((err) => console.log(err));
   };
 
-  // useModal
+  // 카테고리 편집
   const [modalOpen, toggle, firstRef, secondRef] = useModal();
+
+  // 카테고리 삭제
+  const [DeleteModalOpen, DeleteToggle, DeleteFirstRef, DeleteSecondRef] = useModal();
 
   return (
     <>
@@ -67,9 +71,19 @@ const MyScrapedPosts = () => {
               <DeleteImg
                 src={deleteIcon}
                 onClick={() => {
-                  handleRemoveCategory(category.collectionId);
+                  DeleteToggle();
+                  setCollectionId(category.collectionId);
                 }}
+                ref={DeleteFirstRef}
               />
+              {DeleteModalOpen && collectionId === category.collectionId && (
+                <Modal
+                  toggle={DeleteToggle}
+                  secondRef={DeleteSecondRef}
+                  confirm={() => handleRemoveCategory(category.collectionId)}
+                  modalHeading='정말로 삭제하시겠습니까?'
+                />
+              )}
               <CategoryNameWrapper>
                 <H3>{category.name}</H3>
                 <EditImg
