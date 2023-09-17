@@ -20,7 +20,7 @@ const MapContainer = styled.article`
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(1.2);
+  transform: translate(-50%, -50%);
   width: 800px;
   height: 800px;
   z-index: 200;
