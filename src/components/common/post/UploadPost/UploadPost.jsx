@@ -248,7 +248,8 @@ const ImageLabel = styled.label`
   height: 38rem;
   border-radius: 30px;
   cursor: pointer;
-  background: 97% 95% ${(props) => (props.imagePreview ? '' : `url(${photoIcon})`)} var(--image-label-bg) no-repeat;
+  background: 97% 95% ${(props) => (props.imagePreview ? '' : `url(${photoIcon})`)} var(--image-label-bg-color)
+    no-repeat;
 `;
 
 const ImagePreview = styled.img`

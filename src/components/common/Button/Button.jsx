@@ -30,8 +30,8 @@ const SIZES = {
     --button-width: 8rem;
     --button-height: 4rem;
     --button-font-size: var(--fs-sm);
-    --main-btn-color: #e8e8e8;
-    --btn-text-color: #000000;
+    --main-btn-color: #eceeee;
+    --btn-text-color: initial;
   `,
   modalConfirm: css`
     --button-width: 8rem;
