@@ -15,7 +15,7 @@ const NotFoundPage = () => {
       <LogoImg src={logo} alt='여운 로고' onClick={onClickgoHomeHandler} />
       <Heading>404</Heading>
       <SubHeading>Page Not Found</SubHeading>
-      <Message>Sorry, the page you are looking for does not exist.</Message>
+      <Message>요청하신 페이지를 찾을 수 없습니다.</Message>
     </Container>
   );
 };
@@ -26,7 +26,7 @@ const Container = styled.div`
   height: 100vh;
   top: 0;
   z-index: 9999;
-  background: var(--modal-sub-bg-color);
+  background: var(--sub-bg-color);
   display: flex;
   flex-direction: column;
   align-items: center;

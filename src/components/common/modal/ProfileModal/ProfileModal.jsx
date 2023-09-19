@@ -89,7 +89,7 @@ const ContentP = styled.p`
   font-size: var(--fs-xs);
   width: 100%;
   height: 22rem;
-  background: #f5f5f5;
+  background: var(--main-bg-color);
   border-radius: 8px;
   line-height: 2.2rem;
   padding: 0.6rem 0.8rem;
