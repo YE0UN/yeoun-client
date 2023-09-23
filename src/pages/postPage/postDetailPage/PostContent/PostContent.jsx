@@ -1,21 +1,15 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
-import editIcon from '../../../../assets/images/edit-icon.svg';
-import bookMarkIcon from '../../../../assets/images/bookmark-icon.svg';
-import bookMarkFillIcon from '../../../../assets/images/bookmark-fill-icon.svg';
-import heartIcon from '../../../../assets/images/heart-icon.svg';
-import heartFillIcon from '../../../../assets/images/heart-fill-icon.svg';
-import commentIcon from '../../../../assets/images/comment-icon.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContextStore } from './../../../../context/AuthContext';
 import useModal from '../../../../hooks/useModal';
 import ProfileModal from '../../../../components/common/modal/ProfileModal/ProfileModal';
 import useFormattedDate from '../../../../hooks/useFormattedDate';
-import useImagePreload from '../../../../hooks/useImagePreload';
 import ScrapModal from '../../../../components/common/modal/ScrapModal/ScrapModal';
 import API from '../../../../api/API';
 import ENDPOINT from '../../../../api/ENDPOINT';
+import LocalSVGSprite from '../../../../components/SVGSprite/LocalSVGSprite';
 
 const PostContent = ({
   profileImage,
@@ -37,25 +31,14 @@ const PostContent = ({
   const params = useParams();
   const navigate = useNavigate();
 
-  // useImagePreload
-  useImagePreload([editIcon, bookMarkFillIcon, heartFillIcon]);
-
   // 유저 프로필 이미지 alt
   const ProfileImgAlt = `${nickname} 이미지`;
 
   // 스크랩 기능
   const [isBookMarked, setIsBookMarked] = useState(scrap);
-  const bookMarkState = {
-    true: bookMarkFillIcon,
-    false: bookMarkIcon,
-  };
 
   // 좋아요 기능
   const [isLiked, setIsLiked] = useState(likeState);
-  const heartIconState = {
-    true: heartFillIcon,
-    false: heartIcon,
-  };
 
   // 좋아요 카운트 기능
   const [likeCountSpan, setLikeCountSpan] = useState(likeCount);
@@ -84,29 +67,34 @@ const PostContent = ({
         <h3 className='sr-only'>{nickname}의 Post</h3>
 
         {postUserId === userId ? (
-          <Edit
-            src={editIcon}
-            alt='게시물 수정 아이콘'
-            onClick={() => {
-              navigate(`/post/edit/${params.postId}`);
-            }}
-          ></Edit>
+          <EditSVGWrapper>
+            <LocalSVGSprite
+              id='edit-icon'
+              color='transparent'
+              ariaLabel='게시물 수정 아이콘'
+              onClickHandler={() => {
+                navigate(`/post/edit/${params.postId}`);
+              }}
+            />
+          </EditSVGWrapper>
         ) : (
           <></>
         )}
 
-        <BookMark
-          src={bookMarkState[isBookMarked]}
-          alt='스크랩'
-          onClick={() => {
-            if (nickname === '탈퇴한 사용자입니다.') {
-              alert('탈퇴한 사용자의 게시물을 스크랩할 수 없습니다.');
-            } else {
-              toggleScrapModal();
-            }
-          }}
-          ref={firstScrapRef}
-        />
+        <SVGScrapWrapper>
+          <LocalSVGSprite
+            id={isBookMarked ? 'bookmark-fill-icon' : 'bookmark-icon'}
+            ariaLabel={isBookMarked ? '스크랩이 된 상태의 아이콘' : '스크랩 되지 않은 상태의 아이콘'}
+            onClickHandler={() => {
+              if (nickname === '탈퇴한 사용자입니다.') {
+                alert('탈퇴한 사용자의 게시물을 스크랩할 수 없습니다.');
+              } else {
+                toggleScrapModal();
+              }
+            }}
+            $ref={firstScrapRef}
+          />
+        </SVGScrapWrapper>
         <ProfileInfoDiv>
           <ProfileImg
             src={profileImage ? profileImage : userIcon}
@@ -148,23 +136,37 @@ const PostContent = ({
         <ContentInfo>
           <Container>
             <LikeWrapper>
-              <img
-                src={heartIconState[isLiked]}
-                alt='좋아요 아이콘'
-                onClick={() => {
-                  if (nickname === '탈퇴한 사용자입니다.') {
-                    alert('탈퇴한 사용자의 게시물에 좋아요 할 수 없습니다.');
+              <LocalSVGSprite
+                id={isLiked ? 'heart-fill-icon' : 'heart-icon'}
+                color='transparent'
+                width='2.4rem'
+                height='2.4rem'
+                ariaLabel={isLiked ? '좋아요가 활성화된 좋아요 아이콘' : '좋아요가 비활성화된 좋아요 아이콘'}
+                onClickHandler={() => {
+                  if (userId) {
+                    if (nickname === '탈퇴한 사용자입니다.') {
+                      return alert('탈퇴한 사용자의 게시물에 좋아요 할 수 없습니다.');
+                    } else {
+                      togglelikeState();
+                      setIsLiked((cur) => !cur);
+                      setLikeCountSpan((cur) => (isLiked ? cur - 1 : cur + 1));
+                    }
                   } else {
-                    setIsLiked((cur) => !cur);
-                    setLikeCountSpan((cur) => (isLiked ? cur - 1 : cur + 1));
-                    togglelikeState();
+                    alert('로그인 후 이용 가능합니다.');
                   }
                 }}
               />
               <span>{likeCountSpan}</span>
             </LikeWrapper>
             <CommentWrapper>
-              <img src={commentIcon} alt='댓글 아이콘' />
+              <LocalSVGSprite
+                id='comment-icon'
+                color='transparent'
+                width='2.4rem'
+                height='2.4rem'
+                ariaLabel='댓글 아이콘'
+                cursor='initial'
+              />
               <span>{commentCount}</span>
             </CommentWrapper>
           </Container>
@@ -200,7 +202,7 @@ const Article = styled.article`
   background: var(--main-bg-color);
 `;
 
-const Edit = styled.img`
+const EditSVGWrapper = styled.div`
   position: absolute;
   top: 0.5rem;
   right: 6rem;
@@ -209,7 +211,7 @@ const Edit = styled.img`
   cursor: pointer;
 `;
 
-const BookMark = styled.img`
+const SVGScrapWrapper = styled.div`
   position: absolute;
   top: 0;
   right: 0;
@@ -282,13 +284,14 @@ const Container = styled.div`
 const LikeWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.4rem;
   font-size: var(--fs-sm);
   font-weight: 500;
   color: var(--sub-text-color);
-  cursor: pointer;
 `;
-const CommentWrapper = styled(LikeWrapper)``;
+const CommentWrapper = styled(LikeWrapper)`
+  gap: 0.2rem;
+`;
 
 const PostDateSpan = styled.span`
   color: var(--sub-text-color);

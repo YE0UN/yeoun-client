@@ -10,6 +10,7 @@ import userIcon from '../../assets/images/user-icon.svg';
 import { useNavigate } from 'react-router';
 import API from '../../api/API';
 import ENDPOINT from '../../api/ENDPOINT';
+import { Link } from 'react-router-dom';
 
 const ProfileSettingsPage = () => {
   const navigate = useNavigate();
@@ -141,7 +142,7 @@ const ProfileSettingsPage = () => {
           <Introduction placeholder='소개' maxLength='600' value={introduction} onChange={handleIntroductionChange} />
         </InputContainer>
         <ButtonWrapper>
-          <Anchor href='/mypage'>취소</Anchor>
+          <StyledLink to='/mypage'>취소</StyledLink>
           <Button size='profileSetting' disabled={disabledButton} onClickHandler={onClickHandler}>
             수정하기
           </Button>
@@ -222,7 +223,7 @@ const ButtonWrapper = styled.div`
   width: 50%;
 `;
 
-const Anchor = styled.a`
+const StyledLink = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;

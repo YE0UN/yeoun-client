@@ -56,7 +56,7 @@ const Login = () => {
     localStorage.setItem('userId', userId);
     setUserId(userId);
 
-    Cookies.set('token', token, { expires: 7 });
+    Cookies.set('token', token, { expires: 365 });
   };
 
   // enter로 로그인

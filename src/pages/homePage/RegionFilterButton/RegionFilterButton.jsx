@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import checkIcon from '../../../assets/images/check-icon.svg';
-import deleteLightIcon from '../../../assets/images/delete-light-icon.svg';
 import useImagePreload from '../../../hooks/useImagePreload';
+import LocalSVGSprite from '../../../components/SVGSprite/LocalSVGSprite';
 
 const regions = [
   '전국',
@@ -94,6 +94,15 @@ const RegionFilterButton = ({ modalOpen, modalRef, getRigionsHandler }) => {
                 }}
               >
                 {region}
+                <SVGWrapper>
+                  <LocalSVGSprite
+                    id='delete-light-icon'
+                    color='transparent'
+                    width='1rem'
+                    height='1rem'
+                    ariaLabel='지역 삭제 아이콘'
+                  />
+                </SVGWrapper>
               </RegionButton>
             </li>
           ) : (
@@ -155,15 +164,22 @@ const RegionButtonWrapper = styled.ul`
 `;
 
 const RegionButton = styled.button`
+  position: relative;
   width: 6.5rem;
   height: 3.5rem;
-  background: url(${deleteLightIcon}) var(--region-btn-color) no-repeat 95% 15%/15%;
   color: var(--btn-text-color);
   border-radius: 8px;
   font-size: var(--fs-sm);
   font-weight: 700;
+  background: var(--region-btn-color);
 
   &:hover {
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
   }
+`;
+
+const SVGWrapper = styled.div`
+  position: absolute;
+  top: -0.4rem;
+  right: 0.4rem;
 `;

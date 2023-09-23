@@ -2,19 +2,14 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
 import Button from '../../Button/Button';
-import photoIcon from '../../../../assets/images/photo-icon.svg';
 import imageCompression from 'browser-image-compression';
 import useModal from '../../../../hooks/useModal';
 import Modal from '../../modal/Modal/Modal';
+import LocalSVGSprite from '../../../SVGSprite/LocalSVGSprite';
 
 const UploadPost = ({
-  bookMark,
   profileImage,
   nickname,
-  content,
-  postImage,
-  likeCount,
-  commentCount,
 
   buttonName,
   params,
@@ -132,6 +127,19 @@ const UploadPost = ({
           isValid={isContentValid}
         />
         <ImageLabel htmlFor='contentImage' imagePreview={imagePreview}>
+          <SVGWrapper>
+            {!imagePreview ? (
+              <LocalSVGSprite
+                id='photo-icon'
+                color='transparent'
+                width='4rem'
+                height='4rem'
+                ariaLabel='이미지를 업로드 할 수 있음을 나타내는 아이콘'
+              />
+            ) : (
+              <></>
+            )}
+          </SVGWrapper>
           {imagePreview === null ? '' : <ImagePreview src={imagePreview} alt='미리보기 이미지' />}
         </ImageLabel>
         <ImageInput id='contentImage' type='file' accept='image/*' onChange={handleImageChange} />
@@ -244,12 +252,18 @@ const ImageInput = styled.input`
 
 const ImageLabel = styled.label`
   display: block;
+  position: relative;
   width: 52rem;
   height: 38rem;
   border-radius: 30px;
   cursor: pointer;
-  background: 97% 95% ${(props) => (props.imagePreview ? '' : `url(${photoIcon})`)} var(--image-label-bg-color)
-    no-repeat;
+  background: var(--image-label-bg-color);
+`;
+
+const SVGWrapper = styled.div`
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
 `;
 
 const ImagePreview = styled.img`

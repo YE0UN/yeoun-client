@@ -1,15 +1,13 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
-import deleteIcon from '../../../../assets/images/delete-icon.svg';
-import sendIcon from '../../../../assets/images/send-icon.svg';
-import sendFillIcon from '../../../../assets/images/send-fill-icon.svg';
 import { AuthContextStore } from '../../../../context/AuthContext';
 import useModal from '../../../../hooks/useModal';
 import Modal from '../../../../components/common/modal/Modal/Modal';
 import ProfileModal from '../../../../components/common/modal/ProfileModal/ProfileModal';
 import API from '../../../../api/API';
 import ENDPOINT from '../../../../api/ENDPOINT';
+import LocalSVGSprite from '../../../../components/SVGSprite/LocalSVGSprite';
 
 const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
   const { userId } = useContext(AuthContextStore);
@@ -85,8 +83,14 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
                   <CommentInfoDIv>
                     <ProfileInfoDiv>
                       <ProfileImg
-                        src={comment.user.profileImage ? comment.user.profileImage : userIcon}
-                        alt={comment.user.nickname}
+                        src={
+                          comment.user === null
+                            ? userIcon
+                            : comment.user.profileImage
+                            ? comment.user.profileImage
+                            : userIcon
+                        }
+                        alt={comment.user === null ? '탈퇴한 사용자입니다.' : comment.user.nickname}
                         onClick={() => {
                           toggleProfileModal();
                           setProfileCommentId(comment._id);
@@ -100,28 +104,33 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
                         }}
                         ref={firstProfileRef}
                       >
-                        {comment.user.nickname}
+                        {comment.user === null ? '탈퇴한 사용자입니다.' : comment.user.nickname}
                       </UserNameP>
                       {profileModalOpen && profileCommentId === comment._id && (
                         <ProfileModal
                           toggle={toggleProfileModal}
                           secondRef={secondProfileRef}
-                          profileImage={comment.user.profileImage}
-                          ProfileImgAlt={comment.user.nickname}
-                          nickname={comment.user.nickname}
-                          introduction={comment.user.introduction}
+                          profileImage={comment.user === null ? userIcon : comment.user.profileImage}
+                          ProfileImgAlt={
+                            comment.user === null ? '탈퇴한 사용자' : `&{comment.user.nickname}의 프로필 이미지`
+                          }
+                          nickname={comment.user === null ? '탈퇴한 사용자입니다.' : comment.user.nickname}
+                          introduction={comment.user === null ? null : comment.user.introduction}
                         />
                       )}
                     </ProfileInfoDiv>
-                    <DeleteButton
-                      src={deleteIcon}
-                      alt='삭제 아이콘'
-                      onClick={() => {
+                    <LocalSVGSprite
+                      id='delete-icon'
+                      width='2rem'
+                      height='2rem'
+                      ariaLabel='댓글 삭제 아이콘'
+                      onClickHandler={() => {
                         toggleDeleteModal();
                         setDeleteCommentId(comment._id);
                       }}
-                      ref={firstDeleteRef}
+                      $ref={firstDeleteRef}
                     />
+
                     {deleteModalOpen && deleteCommentId === comment._id && (
                       <Modal
                         toggle={toggleDeleteModal}
@@ -150,12 +159,15 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
             maxLength={600}
             onKeyDown={onEnterKeyDownHandler}
           />
-          <SendImg
-            src={commentValue ? sendFillIcon : sendIcon}
-            alt='댓글 작성하기 아이콘'
-            className={commentValue ? 'active' : ''}
-            onClick={onClickSendHandler}
-          />
+          <SVGWrapper>
+            <LocalSVGSprite
+              id={commentValue ? 'send-fill-icon' : 'send-icon'}
+              color='transparent'
+              ariaLabel='댓글 작성하기 아이콘'
+              cursor={commentValue ? 'pointer' : 'default'}
+              onClickHandler={onClickSendHandler}
+            />
+          </SVGWrapper>
         </CommentInputWrapper>
       </Article>
     </>
@@ -232,12 +244,6 @@ const UserNameP = styled.p`
   cursor: pointer;
 `;
 
-const DeleteButton = styled.img`
-  width: 2rem;
-  height: 2rem;
-  cursor: pointer;
-`;
-
 const CommentP = styled.p`
   font-size: var(--fs-xs);
   background: #ffffff;
@@ -281,9 +287,8 @@ const CommentInput = styled.input`
   }
 `;
 
-const SendImg = styled.img`
+const SVGWrapper = styled.div`
   width: 4.5rem;
   height: 4.5rem;
   margin-right: 3rem;
-  cursor: ${({ className }) => (className === 'active' ? 'pointer' : 'default')};
 `;

@@ -1,14 +1,16 @@
 import React from 'react';
 import Map from '../Map/Map';
 import styled from 'styled-components';
-import closeIcon from '../../../assets/images/close-icon.svg';
+import LocalSVGSprite from '../../SVGSprite/LocalSVGSprite';
 
 const MapModal = ({ toggle, modalRef }) => {
   return (
     <>
       <MapContainer ref={modalRef}>
         <Map width='800' height='800' toggle={toggle} />
-        <Img src={closeIcon} alt='닫기 버튼' onClick={toggle} />
+        <SVGWrapper>
+          <LocalSVGSprite id='close-icon' ariaLabel='닫기 아이콘' onClickHandler={toggle} />
+        </SVGWrapper>
       </MapContainer>
     </>
   );
@@ -28,7 +30,7 @@ const MapContainer = styled.article`
   border-radius: 12px;
 `;
 
-const Img = styled.img`
+const SVGWrapper = styled.div`
   position: absolute;
   top: 1rem;
   right: 1rem;
