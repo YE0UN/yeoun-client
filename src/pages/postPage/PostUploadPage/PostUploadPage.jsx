@@ -146,7 +146,7 @@ const RegionButton = styled.button`
   font-weight: 700;
   border-radius: 8px;
   color: var(--btn-text-color);
-  background: ${(props) => (props.active ? 'var(--region-btn-color-active)' : 'var(--region-btn-color)')};
+  background: ${(props) => (props.active ? 'var(--sub-btn-color)' : 'var(--region-btn-color)')};
   &:hover {
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
   }

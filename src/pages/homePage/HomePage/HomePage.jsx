@@ -6,15 +6,12 @@ import Post from '../../../components/common/post/Post/Post';
 import HeadingLayout from '../../../components/common/layout/HeadingLayout/HeadingLayout';
 import Button from '../../../components/common/Button/Button';
 import RegionFilterButton from '../RegionFilterButton/RegionFilterButton';
-import chevronUpIcon from '../../../assets/images/chevron-up-icon.svg';
-import chevronDownIcon from '../../../assets/images/chevron-down-icon.svg';
-import searchIcon from '../../../assets/images/search-icon.svg';
 import Loading from './../../../components/Loading/Loading';
 import useModal from '../../../hooks/useModal';
-import useImagePreload from '../../../hooks/useImagePreload';
 import { useInView } from 'react-intersection-observer';
 import API from '../../../api/API';
 import ENDPOINT from '../../../api/ENDPOINT';
+import LocalSVGSprite from '../../../components/SVGSprite/LocalSVGSprite';
 
 const HomePage = () => {
   // 데이터 로딩
@@ -36,22 +33,13 @@ const HomePage = () => {
   }, [inView, lastPage]);
 
   const refreshPost = () => {
-    setPost([]);
     setPage(1);
     setLastPage(false);
-  };
-
-  // (지역) 드롭 다운 버튼 클릭 시
-  const dropDownState = {
-    true: chevronUpIcon,
-    false: chevronDownIcon,
+    // setPost([]);
   };
 
   // useModal
   const [modalOpen, toggle, firstRef, secondRef] = useModal();
-
-  // useImagePreload
-  useImagePreload([chevronUpIcon]);
 
   // 선택된 지역
   const [selectedRegion, setSelectedRegion] = useState();
@@ -97,7 +85,7 @@ const HomePage = () => {
 
       API(`${ENDPOINT.POSTS}?${regions}&sort=${sortOrder}${keyword ? `&keyword=${keyword}` : ''}&page=${page}`, 'GET')
         .then((res) => {
-          // 이미 마지막 페이지를 가져온 경우에는 추가적인 API 호출을 하지 않도록 함.
+          // 이미 마지막 페이지를 가져온 경우에는 추가적인 API 호출을 하지 않도록 함
           const { currentPage, maxPage } = res.data[res.data.length - 1];
           const isLastPage = currentPage === maxPage;
           if (isLastPage) {
@@ -155,8 +143,19 @@ const HomePage = () => {
         <HeadingLayout heading='여행 피드' />
         <Ul>
           <Li>
-            <DropDownButton type='button' onClick={toggle} ref={firstRef} dropDownState={dropDownState[modalOpen]}>
+            <DropDownButton type='button' onClick={toggle} ref={firstRef}>
               지역
+              <ModalSVGWrapper>
+                <LocalSVGSprite
+                  id={modalOpen ? 'chevron-up-icon' : 'chevron-down-icon'}
+                  color='transparent'
+                  width='3rem'
+                  height='3rem'
+                  ariaLabel={
+                    modalOpen ? '지역 선택 모달 창을 닫는 화살표 아이콘' : '지역 선택 모달 창을 여는 화살표 아이콘'
+                  }
+                />
+              </ModalSVGWrapper>
             </DropDownButton>
             <RegionFilterButton
               modalOpen={modalOpen}
@@ -211,11 +210,16 @@ const HomePage = () => {
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={handleKeyDowm}
             />
-            <SearchImage
-              src={searchIcon}
-              alt='검색하기 아이콘'
-              onClick={handleSearch} // 검색 버튼 클릭 시 검색 수행
-            />
+            <SearchSVGWrapper>
+              <LocalSVGSprite
+                id='search-icon'
+                color='transparent'
+                width='3rem'
+                height='3rem'
+                ariaLabel='검색하기 아이콘'
+                onClickHandler={handleSearch}
+              />
+            </SearchSVGWrapper>
           </Li>
         </Ul>
         {isLoading ? (
@@ -294,17 +298,29 @@ const Li = styled.li`
 `;
 
 const DropDownButton = styled.button`
+  position: relative;
   width: 27.4rem;
   height: 4.5rem;
   font-size: var(--fs-lg);
   font-weight: 700;
   color: var(--btn-text-color);
   border-radius: 8px;
-  background: url(${(props) => props.dropDownState}) no-repeat 90%/10% var(--main-btn-color);
+  background: var(--main-btn-color);
 
   &:hover {
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   }
+`;
+
+const ModalSVGWrapper = styled.div`
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: right;
+  align-items: center;
+  top: 0;
+  right: 2rem;
 `;
 
 const SearchInput = styled.input`
@@ -314,9 +330,6 @@ const SearchInput = styled.input`
   border-radius: 40px;
   padding: 1rem 1.5rem;
   font-size: var(--fs-md);
-
-  // seacrch 아이콘 background로 사용하기
-  /* background: url(${searchIcon}) no-repeat 98%/5%; */
 
   &:focus {
     outline: none;
@@ -339,8 +352,8 @@ const SearchInput = styled.input`
   }
 `;
 
-// search 아이콘 이미지로 사용하기
-const SearchImage = styled.img`
+// search 아이콘
+const SearchSVGWrapper = styled.div`
   width: 3rem;
   height: 3rem;
   display: inline-block;

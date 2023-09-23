@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import closeIcon from '../../../../assets/images/close-icon.svg';
 import styled from 'styled-components';
 import Button from '../../Button/Button';
+import LocalSVGSprite from '../../../SVGSprite/LocalSVGSprite';
 
 const CategoryEditModal = ({ toggle, secondRef, confirm, initialName, getNameValue }) => {
   const [value, setValue] = useState(initialName);
@@ -37,7 +37,9 @@ const CategoryEditModal = ({ toggle, secondRef, confirm, initialName, getNameVal
   return (
     <>
       <ModalContainer ref={secondRef}>
-        <CloseIcon src={closeIcon} alt='닫기 아이콘' onClick={toggle} />
+        <SVGWrapper>
+          <LocalSVGSprite id='close-icon' ariaLabel='닫기 아이콘' onClickHandler={toggle} />
+        </SVGWrapper>
         <Input
           type='text'
           placeholder='변경할 이름을 입력해 주세요.'
@@ -79,7 +81,7 @@ const ModalContainer = styled.article`
   z-index: 100;
 `;
 
-const CloseIcon = styled.img`
+const SVGWrapper = styled.div`
   position: absolute;
   top: 1rem;
   right: 1rem;

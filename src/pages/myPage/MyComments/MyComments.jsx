@@ -1,12 +1,12 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AuthContextStore } from '../../../context/AuthContext';
-import deleteIcon from '../../../assets/images/delete-icon.svg';
 import useModal from '../../../hooks/useModal';
 import Modal from '../../../components/common/modal/Modal/Modal';
 import { useNavigate } from 'react-router-dom';
 import API from '../../../api/API';
 import ENDPOINT from '../../../api/ENDPOINT';
+import LocalSVGSprite from '../../../components/SVGSprite/LocalSVGSprite';
 
 const MyComments = () => {
   const { userId } = useContext(AuthContextStore);
@@ -79,14 +79,16 @@ const MyComments = () => {
                   >
                     {comment.post.title}
                   </TitleInfoP>
-                  <DeleteButton
-                    src={deleteIcon}
-                    alt='삭제 아이콘'
-                    onClick={() => {
+                  <LocalSVGSprite
+                    id='delete-icon'
+                    width='2rem'
+                    height='2rem'
+                    ariaLabel='댓글 삭제 아이콘'
+                    onClickHandler={() => {
                       toggleDeleteModal();
                       setDeleteCommentId(comment._id);
                     }}
-                    ref={firstDeleteRef}
+                    $ref={firstDeleteRef}
                   />
                   {deleteModalOpen && deleteCommentId === comment._id && (
                     <Modal

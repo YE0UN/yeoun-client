@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import logo from '../../../assets/images/logo.svg';
-import octocatIcon from '../../../assets/images/octocat-icon.svg';
-import copyrightIcon from '../../../assets/images/copyright-icon.svg';
 import InnerLayout from './../layout/InnerLayout/InnerLayout';
+import LocalSVGSprite from '../../SVGSprite/LocalSVGSprite';
 
 const Footer = () => {
   return (
@@ -15,11 +14,23 @@ const Footer = () => {
         <Line></Line>
         <Address>
           <CopyrightP>
-            <CopyrightImg src={copyrightIcon} alt='저작권 아이콘' />
+            <LocalSVGSprite
+              id='copyright-icon'
+              width='1.6rem'
+              height='1.6rem'
+              ariaLabel='저작권 아이콘'
+              cursor='initial'
+            />
             <Strong>2023 yeoun All rights reserved.</Strong>
           </CopyrightP>
           <a href='https://github.com/YE0UN'>
-            <OctocatImg src={octocatIcon} alt='옥토캣' />
+            <LocalSVGSprite
+              id='octocat-icon'
+              color='transparent'
+              width='3.2rem'
+              height='3.2rem'
+              ariaLabel='옥토캣 아이콘'
+            />
           </a>
         </Address>
       </InnerLayout>
@@ -63,18 +74,7 @@ const CopyrightP = styled.p`
   gap: 4px;
 `;
 
-const CopyrightImg = styled.img`
-  width: 1.6rem;
-  height: 1.6rem;
-`;
-
 const Strong = styled.strong`
   font-size: var(--fs-xs);
   font-weight: 700;
-`;
-
-const OctocatImg = styled.img`
-  width: 3.2rem;
-  height: 3.2rem;
-  cursor: pointer;
 `;

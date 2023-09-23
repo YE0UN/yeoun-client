@@ -3,11 +3,10 @@ import API from '../../../api/API';
 import ENDPOINT from '../../../api/ENDPOINT';
 import Post from '../../../components/common/post/Post/Post';
 import styled from 'styled-components';
-import deleteIcon from '../../../assets/images/delete-icon.svg';
-import editIcon from '../../../assets/images/edit-icon.svg';
 import useModal from '../../../hooks/useModal';
 import CategoryEditModal from './../../../components/common/modal/CategoryEditModal/CategoryEditModal';
 import Modal from '../../../components/common/modal/Modal/Modal';
+import LocalSVGSprite from '../../../components/SVGSprite/LocalSVGSprite';
 
 const MyScrapedPosts = () => {
   const [scrapList, setScrapList] = useState([]);
@@ -68,14 +67,18 @@ const MyScrapedPosts = () => {
         {scrapList &&
           scrapList.map((category, index) => (
             <Section key={category.name} isFirstSection={index === 0}>
-              <DeleteImg
-                src={deleteIcon}
-                onClick={() => {
-                  DeleteToggle();
-                  setCollectionId(category.collectionId);
-                }}
-                ref={DeleteFirstRef}
-              />
+              <DeleteSVGWrapper>
+                <LocalSVGSprite
+                  id='delete-icon'
+                  ariaLabel='삭제 아이콘'
+                  onClickHandler={() => {
+                    DeleteToggle();
+                    setCollectionId(category.collectionId);
+                  }}
+                  $ref={DeleteFirstRef}
+                />
+              </DeleteSVGWrapper>
+
               {DeleteModalOpen && collectionId === category.collectionId && (
                 <Modal
                   toggle={DeleteToggle}
@@ -86,15 +89,19 @@ const MyScrapedPosts = () => {
               )}
               <CategoryNameWrapper>
                 <H3>{category.name}</H3>
-                <EditImg
-                  src={editIcon}
-                  alt='편집 아이콘'
-                  onClick={() => {
+                <LocalSVGSprite
+                  id='edit-icon'
+                  color='transparent'
+                  width='2rem'
+                  height='2rem'
+                  ariaLabel='편집 아이콘'
+                  onClickHandler={() => {
                     toggle();
                     setCollectionId(category.collectionId);
                   }}
-                  ref={firstRef}
+                  $ref={firstRef}
                 />
+
                 {modalOpen && collectionId === category.collectionId && (
                   <CategoryEditModal
                     toggle={toggle}
@@ -154,13 +161,12 @@ const Section = styled.section`
   background-color: var(--my-scrap-list-bg-color);
 `;
 
-const DeleteImg = styled.img`
+const DeleteSVGWrapper = styled.div`
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
   width: 3rem;
   height: 3rem;
-  cursor: pointer;
 `;
 
 const PostContainer = styled.div`

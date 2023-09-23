@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
-import closeIcon from '../../../../assets/images/close-icon.svg';
+import LocalSVGSprite from '../../../SVGSprite/LocalSVGSprite';
 
 const Modal = ({ toggle, secondRef, profileImage, ProfileImgAlt, nickname, introduction }) => {
   // Esc 누르면 취소하는 기능
@@ -26,7 +26,9 @@ const Modal = ({ toggle, secondRef, profileImage, ProfileImgAlt, nickname, intro
   return (
     <>
       <ModalContainer ref={secondRef}>
-        <CloseIcon src={closeIcon} alt='닫기 아이콘' onClick={toggle} />
+        <SVGWrapper>
+          <LocalSVGSprite id='close-icon' ariaLabel='닫기 아이콘' onClickHandler={toggle} />
+        </SVGWrapper>
         <ProfileImg
           src={profileImage ? profileImage : userIcon}
           alt={ProfileImgAlt}
@@ -63,13 +65,12 @@ const ModalContainer = styled.article`
   z-index: 100;
 `;
 
-const CloseIcon = styled.img`
+const SVGWrapper = styled.div`
   position: absolute;
   top: 1rem;
   right: 1rem;
   width: 2rem;
   height: 2rem;
-  cursor: pointer;
 `;
 
 const ProfileImg = styled.img`

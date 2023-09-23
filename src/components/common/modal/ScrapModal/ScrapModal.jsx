@@ -1,21 +1,19 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import styled from 'styled-components';
-import closeIcon from '../../../../assets/images/close-icon.svg';
 import checkIcon from '../../../../assets/images/check-icon.svg';
 import plusIcon from '../../../../assets/images/plus-icon.svg';
 import Button from '../../Button/Button';
 import API from '../../../../api/API';
 import ENDPOINT from '../../../../api/ENDPOINT';
 import useSnackbar from '../../../../hooks/useSnackbar';
+import LocalSVGSprite from '../../../SVGSprite/LocalSVGSprite';
 
-const ScrapModal = ({ toggle, secondRef, confirm, postId, setIsBookMarked, getMyScrapList }) => {
+const ScrapModal = ({ toggle, secondRef, postId, setIsBookMarked, getMyScrapList }) => {
   const [scrapList, setScrapList] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categoryIds, setCategoryIds] = useState([]);
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
-  console.log(selectedCategories);
-  console.log(scrapList);
 
   const { showSnackbar, SnackbarComponent } = useSnackbar();
 
@@ -124,7 +122,9 @@ const ScrapModal = ({ toggle, secondRef, confirm, postId, setIsBookMarked, getMy
   return (
     <>
       <ModalContainer ref={secondRef}>
-        <CloseIcon src={closeIcon} alt='닫기 아이콘' onClick={toggle} />
+        <CloseSVGWrapper>
+          <LocalSVGSprite id='close-icon' ariaLabel='닫기 아이콘' onClickHandler={toggle} />
+        </CloseSVGWrapper>
         <AddCategoryButton
           onClick={() => {
             setIsAddingCategory(true);
@@ -203,7 +203,7 @@ const ModalContainer = styled.article`
   z-index: 100;
 `;
 
-const CloseIcon = styled.img`
+const CloseSVGWrapper = styled.div`
   position: absolute;
   top: 1rem;
   right: 1rem;

@@ -1,19 +1,14 @@
 import React, { useState, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
-import bookMarkIcon from '../../../../assets/images/bookmark-icon.svg';
-import bookMarkFillIcon from '../../../../assets/images/bookmark-fill-icon.svg';
-import heartIcon from '../../../../assets/images/heart-icon.svg';
-import heartFillIcon from '../../../../assets/images/heart-fill-icon.svg';
-import commentIcon from '../../../../assets/images/comment-icon.svg';
 import { useNavigate } from 'react-router-dom';
 import { AuthContextStore } from '../../../../context/AuthContext';
 import useFormattedDate from './../../../../hooks/useFormattedDate';
-import useImagePreload from '../../../../hooks/useImagePreload';
 import useModal from '../../../../hooks/useModal';
 import ScrapModal from '../../modal/ScrapModal/ScrapModal';
 import API from '../../../../api/API';
 import ENDPOINT from '../../../../api/ENDPOINT';
+import LocalSVGSprite from '../../../SVGSprite/LocalSVGSprite';
 
 const Post = ({
   profileImage,
@@ -32,9 +27,6 @@ const Post = ({
 }) => {
   const { userId } = useContext(AuthContextStore);
   const navigate = useNavigate();
-
-  // image preload
-  useImagePreload([bookMarkFillIcon, heartFillIcon]);
 
   // 유저 프로필 이미지 alt
   const ProfileImgAlt = `${nickname} 이미지`;
@@ -88,18 +80,20 @@ const Post = ({
         <CardFlipper>
           <CardFront flipped={isFlipped}>
             <h3 className='sr-only'>{nickname}의 Post</h3>
-            <BookMark
-              src={isBookMarked ? bookMarkFillIcon : bookMarkIcon}
-              alt='스크랩'
-              onClick={() => {
-                if (nickname === '탈퇴한 사용자입니다.') {
-                  alert('탈퇴한 사용자의 게시물을 스크랩할 수 없습니다.');
-                } else {
-                  toggle();
-                }
-              }}
-              ref={firstRef}
-            />
+            <SVGWrapper>
+              <LocalSVGSprite
+                id={isBookMarked ? 'bookmark-fill-icon' : 'bookmark-icon'}
+                ariaLabel={isBookMarked ? '스크랩이 된 상태의 아이콘' : '스크랩 되지 않은 상태의 아이콘'}
+                onClickHandler={() => {
+                  if (nickname === '탈퇴한 사용자입니다.') {
+                    alert('탈퇴한 사용자의 게시물을 스크랩할 수 없습니다.');
+                  } else {
+                    toggle();
+                  }
+                }}
+                $ref={firstRef}
+              />
+            </SVGWrapper>
             <ProfileInfoDiv>
               <ProfileImg
                 src={profileImage ? profileImage : userIcon}
@@ -135,21 +129,24 @@ const Post = ({
                 src={img}
                 alt=''
                 onError={(e) => {
-                  e.target.src = 'https://picsum.photos/600/600/?random';
+                  e.target.src = 'https://picsum.photos/id/114/600/600';
                 }}
                 onClick={onClickMovePageHandler}
               />
             ) : (
-              <ContentImg src={'https://picsum.photos/600/600/?random'} alt='' onClick={onClickMovePageHandler} />
+              <ContentImg src={'https://picsum.photos/id/114/600/600'} alt='' onClick={onClickMovePageHandler} />
             )}
 
             <ContentInfo>
               <Container>
                 <LikeWrapper>
-                  <img
-                    src={isLiked ? heartFillIcon : heartIcon}
-                    alt='좋아요 아이콘'
-                    onClick={() => {
+                  <LocalSVGSprite
+                    id={isLiked ? 'heart-fill-icon' : 'heart-icon'}
+                    color='transparent'
+                    width='2.4rem'
+                    height='2.4rem'
+                    ariaLabel={isLiked ? '좋아요가 활성화된 좋아요 아이콘' : '좋아요가 비활성화된 좋아요 아이콘'}
+                    onClickHandler={() => {
                       if (userId) {
                         if (nickname === '탈퇴한 사용자입니다.') {
                           return alert('탈퇴한 사용자의 게시물에 좋아요 할 수 없습니다.');
@@ -166,7 +163,13 @@ const Post = ({
                   <span>{likeCountSpan}</span>
                 </LikeWrapper>
                 <CommentWrapper onClick={onClickMovePageHandler}>
-                  <img src={commentIcon} alt='댓글 아이콘' />
+                  <LocalSVGSprite
+                    id='comment-icon'
+                    color='transparent'
+                    width='2.4rem'
+                    height='2.4rem'
+                    ariaLabel='댓글 아이콘'
+                  />
                   <span>{commentCount}</span>
                 </CommentWrapper>
               </Container>
@@ -259,7 +262,7 @@ const CardBack = styled.div`
 `;
 // 게시물 회전 끝
 
-const BookMark = styled.img`
+const SVGWrapper = styled.div`
   position: absolute;
   top: -2rem;
   right: -2rem;
@@ -353,13 +356,15 @@ const Container = styled.div`
 const LikeWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.4rem;
   font-size: var(--fs-sm);
   font-weight: 500;
   color: var(--sub-text-color);
+`;
+const CommentWrapper = styled(LikeWrapper)`
+  gap: 0.2rem;
   cursor: pointer;
 `;
-const CommentWrapper = styled(LikeWrapper)``;
 
 const PostDateSpan = styled.span`
   color: var(--sub-text-color);
