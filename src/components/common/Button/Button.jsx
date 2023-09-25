@@ -12,7 +12,7 @@ const SIZES = {
     --button-font-size: var(--fs-lg);
   `,
   xl: css`
-    --button-width: 45rem;
+    --button-width: 100%;
     --button-height: 6rem;
     --button-font-size: var(--fs-lg);
   `,
