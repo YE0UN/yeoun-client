@@ -12,7 +12,6 @@ const MyScrapedPosts = () => {
   const [scrapList, setScrapList] = useState([]);
   const [changeName, setChangeName] = useState('');
   const [collectionId, setCollectionId] = useState();
-  console.log(scrapList);
 
   const getLikeState = () => {
     setScrapList([]);
@@ -43,7 +42,11 @@ const MyScrapedPosts = () => {
         getMyScrapList();
         toggle();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        if (err.response.data.error === '이미 사용 중인 이름입니다.') {
+          alert('이미 사용 중인 이름입니다.');
+        }
+      });
   };
 
   // 카테고리(컬렉션) 삭제
@@ -66,27 +69,7 @@ const MyScrapedPosts = () => {
       <Container>
         {scrapList &&
           scrapList.map((category, index) => (
-            <Section key={category.name} isFirstSection={index === 0}>
-              <DeleteSVGWrapper>
-                <LocalSVGSprite
-                  id='delete-icon'
-                  ariaLabel='삭제 아이콘'
-                  onClickHandler={() => {
-                    DeleteToggle();
-                    setCollectionId(category.collectionId);
-                  }}
-                  $ref={DeleteFirstRef}
-                />
-              </DeleteSVGWrapper>
-
-              {DeleteModalOpen && collectionId === category.collectionId && (
-                <Modal
-                  toggle={DeleteToggle}
-                  secondRef={DeleteSecondRef}
-                  confirm={() => handleRemoveCategory(category.collectionId)}
-                  modalHeading='정말로 삭제하시겠습니까?'
-                />
-              )}
+            <SectionWrapper>
               <CategoryNameWrapper>
                 <H3>{category.name}</H3>
                 <LocalSVGSprite
@@ -98,6 +81,7 @@ const MyScrapedPosts = () => {
                   onClickHandler={() => {
                     toggle();
                     setCollectionId(category.collectionId);
+                    setChangeName(category.name);
                   }}
                   $ref={firstRef}
                 />
@@ -112,32 +96,53 @@ const MyScrapedPosts = () => {
                   />
                 )}
               </CategoryNameWrapper>
+              <Section key={category.name} isFirstSection={index === 0}>
+                <DeleteSVGWrapper>
+                  <LocalSVGSprite
+                    id='delete-icon'
+                    ariaLabel='삭제 아이콘'
+                    onClickHandler={() => {
+                      DeleteToggle();
+                      setCollectionId(category.collectionId);
+                    }}
+                    $ref={DeleteFirstRef}
+                  />
+                </DeleteSVGWrapper>
 
-              <PostContainer>
-                {category.posts.length ? (
-                  category.posts.map((item) => (
-                    <Post
-                      key={item.post._id}
-                      profileImage={item.post.user.profileImage}
-                      nickname={item.post.user.nickname}
-                      introduction={item.post.user.introduction}
-                      scrap={item.scrap}
-                      content={item.post.content}
-                      img={item.post.img}
-                      likeState={item.likeState}
-                      likeCount={item.post.likeCount}
-                      commentCount={item.post.commentCount}
-                      createdAt={item.post.createdAt}
-                      postId={item.post._id}
-                      getMyScrapList={getMyScrapList}
-                      getLikeState={getLikeState}
-                    />
-                  ))
-                ) : (
-                  <P>아직 스크랩된 게시물이 없습니다.</P>
+                {DeleteModalOpen && collectionId === category.collectionId && (
+                  <Modal
+                    toggle={DeleteToggle}
+                    secondRef={DeleteSecondRef}
+                    confirm={() => handleRemoveCategory(category.collectionId)}
+                    modalHeading='정말로 삭제하시겠습니까?'
+                  />
                 )}
-              </PostContainer>
-            </Section>
+                <PostContainer>
+                  {category.posts.length ? (
+                    category.posts.map((item) => (
+                      <Post
+                        key={item.post._id}
+                        profileImage={item.post.user.profileImage}
+                        nickname={item.post.user.nickname}
+                        introduction={item.post.user.introduction}
+                        scrap={item.scrap}
+                        content={item.post.content}
+                        img={item.post.img}
+                        likeState={item.likeState}
+                        likeCount={item.post.likeCount}
+                        commentCount={item.post.commentCount}
+                        createdAt={item.post.createdAt}
+                        postId={item.post._id}
+                        getMyScrapList={getMyScrapList}
+                        getLikeState={getLikeState}
+                      />
+                    ))
+                  ) : (
+                    <P>아직 스크랩된 게시물이 없습니다.</P>
+                  )}
+                </PostContainer>
+              </Section>
+            </SectionWrapper>
           ))}
       </Container>
     </>
@@ -153,12 +158,33 @@ const Container = styled.div`
   margin-bottom: 5rem;
 `;
 
-const Section = styled.section`
+const SectionWrapper = styled.div`
   position: relative;
+  width: 100%;
   min-height: 15rem;
-  border-radius: 2.5rem;
+  padding-bottom: 0.6rem;
   border: 1px solid var(--border-color);
+  border-radius: 1rem;
   background-color: var(--my-scrap-list-bg-color);
+`;
+
+const Section = styled.section`
+  padding-bottom: 1rem;
+
+  // 스크롤 기능
+  overflow-y: hidden;
+  overflow-x: scroll;
+  &::-webkit-scrollbar {
+    height: 2.4rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #94afc6;
+    border: 0.5rem solid var(--my-scrap-list-bg-color);
+    border-radius: 2rem;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 `;
 
 const DeleteSVGWrapper = styled.div`
@@ -172,12 +198,15 @@ const DeleteSVGWrapper = styled.div`
 const PostContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 3rem;
+  gap: 2.9rem;
+  width: max-content;
 `;
 
 const P = styled.p`
-  width: 100%;
-  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: var(--fs-sm);
   color: var(--sub-text-color);
 `;
@@ -192,10 +221,4 @@ const CategoryNameWrapper = styled.div`
 const H3 = styled.h3`
   font-size: var(--fs-3xl);
   font-weight: 500;
-`;
-
-const EditImg = styled.img`
-  width: 2rem;
-  height: 2rem;
-  cursor: pointer;
 `;

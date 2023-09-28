@@ -19,7 +19,7 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
   const [profileCommentId, setProfileCommentId] = useState(null);
 
   const onClickRemoveHandler = (comment) => {
-    if (userId === comment.user._id) {
+    if (userId === comment.user?._id) {
       API(`${ENDPOINT.COMMENTS}/${comment._id}`, 'DELETE')
         .then((res) => {
           console.log(res);

@@ -100,8 +100,8 @@ const Login = () => {
           <Button size='xl' disabled={!email || !password} onClickHandler={handleLogin}>
             로그인
           </Button>
+          <LinkCustom to='/join'>회원가입</LinkCustom>
         </LoginContainer>
-        <LinkCustom to='/join'>회원가입</LinkCustom>
       </InnerLayout>
     </>
   );
@@ -114,9 +114,9 @@ const LoginContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 60rem;
-  height: 35rem;
-  padding: 5rem 5rem 4rem;
-  margin: 12rem auto 0;
+  height: 100%;
+  padding: 5rem;
+  margin: 12rem auto;
   border: 1px solid var(--input-border-color);
   border-radius: 10px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
@@ -125,7 +125,7 @@ const LoginContainer = styled.div`
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 3.5rem;
+  gap: 2rem;
 `;
 
 const EmailWrapper = styled.div`
@@ -156,19 +156,24 @@ const Input = styled.input`
 const ErrorMsg = styled.strong`
   align-self: flex-start;
   font-size: var(--fs-sm);
-  margin: 1rem 0 3rem;
+  margin: 1rem 0;
   color: var(--main-alert-color);
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
 `;
 
 const LinkCustom = styled(Link)`
-  width: 6rem;
+  width: 100%;
+  min-height: 6rem;
   display: flex;
   justify-content: center;
-  margin: 4rem auto 12rem;
-  font-size: var(--fs-sm);
-  color: var(--sub-text-color);
+  align-items: center;
+  margin: 2rem auto 0;
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  border: 1px solid var(--main-btn-color);
+  border-radius: 0.8rem;
+
   &:hover {
-    transform: scale(1.05);
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   }
 `;
