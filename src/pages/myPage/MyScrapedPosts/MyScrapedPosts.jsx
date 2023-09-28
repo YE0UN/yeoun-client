@@ -198,7 +198,7 @@ const DeleteSVGWrapper = styled.div`
 const PostContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 2.8rem;
+  gap: 2.9rem;
   width: max-content;
 `;
 
