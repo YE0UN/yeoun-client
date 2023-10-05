@@ -19,11 +19,15 @@ const Carousel = () => {
         modules={[Pagination, Navigation]}
         className='mySwiper'
       >
-        <SwiperSlide>Slide 1</SwiperSlide>
-        <SwiperSlide>Slide 2</SwiperSlide>
-        <SwiperSlide>Slide 3</SwiperSlide>
-        <SwiperSlide>Slide 4</SwiperSlide>
-        <SwiperSlide>Slide 5</SwiperSlide>
+        <SwiperSlide>
+          <RegionImg src={`https://picsum.photos/id/114/1920/1080`} alt='기본 배경 이미지입니다.' />
+        </SwiperSlide>
+        <SwiperSlide>
+          <RegionImg src={`https://picsum.photos/id/728/1920/1080`} alt='기본 배경 이미지입니다.' />
+        </SwiperSlide>
+        <SwiperSlide>
+          <RegionImg src={`https://picsum.photos/id/53/1920/1080`} alt='기본 배경 이미지입니다.' />
+        </SwiperSlide>
       </CustomSwiper>
     </>
   );
@@ -46,17 +50,22 @@ const CustomSwiper = styled(Swiper)`
   }
 
   // Button 커스텀
-  /* .swiper-button-prev {
-  }
+  .swiper-button-prev,
   .swiper-button-next {
+    color: var(--sub-bg-color);
+    border-radius: 1rem;
   }
 
   .swiper-button-next::after,
   .swiper-button-prev::after {
-    display: none;
-  } */
+    font-size: var(--fs-lg);
+    color: var(--btn-text-color);
+  }
 
   // Page Navigation 커스텀
-  /* .swiper-pagination-bullet {
-  } */
+  .swiper-pagination-bullet {
+    background-color: var(--sub-bg-color);
+  }
 `;
+
+const RegionImg = styled.img``;
