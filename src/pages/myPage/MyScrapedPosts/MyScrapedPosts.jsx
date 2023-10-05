@@ -69,7 +69,7 @@ const MyScrapedPosts = () => {
       <Container>
         {scrapList &&
           scrapList.map((category, index) => (
-            <SectionWrapper>
+            <SectionWrapper key={category.name}>
               <CategoryNameWrapper>
                 <H3>{category.name}</H3>
                 <LocalSVGSprite
@@ -96,7 +96,7 @@ const MyScrapedPosts = () => {
                   />
                 )}
               </CategoryNameWrapper>
-              <Section key={category.name} isFirstSection={index === 0}>
+              <Section isFirstSection={index === 0}>
                 <DeleteSVGWrapper>
                   <LocalSVGSprite
                     id='delete-icon'
