@@ -35,7 +35,6 @@ const Login = () => {
       password: password,
     })
       .then((res) => {
-        console.log(res);
         setLoginFail(false);
         saveUserInfo(res);
         navigate('/');

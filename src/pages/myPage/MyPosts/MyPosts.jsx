@@ -1,5 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from 'react';
-import { AuthContextStore } from '../../../context/AuthContext';
+import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import Post from '../../../components/common/post/Post/Post';
 import Loading from '../../../components/Loading/Loading';
@@ -7,13 +6,10 @@ import API from '../../../api/API';
 import ENDPOINT from '../../../api/ENDPOINT';
 
 const MyPosts = () => {
-  const { userId } = useContext(AuthContextStore);
-
   const [isLoading, setIsLoading] = useState(false);
 
   // 내가 쓴 게시물 전체 상태관리
   const [post, setPost] = useState([]);
-  // console.log(post);
 
   const getMyPosts = useCallback(() => {
     API(`${ENDPOINT.MY_POSTS}`, 'GET')

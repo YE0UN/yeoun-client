@@ -16,7 +16,6 @@ const HeadingLayout = ({ heading, subHeading }) => {
   const handleClick = () => {
     API(`${ENDPOINT.DELETE_ACCOUNT}`, 'DELETE')
       .then((res) => {
-        console.log(res);
         localStorage.removeItem('userId');
         setUserId(null);
         navigate('/');

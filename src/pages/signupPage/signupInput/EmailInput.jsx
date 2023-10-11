@@ -50,8 +50,7 @@ const EmailInput = ({ getEmail, handleKeyDown, initialEmail, editEmail, emailChe
 
   const onClickCheckHandler = () => {
     API(`${ENDPOINT.EMAIL_DUPLICATE_CHECK}/${email}`, 'GET')
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         setConfirmEmail(true);
         getEmail && getEmail(email);
       })

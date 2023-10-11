@@ -25,7 +25,6 @@ const ScrapModal = ({ toggle, secondRef, postId, setIsBookMarked, getMyScrapList
   const getCollections = useCallback(async () => {
     await API(`${ENDPOINT.COLLECTIONS}/${postId}`, 'GET')
       .then((res) => {
-        console.log(res);
         setScrapList(res.data);
         res.data.forEach((item) => {
           if (item.scrap) {
@@ -88,7 +87,6 @@ const ScrapModal = ({ toggle, secondRef, postId, setIsBookMarked, getMyScrapList
 
     API(`${ENDPOINT.COLLECTIONS}`, 'POST', { name: newCategoryName })
       .then((res) => {
-        console.log(res);
         getCollections();
         setNewCategoryName('');
         setIsAddingCategory(false);
@@ -100,7 +98,6 @@ const ScrapModal = ({ toggle, secondRef, postId, setIsBookMarked, getMyScrapList
   const HandleScrap = () => {
     API(`${ENDPOINT.SCRAPS}/${postId}`, 'POST', { collectionIds: categoryIds })
       .then((res) => {
-        console.log(res);
         toggle();
         getMyScrapList && getMyScrapList();
         setIsBookMarked(true);
@@ -112,7 +109,6 @@ const ScrapModal = ({ toggle, secondRef, postId, setIsBookMarked, getMyScrapList
   const HandleCancelScrap = (collectionId) => {
     API(`${ENDPOINT.SCRAPS}/${postId}`, 'DELETE', { collectionIds: [collectionId] })
       .then((res) => {
-        console.log(res);
         handleSnackbarOpen();
         getMyScrapList && getMyScrapList();
       })
