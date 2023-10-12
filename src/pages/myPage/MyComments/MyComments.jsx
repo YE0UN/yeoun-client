@@ -14,7 +14,6 @@ const MyComments = () => {
   const navigate = useNavigate();
 
   const [comments, setComments] = useState();
-  // console.log(comments);
 
   // 댓글 삭제 기능
   const [deleteCommentId, setDeleteCommentId] = useState(null);
@@ -23,7 +22,6 @@ const MyComments = () => {
     if (userId) {
       API(`${ENDPOINT.MY_COMMENTS}`, 'GET')
         .then((res) => {
-          // console.log(res.data);
           setComments(res.data);
         })
         .catch((err) => {
@@ -41,12 +39,11 @@ const MyComments = () => {
   const onClickRemoveHandler = (comment) => {
     if (userId === comment.user) {
       API(`${ENDPOINT.COMMENTS}/${comment._id}`, 'DELETE')
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           getMyComments();
         })
-        .catch((res) => {
-          console.log(res);
+        .catch((err) => {
+          console.log(err);
         });
     } else {
       toggleDeleteModal();

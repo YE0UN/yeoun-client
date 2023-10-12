@@ -22,11 +22,10 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
     if (userId === comment.user?._id) {
       API(`${ENDPOINT.COMMENTS}/${comment._id}`, 'DELETE')
         .then((res) => {
-          console.log(res);
           GetPostInfo();
         })
-        .catch((res) => {
-          console.log(res);
+        .catch((err) => {
+          console.log(err);
         });
     } else {
       toggleDeleteModal();
@@ -50,12 +49,11 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
 
     API(`${ENDPOINT.COMMENTS}/${postId}`, 'POST', { content: commentValue, userId: userId })
       .then((res) => {
-        console.log(res);
         GetPostInfo();
         setCommentValue('');
       })
-      .catch((res) => {
-        console.log(res);
+      .catch((err) => {
+        console.log(err);
       });
   };
 

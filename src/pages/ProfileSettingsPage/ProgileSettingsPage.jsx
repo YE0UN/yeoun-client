@@ -90,17 +90,14 @@ const ProfileSettingsPage = () => {
       profileImage: imagePreview,
       email: email,
       nickname: nickname,
-      // 비밀번호 수정은 보류
-      // password: password,
       introduction: introduction,
     })
-      .then((res) => {
+      .then(() => {
         alert('수정되었습니다.');
         const newPath = `/mypage`;
         navigate(newPath);
         // 페이지 전환 시, 새로고침
         window.location.href = newPath;
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);

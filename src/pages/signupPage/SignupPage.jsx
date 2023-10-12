@@ -17,8 +17,6 @@ const SignupPage = () => {
   const [nickname, setNickname] = useState();
   const [password, setPassword] = useState();
 
-  // console.log(`email:${email}\nnickname:${nickname}\npassword:${password}`);
-
   // 각각의 인풋 컴포넌트에서 데이터 가져오기
   const getEmail = (value) => {
     setEmail(value);

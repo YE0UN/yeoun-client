@@ -64,7 +64,6 @@ const RegionFilterButton = ({ modalOpen, modalRef, getRigionsHandler }) => {
       setSelectedRegions([]);
     } else {
       setSelectedRegions(selectedRegions.filter((r) => r !== region));
-      // console.log(`${region}지역 필터 삭제!`);
     }
   };
 

@@ -19,7 +19,6 @@ import TouristAttractionRegionPage from './../../pages/touristAttractionPage/Tou
 
 const Router = () => {
   const { userId } = useContext(AuthContextStore);
-  // const cookie = document.cookie;
 
   return (
     <Routes>

@@ -20,7 +20,6 @@ const TouristAttractionRegionPage = () => {
     (page) => {
       API(`${ENDPOINT.TOURISM}/?region=${region}&page=${page}`)
         .then((res) => {
-          console.log(res);
           setTourismInfo(res.data[1]);
           setCurrentPage(page);
           setMaxPages(res.data[0].maxPage);

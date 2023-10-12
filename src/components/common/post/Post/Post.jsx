@@ -44,11 +44,10 @@ const Post = ({
   const togglelikeState = () => {
     API(`${ENDPOINT.LIKE}/${postId}`, 'POST')
       .then((res) => {
-        console.log(res);
         getLikeState && getLikeState();
       })
-      .catch((res) => {
-        console.log(res);
+      .catch((err) => {
+        console.log(err);
       });
   };
 

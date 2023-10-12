@@ -24,7 +24,6 @@ const PostDetailPage = () => {
   const GetPostInfo = useCallback(() => {
     API(`${ENDPOINT.POSTS}/${params.postId}`, 'GET')
       .then((res) => {
-        console.log(res.data);
         setPostContent(res.data);
         setIsLoading(true);
       })

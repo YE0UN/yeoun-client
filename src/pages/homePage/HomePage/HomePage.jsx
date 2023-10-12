@@ -35,7 +35,6 @@ const HomePage = () => {
   const refreshPost = () => {
     setPage(1);
     setLastPage(false);
-    // setPost([]);
   };
 
   // useModal
@@ -43,7 +42,6 @@ const HomePage = () => {
 
   // 선택된 지역
   const [selectedRegion, setSelectedRegion] = useState();
-  // console.log(selectedRegion);
 
   // 지역 버튼 개수에 따른 화면 레이아웃 변화 기능
   const [regionsCount, setRegionsCount] = useState();
@@ -67,7 +65,6 @@ const HomePage = () => {
 
   // 전체 게시물 상태관리
   const [post, setPost] = useState([]);
-  // console.log(post);
 
   // 정렬 기준
   const [sortOrder, setSortOrder] = useState('createdAt');

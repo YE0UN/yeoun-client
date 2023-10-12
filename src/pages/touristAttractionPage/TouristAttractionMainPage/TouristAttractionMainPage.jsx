@@ -28,7 +28,6 @@ const TouristAttractionMainPage = () => {
   const navigate = useNavigate();
 
   const movePageHandler = (region) => {
-    console.log(`${region} 관광지 페이지로 이동!`);
     navigate(`/tour/${region}`);
   };
 

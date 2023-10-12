@@ -22,13 +22,11 @@ const Header = () => {
   // 로그아웃 기능
   const onClickLogoutHandler = () => {
     API(`${ENDPOINT.LOGOUT}`, 'POST')
-      .then((res) => console.log(res))
+      .then()
       .catch((err) => console.log(err));
 
     localStorage.removeItem('userId');
     setUserId(null);
-    // navigate('/');
-    // window.location.reload();
   };
 
   // 유저 프로필

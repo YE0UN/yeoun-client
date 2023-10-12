@@ -46,11 +46,9 @@ const PostContent = ({
   // 좋아요
   const togglelikeState = () => {
     API(`${ENDPOINT.LIKE}/${postId}`, 'POST')
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((res) => {
-        console.log(res);
+      .then(() => {})
+      .catch((err) => {
+        console.log(err);
       });
   };
 

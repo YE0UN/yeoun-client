@@ -64,10 +64,6 @@ const PostModificationPage = () => {
         img: value.imagePreview,
         userId: userId,
       });
-      // console.log(selectedRegion);
-      // console.log(value.title);
-      // console.log(value.postContent);
-      // console.log(value.imagePreview);
     },
     [userId, selectedRegion],
   );
