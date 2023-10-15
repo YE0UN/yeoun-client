@@ -126,14 +126,18 @@ const Post = ({
             {img !== null ? (
               <ContentImg
                 src={img}
-                alt=''
+                alt={`${content} 게시물에 대한 이미지입니다.`}
                 onError={(e) => {
                   e.target.src = 'https://picsum.photos/id/114/600/600';
                 }}
                 onClick={onClickMovePageHandler}
               />
             ) : (
-              <ContentImg src={'https://picsum.photos/id/114/600/600'} alt='' onClick={onClickMovePageHandler} />
+              <ContentImg
+                src={'https://picsum.photos/id/114/600/600'}
+                alt={`${content} 게시물에 대한 이미지입니다.`}
+                onClick={onClickMovePageHandler}
+              />
             )}
 
             <ContentInfo>
