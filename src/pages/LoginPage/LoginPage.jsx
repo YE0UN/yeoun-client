@@ -50,12 +50,12 @@ const Login = () => {
 
   const saveUserInfo = (res) => {
     const userId = res.data.user._id;
-    const token = res.data.token;
+    // const token = res.data.token;
 
     localStorage.setItem('userId', userId);
     setUserId(userId);
 
-    Cookies.set('token', token, { expires: 365 });
+    // Cookies.set('token', token, { expires: 365, sameSite: 'None', secure: true });
   };
 
   // enter로 로그인
