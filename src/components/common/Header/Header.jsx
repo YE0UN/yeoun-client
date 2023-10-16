@@ -10,6 +10,7 @@ import { useCallback } from 'react';
 import useModal from '../../../hooks/useModal';
 import API from '../../../api/API';
 import ENDPOINT from '../../../api/ENDPOINT';
+import Cookies from 'js-cookie';
 
 const Header = () => {
   const { userId, setUserId } = useContext(AuthContextStore);
@@ -26,6 +27,7 @@ const Header = () => {
       .catch((err) => console.log(err));
 
     localStorage.removeItem('userId');
+    Cookies.remove('token');
     setUserId(null);
   };
 
