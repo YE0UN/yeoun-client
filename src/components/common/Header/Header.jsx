@@ -23,12 +23,12 @@ const Header = () => {
   // 로그아웃 기능
   const onClickLogoutHandler = () => {
     API(`${ENDPOINT.LOGOUT}`, 'POST')
-      .then()
+      .then(() => {
+        localStorage.removeItem('userId');
+        setUserId(null);
+        Cookies.remove('token', { path: '/', domain: 'yeoun-402216.du.r.appspot.com', secure: true, sameSite: 'None' });
+      })
       .catch((err) => console.log(err));
-
-    localStorage.removeItem('userId');
-    Cookies.remove('token');
-    setUserId(null);
   };
 
   // 유저 프로필
@@ -39,7 +39,9 @@ const Header = () => {
     userId &&
       API(`${ENDPOINT.GET_USER_INFO}`, 'GET')
         .then((res) => {
-          res.data.user.profileImage ? setUserProfile(res.data.user.profileImage) : setUserProfile(userIcon);
+          res.data.user.profileImage && !res.data.user.profileImage.includes('/user-icon')
+            ? setUserProfile(res.data.user.profileImage)
+            : setUserProfile(userIcon);
         })
         .catch((err) => {
           console.log(err);
