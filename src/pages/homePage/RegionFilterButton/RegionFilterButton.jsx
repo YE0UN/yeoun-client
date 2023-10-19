@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import checkIcon from '../../../assets/images/check-icon.svg';
+import plusIcon from '../../../assets/images/plus-icon.svg';
 import useImagePreload from '../../../hooks/useImagePreload';
 import LocalSVGSprite from '../../../components/SVGSprite/LocalSVGSprite';
 
@@ -27,7 +28,7 @@ const regions = [
 
 const RegionFilterButton = ({ modalOpen, modalRef, getRigionsHandler }) => {
   // useImagePreload
-  useImagePreload([checkIcon]);
+  useImagePreload([checkIcon, plusIcon]);
 
   const [selectedRegions, setSelectedRegions] = useState([...regions]);
 
