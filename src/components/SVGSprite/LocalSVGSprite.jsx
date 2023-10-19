@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SVGSprite = ({
+const LocalSVGSprite = ({
   id,
   color,
   width = '100%',
@@ -25,4 +25,4 @@ const SVGSprite = ({
   );
 };
 
-export default SVGSprite;
+export default LocalSVGSprite;
