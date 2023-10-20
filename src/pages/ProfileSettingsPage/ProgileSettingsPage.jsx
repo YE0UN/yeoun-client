@@ -175,7 +175,7 @@ const ImageLabel = styled.label`
   border-radius: 50%;
   cursor: pointer;
   margin-bottom: 5rem;
-  background: var(--profile-bg-color);
+  background: ${(props) => (props.imagePreview === userIcon ? 'var(--profile-bg-color)' : 'initial')};
   border: 1px solid var(--profile-border-color);
 `;
 

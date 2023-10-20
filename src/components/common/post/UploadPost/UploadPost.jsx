@@ -107,7 +107,11 @@ const UploadPost = ({
       <Article>
         <h3 className='sr-only'>{nickname}의 Post</h3>
         <ProfileInfoDiv>
-          <ProfileImg src={profileImage ? profileImage : userIcon} alt={ProfileImgAlt} />
+          <ProfileImg
+            src={profileImage && !profileImage.includes('/user-icon') ? profileImage : userIcon}
+            alt={ProfileImgAlt}
+            profileImage={profileImage && !profileImage.includes('/user-icon')}
+          />
           <UserNameP>{nickname}</UserNameP>
         </ProfileInfoDiv>
         <TitleInput
@@ -199,7 +203,7 @@ const ProfileImg = styled.img`
   height: 8rem;
   border: 1px solid var(--profile-border-color);
   border-radius: 50%;
-  background: var(--profile-bg-color);
+  background: ${(props) => (props.profileImage ? 'initial' : 'var(--profile-bg-color)')};
 `;
 
 const ProfileInfoDiv = styled.div`

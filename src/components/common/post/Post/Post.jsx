@@ -107,6 +107,7 @@ const Post = ({
                     alert('로그인 후 이용 가능합니다.');
                   }
                 }}
+                profileImage={profileImage && !profileImage.includes('/user-icon')}
               />
               <UserNameP
                 onClick={() => {
@@ -188,6 +189,7 @@ const Post = ({
                 onError={(e) => {
                   e.target.src = userIcon;
                 }}
+                profileImage={profileImage && !profileImage.includes('/user-icon')}
               />
               <UserNameP className='back'>{nickname}</UserNameP>
               <ContentP className='back'>{introduction !== '' ? introduction : '작성된 소개 글이 없습니다.'}</ContentP>
@@ -279,7 +281,7 @@ const ProfileImg = styled.img`
   height: 4.2rem;
   border: 1px solid var(--profile-border-color);
   border-radius: 50%;
-  background: var(--profile-bg-color);
+  background: ${(props) => (props.profileImage ? 'initial' : 'var(--profile-bg-color)')};
   cursor: pointer;
 
   &.back {

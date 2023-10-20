@@ -82,7 +82,7 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
                     <ProfileInfoDiv>
                       <ProfileImg
                         src={
-                          comment.user === null
+                          comment.user === null || comment.user.profileImage.includes('/user-icon')
                             ? userIcon
                             : comment.user.profileImage
                             ? comment.user.profileImage
@@ -94,6 +94,7 @@ const PostComment = ({ nickname, postId, comments, GetPostInfo }) => {
                           setProfileCommentId(comment._id);
                         }}
                         ref={firstProfileRef}
+                        profileImage={comment.user?.profileImage && !comment.user?.profileImage.includes('/user-icon')}
                       />
                       <UserNameP
                         onClick={() => {
@@ -232,7 +233,7 @@ const ProfileImg = styled.img`
   height: 3rem;
   border: 1px solid var(--profile-border-color);
   border-radius: 50%;
-  background: var(--profile-bg-color);
+  background: ${(props) => (props.profileImage ? 'initial' : 'var(--profile-bg-color)')};
   cursor: pointer;
 `;
 

@@ -102,6 +102,7 @@ const PostContent = ({
               e.target.src = userIcon;
             }}
             ref={firstProfileRef}
+            profileImage={profileImage && !profileImage.includes('/user-icon')}
           />
           <UserNameP onClick={toggleProfileModal} ref={firstProfileRef}>
             {nickname}
@@ -223,7 +224,7 @@ const ProfileImg = styled.img`
   height: 8rem;
   border: 1px solid var(--profile-border-color);
   border-radius: 50%;
-  background: var(--profile-bg-color);
+  background: ${(props) => (props.profileImage ? 'initial' : 'var(--profile-bg-color)')};
   cursor: pointer;
 `;
 

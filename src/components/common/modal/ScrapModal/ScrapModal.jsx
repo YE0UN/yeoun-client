@@ -110,7 +110,9 @@ const ScrapModal = ({ toggle, secondRef, postId, setIsBookMarked, getMyScrapList
     API(`${ENDPOINT.SCRAPS}/${postId}`, 'DELETE', { collectionIds: [collectionId] })
       .then((res) => {
         handleSnackbarOpen();
-        getMyScrapList && getMyScrapList();
+        setTimeout(() => {
+          getMyScrapList && getMyScrapList();
+        }, 800);
       })
       .catch((err) => console.log(err));
   };
