@@ -79,11 +79,6 @@ const ScrapModal = ({ toggle, secondRef, postId, setIsBookMarked, getMyScrapList
     if (newCategoryName.trim() === '') {
       return;
     }
-    // 카테고리명 중복 체크
-    if (scrapList.includes(newCategoryName)) {
-      alert('이미 존재하는 카테고리입니다.');
-      return;
-    }
 
     API(`${ENDPOINT.COLLECTIONS}`, 'POST', { name: newCategoryName })
       .then((res) => {
@@ -91,7 +86,11 @@ const ScrapModal = ({ toggle, secondRef, postId, setIsBookMarked, getMyScrapList
         setNewCategoryName('');
         setIsAddingCategory(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        if (err.response.data.error === '이미 사용 중인 이름입니다.') {
+          alert('이미 존재하는 카테고리입니다.');
+        }
+      });
   };
 
   // 스크랩 하기

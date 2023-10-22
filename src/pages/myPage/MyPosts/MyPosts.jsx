@@ -31,24 +31,28 @@ const MyPosts = () => {
     <>
       {isLoading ? (
         <PostContainer>
-          {post.map((post, index) => {
-            return (
-              <Post
-                key={post.post._id}
-                profileImage={post.post.user.profileImage}
-                nickname={post.post.user.nickname}
-                introduction={post.post.user.introduction}
-                scrap={post.scrap}
-                content={post.post.content}
-                img={post.post.img}
-                likeState={post.likeState}
-                likeCount={post.post.likeCount}
-                commentCount={post.post.commentCount}
-                createdAt={post.post.createdAt}
-                postId={post.post._id}
-              />
-            );
-          })}
+          {post?.length !== 0 ? (
+            post.map((post, index) => {
+              return (
+                <Post
+                  key={post.post._id}
+                  profileImage={post.post.user.profileImage}
+                  nickname={post.post.user.nickname}
+                  introduction={post.post.user.introduction}
+                  scrap={post.scrap}
+                  content={post.post.content}
+                  img={post.post.img}
+                  likeState={post.likeState}
+                  likeCount={post.post.likeCount}
+                  commentCount={post.post.commentCount}
+                  createdAt={post.post.createdAt}
+                  postId={post.post._id}
+                />
+              );
+            })
+          ) : (
+            <Description>작성한 게시글이 없습니다.</Description>
+          )}
         </PostContainer>
       ) : (
         <Loading description='데이터를 불러오는 중입니다...' margin='20rem 0 10rem' />
@@ -64,4 +68,9 @@ const PostContainer = styled.div`
   flex-wrap: wrap;
   gap: 3rem;
   margin-bottom: 5rem;
+`;
+
+const Description = styled.span`
+  font-size: var(--fs-md);
+  font-weight: 500;
 `;

@@ -95,7 +95,8 @@ const ContentP = styled.p`
   border-radius: 8px;
   line-height: 2.2rem;
   padding: 0.6rem 0.8rem;
-  overflow: auto;
+  overflow-x: auto;
+  white-space: pre-wrap;
   cursor: default;
   &:hover {
     box-shadow: none;

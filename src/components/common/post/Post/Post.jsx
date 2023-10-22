@@ -282,6 +282,7 @@ const ProfileImg = styled.img`
   border: 1px solid var(--profile-border-color);
   border-radius: 50%;
   background: ${(props) => (props.profileImage ? 'initial' : 'var(--profile-bg-color)')};
+  object-fit: cover;
   cursor: pointer;
 
   &.back {

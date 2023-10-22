@@ -67,7 +67,7 @@ const MyScrapedPosts = () => {
   return (
     <>
       <Container>
-        {scrapList &&
+        {scrapList.length > 0 ? (
           scrapList.map((category, index) => (
             <SectionWrapper key={category.name}>
               <CategoryNameWrapper>
@@ -143,7 +143,10 @@ const MyScrapedPosts = () => {
                 </PostContainer>
               </Section>
             </SectionWrapper>
-          ))}
+          ))
+        ) : (
+          <NoScrapedPostsMessage>아직 스크랩된 게시물이 없습니다.</NoScrapedPostsMessage>
+        )}
       </Container>
     </>
   );
@@ -221,4 +224,11 @@ const CategoryNameWrapper = styled.div`
 const H3 = styled.h3`
   font-size: var(--fs-3xl);
   font-weight: 500;
+`;
+
+const NoScrapedPostsMessage = styled.p`
+  text-align: center;
+  font-size: 18px;
+  color: var(--sub-text-color);
+  margin-top: 20px;
 `;
