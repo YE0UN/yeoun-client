@@ -9,11 +9,16 @@ import { AuthContextStore } from '../../../../context/AuthContext';
 import LocalSVGSprite from '../../../SVGSprite/LocalSVGSprite';
 
 const HeadingLayout = ({ heading, subHeading }) => {
-  const { setUserId } = useContext(AuthContextStore);
+  const { userId, setUserId } = useContext(AuthContextStore);
 
   const navigate = useNavigate();
 
   const handleClick = () => {
+    if (userId === '653520d95656b462203e8a6d') {
+      toggle();
+      return alert('테스트 계정은 탈퇴할 수 없습니다.');
+    }
+
     API(`${ENDPOINT.DELETE_ACCOUNT}`, 'DELETE')
       .then((res) => {
         localStorage.removeItem('userId');
@@ -37,7 +42,6 @@ const HeadingLayout = ({ heading, subHeading }) => {
                 <SVGWrapper>
                   <LocalSVGSprite id='setting-icon' color='transparent' ariaLabel='회원 정보 설정 아이콘' />
                 </SVGWrapper>
-
                 {subHeading}
               </Anchor>
             </Link>
