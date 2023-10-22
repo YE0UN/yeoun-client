@@ -79,7 +79,7 @@ const Header = () => {
               {userId ? (
                 <Li>
                   <DropdownButton type='button' onClick={toggle} ref={firstRef}>
-                    <Img src={userProfile} alt='' />
+                    <Img src={userProfile} alt='유저 프로필 이미지' />
                   </DropdownButton>
                   {modalOpen && (
                     <DropdownMenu ref={secondRef}>
@@ -161,6 +161,7 @@ const Img = styled.img`
   border: 1px solid var(--profile-border-color);
   border-radius: 50%;
   background: var(--profile-bg-color);
+  object-fit: cover;
 `;
 
 const DropdownMenu = styled.ul`
