@@ -13,7 +13,8 @@ import ENDPOINT from '../../../api/ENDPOINT';
 import Cookies from 'js-cookie';
 
 const Header = () => {
-  const { userId, setUserId } = useContext(AuthContextStore);
+  const { setUserId } = useContext(AuthContextStore);
+  const token = Cookies.get('token');
 
   const navigate = useNavigate();
 
@@ -36,7 +37,7 @@ const Header = () => {
 
   // 유저 정보 가져오기
   const getUserData = useCallback(() => {
-    userId &&
+    token &&
       API(`${ENDPOINT.GET_USER_INFO}`, 'GET')
         .then((res) => {
           res.data.user.profileImage && !res.data.user.profileImage.includes('/user-icon')
@@ -46,7 +47,7 @@ const Header = () => {
         .catch((err) => {
           console.log(err);
         });
-  }, [userId]);
+  }, [token]);
 
   useEffect(() => {
     getUserData();
@@ -70,13 +71,13 @@ const Header = () => {
                 <Link
                   to='/post'
                   onClick={() => {
-                    userId ? <></> : alert('로그인 후 이용 가능합니다.');
+                    token ? <></> : alert('로그인 후 이용 가능합니다.');
                   }}
                 >
                   새 글 작성
                 </Link>
               </Li>
-              {userId ? (
+              {token ? (
                 <Li>
                   <DropdownButton type='button' onClick={toggle} ref={firstRef}>
                     <Img src={userProfile} alt='유저 프로필 이미지' />

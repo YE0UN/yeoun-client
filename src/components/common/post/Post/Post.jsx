@@ -1,14 +1,14 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import userIcon from '../../../../assets/images/user-icon.svg';
 import { useNavigate } from 'react-router-dom';
-import { AuthContextStore } from '../../../../context/AuthContext';
 import useFormattedDate from './../../../../hooks/useFormattedDate';
 import useModal from '../../../../hooks/useModal';
 import ScrapModal from '../../modal/ScrapModal/ScrapModal';
 import API from '../../../../api/API';
 import ENDPOINT from '../../../../api/ENDPOINT';
 import LocalSVGSprite from '../../../SVGSprite/LocalSVGSprite';
+import Cookies from 'js-cookie';
 
 const Post = ({
   profileImage,
@@ -25,7 +25,9 @@ const Post = ({
   getMyScrapList,
   getLikeState,
 }) => {
-  const { userId } = useContext(AuthContextStore);
+  // const { userId } = useContext(AuthContextStore);
+  const token = Cookies.get('token');
+
   const navigate = useNavigate();
 
   // 유저 프로필 이미지 alt
@@ -53,7 +55,7 @@ const Post = ({
 
   // 게시물 내용 클릭 시, 상세 게시물 페이지로 이동
   const onClickMovePageHandler = () => {
-    if (userId) {
+    if (token) {
       const newPath = `/post/${postId}`;
       navigate(newPath);
     } else {
@@ -84,10 +86,14 @@ const Post = ({
                 id={isBookMarked ? 'bookmark-fill-icon' : 'bookmark-icon'}
                 ariaLabel={isBookMarked ? '스크랩이 된 상태의 아이콘' : '스크랩 되지 않은 상태의 아이콘'}
                 onClickHandler={() => {
-                  if (nickname === '탈퇴한 사용자입니다.') {
-                    alert('탈퇴한 사용자의 게시물을 스크랩할 수 없습니다.');
+                  if (token) {
+                    if (nickname === '탈퇴한 사용자입니다.') {
+                      return alert('탈퇴한 사용자의 게시물을 스크랩할 수 없습니다.');
+                    } else {
+                      toggle();
+                    }
                   } else {
-                    toggle();
+                    alert('로그인 후 이용 가능합니다.');
                   }
                 }}
                 $ref={firstRef}
@@ -101,7 +107,7 @@ const Post = ({
                   e.target.src = userIcon;
                 }}
                 onClick={() => {
-                  if (userId) {
+                  if (token) {
                     onClickFlipCardHandler();
                   } else {
                     alert('로그인 후 이용 가능합니다.');
@@ -111,7 +117,7 @@ const Post = ({
               />
               <UserNameP
                 onClick={() => {
-                  if (userId) {
+                  if (token) {
                     onClickFlipCardHandler();
                   } else {
                     alert('로그인 후 이용 가능합니다.');
@@ -151,7 +157,7 @@ const Post = ({
                     height='2.4rem'
                     ariaLabel={isLiked ? '좋아요가 활성화된 좋아요 아이콘' : '좋아요가 비활성화된 좋아요 아이콘'}
                     onClickHandler={() => {
-                      if (userId) {
+                      if (token) {
                         if (nickname === '탈퇴한 사용자입니다.') {
                           return alert('탈퇴한 사용자의 게시물에 좋아요 할 수 없습니다.');
                         } else {
