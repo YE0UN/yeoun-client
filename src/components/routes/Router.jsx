@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { AuthContextStore } from '../../context/AuthContext';
 
 import NonAuthRoute from './NonAuthRoute';
 import AuthRoute from './AuthRoute';
@@ -16,9 +15,11 @@ import NotFoundPage from '../../pages/NotFoundPage/NotFoundPage';
 import Mypage from '../../pages/myPage/MyPage/Mypage';
 import TouristAttractionMainPage from '../../pages/touristAttractionPage/TouristAttractionMainPage/TouristAttractionMainPage';
 import TouristAttractionRegionPage from './../../pages/touristAttractionPage/TouristAttractionRegionPage/TouristAttractionRegionPage';
+import Cookies from 'js-cookie';
 
 const Router = () => {
-  const { userId } = useContext(AuthContextStore);
+  // const { userId } = useContext(AuthContextStore);
+  const token = Cookies.get('token');
 
   return (
     <Routes>
@@ -28,12 +29,12 @@ const Router = () => {
       <Route path='/tour' element={<TouristAttractionMainPage />} />
       <Route path='/tour/:region' element={<TouristAttractionRegionPage />} />
 
-      <Route element={<NonAuthRoute authenticated={userId} />}>
+      <Route element={<NonAuthRoute authenticated={token} />}>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/join' element={<SignupPage />} />
       </Route>
 
-      <Route element={<AuthRoute authenticated={userId} />}>
+      <Route element={<AuthRoute authenticated={token} />}>
         <Route path='/post' element={<PostUploadPage />} />
         <Route path='/post/:postId' element={<PostDetailPage />} />
         <Route path='/post/edit/:id' element={<PostModificationPage />} />

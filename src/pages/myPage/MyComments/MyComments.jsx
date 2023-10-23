@@ -10,13 +10,10 @@ import LocalSVGSprite from '../../../components/SVGSprite/LocalSVGSprite';
 
 const MyComments = () => {
   const { userId } = useContext(AuthContextStore);
-
   const navigate = useNavigate();
-
   const [comments, setComments] = useState();
-
-  // 댓글 삭제 기능
   const [deleteCommentId, setDeleteCommentId] = useState(null);
+  const [deleteModalOpen, toggleDeleteModal, firstDeleteRef, secondDeleteRef] = useModal();
 
   const getMyComments = useCallback(() => {
     if (userId) {
@@ -34,8 +31,6 @@ const MyComments = () => {
     getMyComments();
   }, [getMyComments]);
 
-  const [deleteModalOpen, toggleDeleteModal, firstDeleteRef, secondDeleteRef] = useModal();
-
   const onClickRemoveHandler = (comment) => {
     if (userId === comment.user) {
       API(`${ENDPOINT.COMMENTS}/${comment._id}`, 'DELETE')
@@ -51,7 +46,6 @@ const MyComments = () => {
     }
   };
 
-  // 게시물 내용 클릭 시, 상세 게시물 페이지로 이동
   const onClickMovePageHandler = (postId) => {
     if (userId) {
       const newPath = `/post/${postId}`;
@@ -64,11 +58,11 @@ const MyComments = () => {
   return (
     <>
       <Article>
-        {comments &&
+        {comments && comments.length > 0 ? (
           comments.map((comment) => {
             return (
               <CommentContainer key={comment._id}>
-                <CommentInfoDIv>
+                <CommentInfoDiv>
                   <TitleInfoP
                     onClick={() => {
                       onClickMovePageHandler(comment.post._id);
@@ -97,7 +91,7 @@ const MyComments = () => {
                       modalHeading='정말로 삭제하시겠습니까?'
                     />
                   )}
-                </CommentInfoDIv>
+                </CommentInfoDiv>
                 <CommentP
                   onClick={() => {
                     onClickMovePageHandler(comment.post._id);
@@ -110,7 +104,10 @@ const MyComments = () => {
                 </ContentInfo>
               </CommentContainer>
             );
-          })}
+          })
+        ) : (
+          <NoCommentsMessage>작성한 댓글이 없습니다.</NoCommentsMessage>
+        )}
       </Article>
     </>
   );
@@ -138,7 +135,7 @@ const CommentContainer = styled.div`
   position: relative;
 `;
 
-const CommentInfoDIv = styled.div`
+const CommentInfoDiv = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: var(--fs-xs);
@@ -149,12 +146,6 @@ const TitleInfoP = styled.p`
   display: flex;
   gap: 1rem;
   align-items: center;
-`;
-
-const DeleteButton = styled.img`
-  width: 2rem;
-  height: 2rem;
-  cursor: pointer;
 `;
 
 const CommentP = styled.p`
@@ -179,5 +170,11 @@ const ContentInfo = styled.div`
 `;
 
 const PostDateSpan = styled.span`
+  color: var(--sub-text-color);
+`;
+
+const NoCommentsMessage = styled.p`
+  text-align: center;
+  font-size: var(--fs-md);
   color: var(--sub-text-color);
 `;

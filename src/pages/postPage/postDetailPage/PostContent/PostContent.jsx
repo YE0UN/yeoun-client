@@ -258,6 +258,7 @@ const ContentP = styled.p`
   line-height: 2.1rem;
   padding: 0.6rem 0.8rem;
   overflow: auto;
+  white-space: pre-wrap;
 `;
 
 const ContentImg = styled.img`
