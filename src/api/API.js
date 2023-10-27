@@ -3,7 +3,10 @@ import axios from 'axios';
 // 모든 axios 요청에서 자동으로 쿠키 포함
 axios.defaults.withCredentials = true;
 
-const serverURL = 'https://yeoun-402216.du.r.appspot.com';
+// const serverURL = 'http://localhost:8000';
+// const serverURL = 'https://yeoun-ilu25.koyeb.app';
+const serverURL = 'https://port-0-test-server-euegqv2llo3u461f.sel5.cloudtype.app';
+// const serverURL = 'https://yeoun-402216.du.r.appspot.com';
 
 const API = async (endpoint, method, data) => {
   const headers = {

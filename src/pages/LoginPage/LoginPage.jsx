@@ -52,7 +52,7 @@ const Login = () => {
     const userId = res.data.user._id;
     // const token = res.data.token;
 
-    localStorage.setItem('userId', userId);
+    sessionStorage.setItem('userId', userId);
     setUserId(userId);
 
     // Cookies.set('token', token, { expires: 365, sameSite: 'None', secure: true });
